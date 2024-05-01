@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "coords_mod",
+	"version": "${version}",
+	"name": "Simple Info Display",
+	"description": "A simple mod that displays coordinates and even the current biome, similar to the one in Lunar Client",
+	"authors": [
+		"Lonelywalf"
+	],
+	"contact": {
+		"homepage": "https://youtu.be/dQw4w9WgXcQ",
+		"sources": "https://youtu.be/dQw4w9WgXcQ"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/coords_mod/icon.png",
+	"client": "*",
+	"entrypoints": {
+		"main": [
+			"net.jamicah.coords_mod.Coords_mod"
+		],
+		"client": [
+			"net.jamicah.coords_mod.Coords_modClient"
+		],
+		"fabric-datagen": [
+			"net.jamicah.coords_mod.Coords_modDataGenerator"
+		]
+	},
+	"mixins": [
+		"coords_mod.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.1",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
