@@ -10,6 +10,6 @@ public class Coords_mod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		LOGGER.info("Starting!");
+		LOGGER.info("Starting! Hello!!");
 	}
 }
