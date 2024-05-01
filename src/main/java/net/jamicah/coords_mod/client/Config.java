@@ -2,7 +2,6 @@ package net.jamicah.coords_mod.client;
 
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.impl.lib.tinyremapper.extension.mixin.common.Logger;
 import net.jamicah.coords_mod.Coords_mod;
 
 import java.io.*;
