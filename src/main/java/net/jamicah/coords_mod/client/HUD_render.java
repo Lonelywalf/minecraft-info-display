@@ -1,9 +1,9 @@
 package net.jamicah.coords_mod.client;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.loader.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderTickCounter;
 
 public class HUD_render implements HudRenderCallback {
     public static Boolean toggleHud = Config.readConfig("HUD");
@@ -13,7 +13,7 @@ public class HUD_render implements HudRenderCallback {
     public static Boolean toggleFPS = Config.readConfig("FPS");
     public static Boolean toggleBackground = Config.readConfig("Background");
     @Override
-    public void onHudRender(DrawContext drawContext, float tickDelta) {
+    public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         // pos of the gui
         int x = 5;
         int y = 5;
@@ -81,7 +81,7 @@ public class HUD_render implements HudRenderCallback {
 
             // coordinates
             drawContext.drawText(client.textRenderer,
-                              String.valueOf(x_pos) +
+                    String.valueOf(x_pos) +
                             " " +  String.valueOf(y_pos) +
                             " " +  String.valueOf(z_pos),
                     x, y, 0xFFFFFFFF, false);
@@ -143,5 +143,6 @@ public class HUD_render implements HudRenderCallback {
         int total_length = x_length + y_length + z_length;
         return ((total_length)*6)+14;       // not sure to be honest why this works, but it does
     }
+
 
 }
