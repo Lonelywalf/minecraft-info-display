@@ -81,9 +81,9 @@ public class HUD_render implements HudRenderCallback {
 
             // coordinates
             drawContext.drawText(client.textRenderer,
-                    String.valueOf(x_pos) +
-                            " " +  String.valueOf(y_pos) +
-                            " " +  String.valueOf(z_pos),
+                               x_pos +
+                            " " +  y_pos +
+                            " " +  z_pos,
                     x, y, 0xFFFFFFFF, false);
 
             // show biome only if biome is toggled
