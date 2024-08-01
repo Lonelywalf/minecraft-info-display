@@ -9,7 +9,10 @@ import java.io.*;
 public class Config {
     public static Boolean readConfig(String selection) {
         BufferedReader read;
-        String configFileDir = FabricLoader.getInstance().getConfigDir().toString() + "\\config_coords_display.txt";
+        String configFileDir = FabricLoader
+                .getInstance()
+                .getConfigDir()
+                .toString() + "\\coordsDisplay_config.txt";
         try {
             read = new BufferedReader(new FileReader(configFileDir));
             String text;
@@ -54,11 +57,17 @@ public class Config {
     public static void writeConfig() {
         BufferedWriter write;
         try {   // write the config file if it hasn't been created yet
-            write = new BufferedWriter(new FileWriter(FabricLoader.getInstance().getConfigDir().toString() + "\\config_coords_display.txt"));
+            write = new BufferedWriter(
+                    new FileWriter(
+                            FabricLoader.getInstance().
+                                    getConfigDir().
+                                    toString() + "\\coordsDisplay_config.txt")
+            );
 
             write.write("ToggleHUD:" + "true\n");
             write.write("ToggleBiome:" + "true\n");
             write.write("ToggleFPS:" + "true\n");
+            write.write("ToggleCoords:" + "true\n");
             write.write("ToggleBackground:" + "true\n");
             write.close();
 

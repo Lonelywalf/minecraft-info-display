@@ -13,7 +13,7 @@ import net.minecraft.text.Text;
 public class ConfigScreen implements ModMenuApi {
 
     public static Screen createConfigScreen() {
-        ConfigBuilder builder = ConfigBuilder.create().setTitle(Text.of("Coords Display Config"));
+        ConfigBuilder builder = ConfigBuilder.create().setTitle(Text.of("Info Display Config"));
 
         builder.setSavingRunnable(Config::writeConfig);
 
@@ -22,7 +22,7 @@ public class ConfigScreen implements ModMenuApi {
 
         general.addEntry(entryBuilder
                 .startBooleanToggle(
-                        Text.of("Toggle Entire HUD"),
+                        Text.of("Toggle Entire Info Display"),
                         HUD_render.toggleHud
                 )
                 .setDefaultValue(true)

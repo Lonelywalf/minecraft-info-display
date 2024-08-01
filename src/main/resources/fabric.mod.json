@@ -31,6 +31,7 @@
 	"mixins": [
 		"coords_mod.mixins.json"
 	],
+
 	"depends": {
 		"fabricloader": ">=0.15.1",
 		"minecraft": "~1.21",

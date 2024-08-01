@@ -37,11 +37,13 @@ public class KeyInputHandler {
                 Config.writeConfig();
             }
 
+            // toggle fps info
             if (toggle_fps.wasPressed()) {
                 HUD_render.toggleFPS = !HUD_render.toggleFPS;
                 Config.writeConfig();
             }
 
+            // toggle coords info
             if (toggle_Background.wasPressed()) {
                 HUD_render.toggleCoords = !HUD_render.toggleCoords;
                 Config.writeConfig();
