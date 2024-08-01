@@ -1,9 +1,11 @@
 package net.jamicah.coords_mod.event;
 
+import net.jamicah.coords_mod.ConfigScreen;
 import net.jamicah.coords_mod.client.Config;
 import net.jamicah.coords_mod.client.HUD_render;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
@@ -17,12 +19,14 @@ public class KeyInputHandler {
     public static final String KEY_TOGGLEBIOME = "key.coords_mod.toggle_coordsHud_BIOME";
     public static final String KEY_TOGGLEFPS = "key.coords_mod.toggle_coordsHud_FPS";
     public static final String KEY_TOGGLECOORDS = "key.coords_mod.toggle_coordsHud_COORDS";
+    public static final String KEY_OPENCONFIG = "key.coords_mod.open_config";
 
     // keybinding keys
     public static KeyBinding toggle_hud;
     public static KeyBinding toggle_biome;
     public static KeyBinding toggle_fps;
     public static KeyBinding toggle_Background;
+    public static KeyBinding open_config;
     public static void registerKeyInputs() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // toggle coords display
@@ -47,6 +51,11 @@ public class KeyInputHandler {
             if (toggle_Background.wasPressed()) {
                 HUD_render.toggleCoords = !HUD_render.toggleCoords;
                 Config.writeConfig();
+            }
+
+            // open config screen
+            if (open_config.wasPressed()) {
+                MinecraftClient.getInstance().setScreen(ConfigScreen.createConfigScreen());
             }
         });
     }
@@ -73,6 +82,12 @@ public class KeyInputHandler {
                 KEY_TOGGLECOORDS,
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_F9,
+                KEY_CATEGORY
+        ));
+        open_config = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                KEY_OPENCONFIG,
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_F4,
                 KEY_CATEGORY
         ));
         registerKeyInputs();
