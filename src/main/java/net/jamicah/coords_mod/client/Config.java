@@ -8,7 +8,7 @@ import java.io.*;
 
 public class Config {
     public static Boolean readConfig(String selection) {
-        BufferedReader read = null;
+        BufferedReader read;
         String configFileDir = FabricLoader.getInstance().getConfigDir().toString() + "\\config_coords_display.txt";
         try {
             read = new BufferedReader(new FileReader(configFileDir));
@@ -26,7 +26,7 @@ public class Config {
         } catch (FileNotFoundException e) { // write config file if it wasn't created yet
             Coords_mod.LOGGER.info("Config file not found, creating one...");
 
-            writeConfig(true);
+            writeConfig();
 
             try {
                 read = new BufferedReader(new FileReader(configFileDir));
@@ -39,37 +39,20 @@ public class Config {
                 }
                 read.close();
                 return false;
-            } catch (FileNotFoundException ex) {
-                Coords_mod.LOGGER.info(ex.toString());
-                return true;
             } catch (IOException ex) {
                 Coords_mod.LOGGER.info(ex.toString());
                 return true;
             }
 
-        } catch (IOException ex) {
+        } catch (IOException ignored) {
 
         }
         return true;
     }
 
+
     public static void writeConfig() {
-        BufferedWriter write = null;
-        try {   // write the config file if it hasn't been created yet
-            write = new BufferedWriter(new FileWriter(FabricLoader.getInstance().getConfigDir().toString() + "\\config_coords_display.txt"));
-
-            write.write("ToggleHUD:" + HUD_render.toggleHud +"\n");
-            write.write("ToggleBiome:" + HUD_render.toggleBiome + "\n");
-            write.write("ToggleFPS:" + HUD_render.toggleFPS + "\n");
-            write.write("ToggleBackground:" + HUD_render.toggleBackground + "\n");
-            write.close();
-
-        } catch (IOException ex) {
-            Coords_mod.LOGGER.info(ex.toString());
-        }
-    }
-    public static void writeConfig(Boolean newFile) {
-        BufferedWriter write = null;
+        BufferedWriter write;
         try {   // write the config file if it hasn't been created yet
             write = new BufferedWriter(new FileWriter(FabricLoader.getInstance().getConfigDir().toString() + "\\config_coords_display.txt"));
 

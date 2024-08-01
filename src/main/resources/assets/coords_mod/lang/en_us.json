@@ -3,5 +3,5 @@
   "key.coords_mod.toggle_coordsHud": "Toggle Entire Info Display",
   "key.coords_mod.toggle_coordsHud_BIOME": "Toggle Biome Info",
   "key.coords_mod.toggle_coordsHud_FPS": "Toggle FPS",
-  "key.coords_mod.toggle_coordsHud_BG": "Toggle Transparent Background"
+  "key.coords_mod.toggle_coordsHud_COORDS": "Toggle Coordinates"
 }

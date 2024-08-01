@@ -16,7 +16,7 @@ public class KeyInputHandler {
     public static final String KEY_TOGGLEHUD = "key.coords_mod.toggle_coordsHud";
     public static final String KEY_TOGGLEBIOME = "key.coords_mod.toggle_coordsHud_BIOME";
     public static final String KEY_TOGGLEFPS = "key.coords_mod.toggle_coordsHud_FPS";
-    public static final String KEY_TOGGLEBACKGROUND = "key.coords_mod.toggle_coordsHud_BG";
+    public static final String KEY_TOGGLECOORDS = "key.coords_mod.toggle_coordsHud_COORDS";
 
     // keybinding keys
     public static KeyBinding toggle_hud;
@@ -27,39 +27,23 @@ public class KeyInputHandler {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // toggle coords display
             if (toggle_hud.wasPressed()) {
-                if (HUD_render.toggleHud) {
-                    HUD_render.toggleHud = false;
-                } else if (!HUD_render.toggleHud) {
-                    HUD_render.toggleHud = true;
-                }
+                HUD_render.toggleHud = !HUD_render.toggleHud;
                 Config.writeConfig();
             }
 
             // toggle biome info
             if (toggle_biome.wasPressed()) {
-                if (HUD_render.toggleBiome) {
-                    HUD_render.toggleBiome = false;
-                } else if (!HUD_render.toggleBiome) {
-                    HUD_render.toggleBiome = true;
-                }
+                HUD_render.toggleBiome = !HUD_render.toggleBiome;
                 Config.writeConfig();
             }
 
             if (toggle_fps.wasPressed()) {
-                if (HUD_render.toggleFPS) {
-                    HUD_render.toggleFPS = false;
-                } else if (!HUD_render.toggleFPS) {
-                    HUD_render.toggleFPS = true;
-                }
+                HUD_render.toggleFPS = !HUD_render.toggleFPS;
                 Config.writeConfig();
             }
 
             if (toggle_Background.wasPressed()) {
-                if (HUD_render.toggleBackground) {
-                    HUD_render.toggleBackground = false;
-                } else if (!HUD_render.toggleBackground) {
-                    HUD_render.toggleBackground = true;
-                }
+                HUD_render.toggleCoords = !HUD_render.toggleCoords;
                 Config.writeConfig();
             }
         });
@@ -84,7 +68,7 @@ public class KeyInputHandler {
                 KEY_CATEGORY
         ));
         toggle_Background = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                KEY_TOGGLEBACKGROUND,
+                KEY_TOGGLECOORDS,
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_F9,
                 KEY_CATEGORY
