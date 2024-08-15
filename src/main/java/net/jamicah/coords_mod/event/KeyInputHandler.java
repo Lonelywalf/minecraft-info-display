@@ -32,25 +32,25 @@ public class KeyInputHandler {
             // toggle coords display
             if (toggle_hud.wasPressed()) {
                 HUD_render.toggleHud = !HUD_render.toggleHud;
-                Config.writeConfig();
+                Config.saveConfig();
             }
 
             // toggle biome info
             if (toggle_biome.wasPressed()) {
                 HUD_render.toggleBiome = !HUD_render.toggleBiome;
-                Config.writeConfig();
+                Config.saveConfig();
             }
 
             // toggle fps info
             if (toggle_fps.wasPressed()) {
                 HUD_render.toggleFPS = !HUD_render.toggleFPS;
-                Config.writeConfig();
+                Config.saveConfig();
             }
 
             // toggle coords info
             if (toggle_Background.wasPressed()) {
                 HUD_render.toggleCoords = !HUD_render.toggleCoords;
-                Config.writeConfig();
+                Config.saveConfig();
             }
 
             // open config screen

@@ -15,7 +15,8 @@ public class ConfigScreen implements ModMenuApi {
     public static Screen createConfigScreen() {
         ConfigBuilder builder = ConfigBuilder.create().setTitle(Text.of("Info Display Config"));
 
-        builder.setSavingRunnable(Config::writeConfig);
+        // action when pressing "save & quit"
+        builder.setSavingRunnable(Config::saveConfig);
 
         ConfigCategory general = builder.getOrCreateCategory(Text.of("General"));
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
@@ -70,6 +71,16 @@ public class ConfigScreen implements ModMenuApi {
                 )
                 .setDefaultValue(true)
                 .setSaveConsumer(newValue -> HUD_render.toggleBiome = newValue)
+                .build()
+        );
+
+        general.addEntry(entryBuilder
+                .startBooleanToggle(
+                        Text.of("Toggle Direction"),
+                        HUD_render.toggleDirection
+                )
+                .setDefaultValue(true)
+                .setSaveConsumer(newValue -> HUD_render.toggleDirection = newValue)
                 .build()
         );
 

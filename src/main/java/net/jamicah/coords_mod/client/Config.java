@@ -29,23 +29,9 @@ public class Config {
         } catch (FileNotFoundException e) { // write config file if it wasn't created yet
             Coords_mod.LOGGER.info("Config file not found, creating one...");
 
-            writeConfig();
+            writeNewConfig();
 
-            try {
-                read = new BufferedReader(new FileReader(configFileDir));
-                String text;
-                while ((text = read.readLine()) != null) {
-                    if (text.equals("Toggle" + selection + ":true")) {
-                        read.close();
-                        return true;
-                    }
-                }
-                read.close();
-                return false;
-            } catch (IOException ex) {
-                Coords_mod.LOGGER.info(ex.toString());
-                return true;
-            }
+            readConfig(selection);
 
         } catch (IOException ignored) {
 
@@ -53,10 +39,34 @@ public class Config {
         return true;
     }
 
-
-    public static void writeConfig() {
+    // save config
+    public static void saveConfig() {
         BufferedWriter write;
-        try {   // write the config file if it hasn't been created yet
+        try {
+            write = new BufferedWriter(
+                    new FileWriter(
+                            FabricLoader.getInstance().
+                                    getConfigDir().
+                                    toString() + "\\coordsDisplay_config.txt")
+            );
+
+            write.write("ToggleHUD:" + HUD_render.toggleHud + "\n");
+            write.write("ToggleBiome:" + HUD_render.toggleBiome + "\n");
+            write.write("ToggleFPS:" + HUD_render.toggleFPS + "\n");
+            write.write("ToggleCoords:" + HUD_render.toggleCoords + "\n");
+            write.write("ToggleBackground:" + HUD_render.toggleBackground + "\n");
+            write.write("ToggleDirection:" + HUD_render.toggleDirection + "\n");
+            write.close();
+
+        } catch (IOException ex) {
+            Coords_mod.LOGGER.info(ex.toString());
+        }
+    }
+
+    public static void writeNewConfig() {
+        BufferedWriter write;
+        // write the config file if it hasn't been created yet
+        try {
             write = new BufferedWriter(
                     new FileWriter(
                             FabricLoader.getInstance().

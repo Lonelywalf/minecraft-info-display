@@ -9,10 +9,10 @@ public class HUD_render implements HudRenderCallback {
     public static Boolean toggleHud = Config.readConfig("HUD");
     public static Boolean toggleBackground = Config.readConfig("Background");
 
-    // show biome or not
     public static Boolean toggleBiome = Config.readConfig("Biome");
     public static Boolean toggleFPS = Config.readConfig("FPS");
     public static Boolean toggleCoords = Config.readConfig("Coords");
+    public static Boolean toggleDirection = Config.readConfig("Direction");
 
     @Override
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
@@ -75,13 +75,23 @@ public class HUD_render implements HudRenderCallback {
             yCurrent += 10;
         }
 
+        // Facing Direction info
+        assert client.player != null;
+        String currentDirection = client.player.getFacing().toString();
+        int currentDirectionX = 0;
+        if (toggleDirection) {
+            currentDirection = "Facing: " + client.player.getFacing().toString();
+            currentDirectionX = x + dynamicSizeX(currentDirection);
+            yCurrent += 10;
+        }
+
         // render rectangle bg
         if (toggleBackground && yCurrent != y) {
             // compare which of the text is the longest
             drawContext.fill(x-3,
                     y-3,
                     Math.max(currentFPSx,
-                            Math.max(currentCoordsX, currentBiomeX)),
+                            Math.max(currentCoordsX, Math.max(currentBiomeX, currentDirectionX))),
                     yCurrent,
                     0x4D000000
             );
@@ -121,6 +131,18 @@ public class HUD_render implements HudRenderCallback {
         if (toggleBiome) {
             drawContext.drawText(client.textRenderer,
                     currentBiome,
+                    x,
+                    yCurrent,
+                    0xFFFFFFFF,
+                    false
+            );
+            yCurrent += 10;
+        }
+
+        // render "Direction"
+        if (toggleDirection) {
+            drawContext.drawText(client.textRenderer,
+                    currentDirection,
                     x,
                     yCurrent,
                     0xFFFFFFFF,
