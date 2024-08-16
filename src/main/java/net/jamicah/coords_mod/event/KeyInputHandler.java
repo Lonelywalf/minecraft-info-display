@@ -19,6 +19,8 @@ public class KeyInputHandler {
     public static final String KEY_TOGGLEBIOME = "key.coords_mod.toggle_coordsHud_BIOME";
     public static final String KEY_TOGGLEFPS = "key.coords_mod.toggle_coordsHud_FPS";
     public static final String KEY_TOGGLECOORDS = "key.coords_mod.toggle_coordsHud_COORDS";
+    public static final String KEY_TOGGLEDIRECTION = "key.coords_mod.toggle_coordsHud_DIRECTION";
+    public static final String KEY_TOGGLEBACKGROUND = "key.coords_mod.toggle_coordsHud_BACKGROUND";
     public static final String KEY_OPENCONFIG = "key.coords_mod.open_config";
 
     // keybinding keys
@@ -27,6 +29,8 @@ public class KeyInputHandler {
     public static KeyBinding toggle_fps;
     public static KeyBinding toggle_Background;
     public static KeyBinding open_config;
+    public static KeyBinding toggle_direction;
+    public static KeyBinding toggle_coords;
     public static void registerKeyInputs() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // toggle coords display
@@ -47,6 +51,18 @@ public class KeyInputHandler {
                 Config.saveConfig();
             }
 
+            // toggle direction info
+            if (toggle_biome.wasPressed()) {
+                HUD_render.toggleDirection = !HUD_render.toggleDirection;
+                Config.saveConfig();
+            }
+
+            // toggle background
+            if (toggle_Background.wasPressed()) {
+                HUD_render.toggleBackground = !HUD_render.toggleBackground;
+                Config.saveConfig();
+            }
+
             // toggle coords info
             if (toggle_Background.wasPressed()) {
                 HUD_render.toggleCoords = !HUD_render.toggleCoords;
@@ -63,31 +79,43 @@ public class KeyInputHandler {
         toggle_hud = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_TOGGLEHUD,
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_F6,
+                GLFW.GLFW_DONT_CARE,
                 KEY_CATEGORY
         ));
         toggle_biome = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_TOGGLEBIOME,
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_F7,
+                GLFW.GLFW_DONT_CARE,
                 KEY_CATEGORY
         ));
         toggle_fps = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_TOGGLEFPS,
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_F8,
+                GLFW.GLFW_DONT_CARE,
                 KEY_CATEGORY
         ));
         toggle_Background = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_TOGGLECOORDS,
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_F9,
+                GLFW.GLFW_DONT_CARE,
+                KEY_CATEGORY
+        ));
+        toggle_direction = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                KEY_TOGGLEDIRECTION,
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_DONT_CARE,
+                KEY_CATEGORY
+        ));
+        toggle_coords = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                KEY_TOGGLEBACKGROUND,
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_DONT_CARE,
                 KEY_CATEGORY
         ));
         open_config = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_OPENCONFIG,
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_F4,
+                GLFW.GLFW_DONT_CARE,
                 KEY_CATEGORY
         ));
         registerKeyInputs();
