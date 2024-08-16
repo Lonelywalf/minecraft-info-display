@@ -6,6 +6,7 @@ Info Display:
 - FPS
 - Coordinates
 - Biome
+- Facing Direction
 
 Toggle all of them on/off using a keybind or in the config menu.
 
