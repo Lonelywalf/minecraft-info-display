@@ -80,7 +80,10 @@ public class HUD_render implements HudRenderCallback {
         String currentDirection = client.player.getMovementDirection().asString();
         int currentDirectionX = 0;
         if (toggleDirection) {
-            currentDirection = "Facing: " + client.player.getMovementDirection().asString();
+            String dir = client.player.getMovementDirection().asString();
+            currentDirection = "Facing: " + Character.toUpperCase(dir.charAt(0))
+                    + dir.substring(1
+            );
 
             currentDirectionX = x + dynamicSizeX(currentDirection);
             yCurrent += 10;
