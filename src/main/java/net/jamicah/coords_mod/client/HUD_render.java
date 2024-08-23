@@ -77,10 +77,11 @@ public class HUD_render implements HudRenderCallback {
 
         // Facing Direction info
         assert client.player != null;
-        String currentDirection = client.player.getFacing().toString();
+        String currentDirection = client.player.getMovementDirection().asString();
         int currentDirectionX = 0;
         if (toggleDirection) {
-            currentDirection = "Facing: " + client.player.getFacing().toString();
+            currentDirection = "Facing: " + client.player.getMovementDirection().asString();
+
             currentDirectionX = x + dynamicSizeX(currentDirection);
             yCurrent += 10;
         }
@@ -156,10 +157,31 @@ public class HUD_render implements HudRenderCallback {
         MinecraftClient client = MinecraftClient.getInstance();
         assert client.world != null;
         assert client.player != null;
-        String biomeGibberish = client.world.getBiome(client.player.getBlockPos()).toString();
-        String biomeToString = biomeGibberish.substring(biomeGibberish.indexOf("/ minecraft:")+12 , biomeGibberish.indexOf(']'));
-        biomeToString = biomeToString.substring(0, 1).toUpperCase() + biomeToString.substring(1);
+        String biomeGibberish = client
+                .world
+                .getBiome(client.player.getBlockPos())
+                .toString();
+        String biomeToString = biomeGibberish.substring(biomeGibberish.indexOf("/ minecraft:")+12 ,
+                biomeGibberish.indexOf(']')
+        );
+
         biomeToString = biomeToString.replace('_', ' ');
+
+        // capitalize first letter
+        biomeToString = Character.toUpperCase(
+                biomeToString.charAt(0))
+                + biomeToString.substring(1
+        );
+
+        // capitalize every letter after space
+        for (int i = 0; i < biomeToString.length(); i++) {
+            if (biomeToString.length() > 1 && biomeToString.charAt(i) == ' ') {
+                biomeToString = biomeToString.substring(0, i+1)
+                        + Character.toUpperCase(biomeToString.charAt(i+1))
+                        + biomeToString.substring(i+2
+                );
+            }
+        }
         return biomeToString;
     }
 
