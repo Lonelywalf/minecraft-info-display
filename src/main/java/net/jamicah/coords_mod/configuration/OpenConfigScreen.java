@@ -1,29 +1,34 @@
-package net.jamicah.coords_mod;
+package net.jamicah.coords_mod.configuration;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import me.shedaniel.clothconfig2.api.ConfigBuilder;
-import me.shedaniel.clothconfig2.api.ConfigCategory;
-import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.jamicah.coords_mod.client.Config;
-import net.jamicah.coords_mod.client.HUD_render;
+
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
-public class ConfigScreen implements ModMenuApi {
+public class OpenConfigScreen implements ModMenuApi {
 
     public static Screen createConfigScreen() {
-        ConfigBuilder builder = ConfigBuilder.create().setTitle(Text.of("Info Display Config"));
+
+        /*
+        ConfigBuilder builder = ConfigBuilder
+                .create()
+                .setTitle(
+                        Text.of("Info Display Config")
+                );
 
         // action when pressing "save & quit"
         builder.setSavingRunnable(Config::saveConfig);
 
         ConfigCategory general = builder.getOrCreateCategory(Text.of("General"));
+        ConfigCategory design = builder.getOrCreateCategory(Text.of("Design"));
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
+        // toggles
         general.addEntry(entryBuilder
                 .startBooleanToggle(
-                        Text.of("Toggle Entire Info Display"),
+                        Text.of("Enable Entire Info Display"),
                         HUD_render.toggleHud
                 )
                 .setDefaultValue(true)
@@ -34,18 +39,7 @@ public class ConfigScreen implements ModMenuApi {
 
         general.addEntry(entryBuilder
                 .startBooleanToggle(
-                        Text.of("Toggle Background"),
-                        HUD_render.toggleBackground
-                )
-                .setDefaultValue(true)
-                // it reads the value from the config file and sets it to the new value (when clicked on)
-                .setSaveConsumer(newValue -> HUD_render.toggleBackground = newValue)
-                .build()
-        );
-
-        general.addEntry(entryBuilder
-                .startBooleanToggle(
-                        Text.of("Toggle FPS"),
+                        Text.of("Show FPS"),
                         HUD_render.toggleFPS
                 )
                 .setDefaultValue(true)
@@ -56,7 +50,7 @@ public class ConfigScreen implements ModMenuApi {
 
         general.addEntry(entryBuilder
                 .startBooleanToggle(
-                        Text.of("Toggle Coordinates"),
+                        Text.of("Show Coordinates"),
                         HUD_render.toggleCoords
                 )
                 .setDefaultValue(true)
@@ -66,7 +60,7 @@ public class ConfigScreen implements ModMenuApi {
 
         general.addEntry(entryBuilder
                 .startBooleanToggle(
-                        Text.of("Toggle Biome"),
+                        Text.of("Show Biome"),
                         HUD_render.toggleBiome
                 )
                 .setDefaultValue(true)
@@ -76,7 +70,7 @@ public class ConfigScreen implements ModMenuApi {
 
         general.addEntry(entryBuilder
                 .startBooleanToggle(
-                        Text.of("Toggle Direction"),
+                        Text.of("Show Direction"),
                         HUD_render.toggleDirection
                 )
                 .setDefaultValue(true)
@@ -84,8 +78,35 @@ public class ConfigScreen implements ModMenuApi {
                 .build()
         );
 
+        // design
 
-        return builder.build();
+        design.addEntry(entryBuilder
+                .startIntSlider(Text.of("Set Background Opacity"), HUD_render.backgroundOpacity, 0, 255)
+                .setSaveConsumer(newValue -> HUD_render.backgroundOpacity = newValue)
+                .setDefaultValue(77)
+                .build()
+        );
+        */
+
+        // set absolute position
+        /*
+        general.addEntry(entryBuilder
+                .startIntSlider(Text.of("Set x position"), HUD_render.x, 0, HUD_render.screenSizeX)
+                .setSaveConsumer(newValue -> HUD_render.x = newValue)
+                .setDefaultValue(5)
+                .build()
+        );
+
+        general.addEntry(entryBuilder
+                .startIntSlider(Text.of("Set y position"), HUD_render.y, 0, HUD_render.screenSizeY)
+                .setSaveConsumer(newValue -> HUD_render.y = newValue)
+                .setDefaultValue(5)
+                .build()
+        );
+         */
+
+        // TODO: relative position
+        return new CustomConfigScreen(Text.of("Hello World"), MinecraftClient.getInstance().currentScreen);
     }
 
     @Override

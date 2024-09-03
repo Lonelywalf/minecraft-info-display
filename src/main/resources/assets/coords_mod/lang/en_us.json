@@ -5,6 +5,6 @@
   "key.coords_mod.toggle_coordsHud_COORDS": "Toggle Coordinates",
   "key.coords_mod.toggle_coordsHud_BIOME": "Toggle Biomes Info",
   "key.coords_mod.toggle_coordsHud_DIRECTION": "Toggle Direction",
-  "key.coords_mod.toggle_coordsHud_BACKGROUND": "Toggle Background",
+  "key.coords_mod.toggle_coordsHud_CLOCK": "Toggle Time",
   "key.coords_mod.open_config": "Open Configuration"
 }

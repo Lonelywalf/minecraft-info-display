@@ -1,13 +1,14 @@
 package net.jamicah.coords_mod.event;
 
-import net.jamicah.coords_mod.ConfigScreen;
-import net.jamicah.coords_mod.client.Config;
+import net.jamicah.coords_mod.configuration.Config;
 import net.jamicah.coords_mod.client.HUD_render;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.jamicah.coords_mod.configuration.CustomConfigScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyInputHandler {
@@ -20,7 +21,7 @@ public class KeyInputHandler {
     public static final String KEY_TOGGLEFPS = "key.coords_mod.toggle_coordsHud_FPS";
     public static final String KEY_TOGGLECOORDS = "key.coords_mod.toggle_coordsHud_COORDS";
     public static final String KEY_TOGGLEDIRECTION = "key.coords_mod.toggle_coordsHud_DIRECTION";
-    public static final String KEY_TOGGLEBACKGROUND = "key.coords_mod.toggle_coordsHud_BACKGROUND";
+    public static final String KEY_CLOCK = "key.coords_mod.toggle_coordsHud_CLOCK";
     public static final String KEY_OPENCONFIG = "key.coords_mod.open_config";
 
     // keybinding keys
@@ -57,9 +58,9 @@ public class KeyInputHandler {
                 Config.saveConfig();
             }
 
-            // toggle background
+            // toggle clock info
             if (toggle_Background.wasPressed()) {
-                HUD_render.toggleBackground = !HUD_render.toggleBackground;
+                HUD_render.toggleClock = !HUD_render.toggleClock;
                 Config.saveConfig();
             }
 
@@ -71,7 +72,16 @@ public class KeyInputHandler {
 
             // open config screen
             if (open_config.wasPressed()) {
-                MinecraftClient.getInstance().setScreen(ConfigScreen.createConfigScreen());
+                MinecraftClient
+                        .getInstance().
+                        setScreen(
+                                new CustomConfigScreen(
+                                        Text.of("Info Display Config"),
+                                        MinecraftClient
+                                                .getInstance()
+                                                .currentScreen
+                                )
+                        );
             }
         });
     }
@@ -107,7 +117,7 @@ public class KeyInputHandler {
                 KEY_CATEGORY
         ));
         toggle_coords = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                KEY_TOGGLEBACKGROUND,
+                KEY_CLOCK,
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_DONT_CARE,
                 KEY_CATEGORY
@@ -115,7 +125,7 @@ public class KeyInputHandler {
         open_config = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_OPENCONFIG,
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_DONT_CARE,
+                GLFW.GLFW_KEY_F6,
                 KEY_CATEGORY
         ));
         registerKeyInputs();
