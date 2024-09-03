@@ -3,7 +3,7 @@
 	"id": "coords_mod",
 	"version": "${version}",
 	"name": "Simple Info Display",
-	"description": "A simple, yet customizable, info display mod, similar to the one in Lunar Client.",
+	"description": "A simple, yet customizable, mod that can display some useful infos on the hud, similar to the one in Lunar Client.",
 	"authors": [
 		"Lonelywalf"
 	],
