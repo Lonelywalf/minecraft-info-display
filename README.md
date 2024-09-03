@@ -24,7 +24,6 @@ Customization:
 ![Screenshot](https://github.com/Lonelywalf/minecraft-info-display/blob/1.21/images/img_1.png)
 
 ### TODO:
-- 1.21.1 support
 - more customization options
 - more info to display
 - make it easier to change order of the display
