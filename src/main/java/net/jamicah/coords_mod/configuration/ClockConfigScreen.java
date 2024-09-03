@@ -4,6 +4,7 @@ import net.jamicah.coords_mod.client.HUD_render;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.text.Text;
 
 public class ClockConfigScreen extends Screen {
@@ -44,6 +45,7 @@ public class ClockConfigScreen extends Screen {
                     })
             .dimensions(CustomConfigScreen.xPosToggles, 80, CustomConfigScreen.widthToggles, 20)
             .build();
+
 
     @Override
     protected void init() {
