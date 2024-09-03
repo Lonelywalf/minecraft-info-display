@@ -17,8 +17,10 @@ Customization:
 - Change the color of the text
 - Change the background color
 - and more!
+![Screenshot](
 
 ### TODO:
+- 1.21.1 support
 - more customization options
 - more info to display
 - make it easier to change order of the display
