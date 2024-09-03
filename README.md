@@ -17,6 +17,7 @@ Customization:
 - Change the color of the text
 - Change the background color
 - and more!
+
 ![Screenshot](https://github.com/Lonelywalf/minecraft-info-display/blob/1.21/images/img_1.png)
 
 ### TODO:
