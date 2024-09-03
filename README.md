@@ -32,4 +32,4 @@ Customization:
 2. Put the downloaded jar file into your mods folder
 3. Launch the game
 ### How to use
-- Press `F6` to open the config menu
+- Press `F7` to open the config menu

@@ -125,7 +125,7 @@ public class KeyInputHandler {
         open_config = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_OPENCONFIG,
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_F6,
+                GLFW.GLFW_KEY_F7,
                 KEY_CATEGORY
         ));
         registerKeyInputs();
