@@ -1,5 +1,6 @@
 # Minecraft Info Display
 A simple, yet customizable, mod that can display some useful infos on the hud, similar to the one in Lunar Client.
+
 ![Screenshot](https://github.com/Lonelywalf/minecraft-info-display/blob/1.21/images/img.png)
 
 I am very new to fabric modding, so if you have suggestions or find any bugs, DM me on Discord: @jamicah or open an issue on GitHub.
