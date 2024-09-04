@@ -33,8 +33,8 @@ Customization:
 - Fabric API
 - Mod Menu (optional)
 ## How to install
-1. Download the mod from the releases page
+1. Download the latest release on [modrinth](https://modrinth.com/mod/simple-info-display/versions) or from the [releases](https://github.com/Lonelywalf/minecraft-info-display/releases) page
 2. Put the downloaded jar file into your mods folder
 3. Launch the game
-### How to use
+## How to use
 - Press `F7` to open the config menu
