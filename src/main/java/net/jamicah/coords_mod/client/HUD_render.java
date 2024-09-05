@@ -127,13 +127,15 @@ public class HUD_render implements HudRenderCallback {
                 );
         order = removeInvalidChars(order);
         order = removeDoubleChars(order);
-
+        /*
         int length = order.length;
         if (length > getEnabledInfoCount()) {
             length = length * 10 + 3;
         } else {
             length = getEnabledInfoCount() * 10 + 3;
         }
+         */
+        int length = getEnabledInfoCount() * 10 + 3;
 
         // FPS info
         String currentFPS = "";
@@ -395,7 +397,7 @@ public class HUD_render implements HudRenderCallback {
 
     // method to dynamically change the size of the rectangle based on the length of the biome name,
     // shorter char like i, l, t, I, k and f are also taken into account
-    public int dynamicSizeX(String text) {
+    public static int dynamicSizeX(String text) {
 
         int total_length = text.length();
         int totalPixelWidth = 0;
