@@ -1,5 +1,10 @@
-package net.jamicah.coords_mod.configuration;
+package net.jamicah.coords_mod.gui.screenold;
 
+/*
+  read CustomConfigScreen.java
+ */
+
+/*
 import net.jamicah.coords_mod.client.HUD_render;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -20,7 +25,7 @@ public class ClockConfigScreen extends Screen {
                     (btn) -> {
                         HUD_render.timeFormat12 = !HUD_render.timeFormat12;
                         btn.setMessage(Text.of("Time Format: " + (HUD_render.timeFormat12 ? "24h" : "12h")));
-                        Config.saveConfig();
+                        ConfigOld.saveConfig();
                     })
             .dimensions(CustomConfigScreen.X_POS_COLUMN1, 40, CustomConfigScreen.WIDTH_COLUMN1, 20)
             .build();
@@ -30,7 +35,7 @@ public class ClockConfigScreen extends Screen {
                     (btn) -> {
                         HUD_render.showAmPm = !HUD_render.showAmPm;
                         btn.setMessage(Text.of("Show AM/PM: " + (HUD_render.showAmPm ? "On" : "Off")));
-                        Config.saveConfig();
+                        ConfigOld.saveConfig();
                     })
             .dimensions(CustomConfigScreen.X_POS_COLUMN1, 60, CustomConfigScreen.WIDTH_COLUMN1, 20)
             .build();
@@ -40,7 +45,7 @@ public class ClockConfigScreen extends Screen {
                     (btn) -> {
                         HUD_render.showSeconds = !HUD_render.showSeconds;
                         btn.setMessage(Text.of("Show Seconds: " + (HUD_render.showSeconds ? "On" : "Off")));
-                        Config.saveConfig();
+                        ConfigOld.saveConfig();
                     })
             .dimensions(CustomConfigScreen.X_POS_COLUMN1, 80, CustomConfigScreen.WIDTH_COLUMN1, 20)
             .build();
@@ -82,6 +87,7 @@ public class ClockConfigScreen extends Screen {
                     assert this.client != null;
                     this.client.setScreen(this.parent);
                 }).dimensions(this.width / 2 - 50, this.height - 30, 100, 20).build();
+
         this.addDrawableChild(showSeconds);
         this.addDrawableChild(timeFormat);
         this.addDrawableChild(toggleAmPm);
@@ -119,3 +125,5 @@ public class ClockConfigScreen extends Screen {
         this.client.setScreen(this.parent);
     }
 }
+
+ */

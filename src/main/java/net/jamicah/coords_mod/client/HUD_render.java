@@ -1,102 +1,94 @@
 package net.jamicah.coords_mod.client;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.jamicah.coords_mod.configuration.Config;
+import net.jamicah.coords_mod.gui.screen.ConfigScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
-
+// TODO: relative position
 public class HUD_render implements HudRenderCallback {
-    public static Boolean toggleHud = Config.readToggleConfigBool("HUD");
 
-    public static Boolean toggleBiome = Config.readToggleConfigBool("Biome");
-    public static Boolean toggleFPS = Config.readToggleConfigBool("FPS");
+    // TODO: don't forget to implement this
+    public static String infoOrder = "f,c,b,d,C";
 
-    public static Boolean toggleCoords = Config.readToggleConfigBool("Coords");
-    public static Boolean toggleDirection = Config.readToggleConfigBool("Direction");
-    public static Boolean toggleClock = Config.readToggleConfigBool("Clock");
-    public static String infoOrder = Config.readToggleConfigBool();
+    // toggleable options
+    public Boolean toggleHud;
+    public Boolean toggleFPS;
+    public Boolean toggleBiome;
+    public Boolean toggleCoords;
+    public Boolean toggleDirection;
+    public Boolean toggleClock;
 
-    public static int bgOpacity = Config.readConfigInt("bgOpacity");
-    public static int bgColorR = Config.readConfigInt("bgColorR");
-    public static int bgColorG = Config.readConfigInt("bgColorG");
-    public static int bgColorB = Config.readConfigInt("bgColorB");
+    // background color
+    public int bgOpacity;
+    public int bgColorR;
+    public int bgColorG;
+    public int bgColorB;
 
-    public static int textColorR = Config.readConfigInt("textColorR");
-    public static int textColorG = Config.readConfigInt("textColorG");
-    public static int textColorB = Config.readConfigInt("textColorB");
+    // text color
+    public int textColorR;
+    public int textColorG;
+    public int textColorB;
 
-    public static int x = Config.readConfigInt("xPos");
-    public static int y = Config.readConfigInt("yPos");
+    // position
+    public int x;
+    public int y;
 
-    public static boolean timeFormat12 = Config.readOtherConfigBool("timeFormat12");
-    public static boolean showAmPm = Config.readOtherConfigBool("showAmPm");
-    public static boolean showSeconds = Config.readOtherConfigBool("showSeconds");
+    // other configs
+    public boolean timeFormat12;
+    public boolean showAmPm;
+    public boolean showSeconds;
+
+
+    /*
+    how to add a new config value:
+    1. add it here as a variable
+    2. go to Config and update
+       saveConfig() and writeNewConfig
+
+    how to add a new info:
+    1. add it here as a variable
+    2. update onHudRender()
+    3. update updateInfoOrder()
+    4. update removeInvalidChars()
+    5. go to Config and update
+       saveConfig() and writeNewConfig
+    */
 
     public static int screenSizeX;
     public static int screenSizeY;
 
-    // TODO: enable/disable text shadow
 
-    public static void updateInfoOrder() {
-
-        boolean f = false;
-        boolean c = false;
-        boolean b = false;
-        boolean d = false;
-        boolean cl = false;
-
-        for (String pos : infoOrder.split(",")) {
-            switch (pos) {
-                case "f":
-                    f = true;
-                    toggleFPS = true;
-                    break;
-                case "c":
-                    c = true;
-                    toggleCoords = true;
-                    break;
-                case "b":
-                    b = true;
-                    toggleBiome = true;
-                    break;
-                case "d":
-                    d = true;
-                    toggleDirection = true;
-                    break;
-                case "C":
-                    cl = true;
-                    toggleClock = true;
-                    break;
-            }
-        }
-
-        if (!f) {
-            toggleFPS = false;
-        }
-        if (!c) {
-            toggleCoords = false;
-        }
-        if (!b) {
-            toggleBiome = false;
-        }
-        if (!d) {
-            toggleDirection = false;
-        }
-        if (!cl) {
-            toggleClock = false;
-        }
-        Config.saveConfig();
-    }
 
     @Override
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
-
         MinecraftClient client = MinecraftClient.getInstance();
+
+        toggleHud = Config.HANDLER.instance().toggleHud;
+        toggleFPS = Config.HANDLER.instance().toggleFPS;
+        toggleBiome = Config.HANDLER.instance().toggleBiome;
+        toggleCoords = Config.HANDLER.instance().toggleCoords;
+        toggleDirection = Config.HANDLER.instance().toggleDirection;
+        toggleClock = Config.HANDLER.instance().toggleTime;
+
+        bgOpacity = Config.HANDLER.instance().bgOpacity;
+        bgColorR = Config.HANDLER.instance().bgColorR;
+        bgColorG = Config.HANDLER.instance().bgColorG;
+        bgColorB = Config.HANDLER.instance().bgColorB;
+
+        textColorR = Config.HANDLER.instance().textColorR;
+        textColorG = Config.HANDLER.instance().textColorG;
+        textColorB = Config.HANDLER.instance().textColorB;
+
+        x = Config.HANDLER.instance().x;
+        y = Config.HANDLER.instance().y;
+
 
         screenSizeX = client.getWindow().getScaledWidth();
         screenSizeY = client.getWindow().getScaledHeight();
@@ -108,10 +100,9 @@ public class HUD_render implements HudRenderCallback {
             return;
         }
 
-
         // pos of the gui
-        int x = HUD_render.x;
-        int y = HUD_render.y;
+        int x = Config.HANDLER.instance().x;
+        int y = Config.HANDLER.instance().y;
 
         // dynamic y position
         int yCurrent = y;
@@ -127,14 +118,6 @@ public class HUD_render implements HudRenderCallback {
                 );
         order = removeInvalidChars(order);
         order = removeDoubleChars(order);
-        /*
-        int length = order.length;
-        if (length > getEnabledInfoCount()) {
-            length = length * 10 + 3;
-        } else {
-            length = getEnabledInfoCount() * 10 + 3;
-        }
-         */
         int length = getEnabledInfoCount() * 10 + 3;
 
         // FPS info
@@ -197,25 +180,28 @@ public class HUD_render implements HudRenderCallback {
         }
 
 
-
         // render rectangle bg
         if (yCurrent != y) {
             // compare which of the text is the longest
             drawContext.fill(
                     x,
                     y,
-                    Math.max(
-                            Math.max(
+                    Collections.max(
+                            Arrays.asList(
                                     currentFPSx,
-                                    currentCoordsX
-                            ),
-                            Math.max(
+                                    currentCoordsX,
                                     currentBiomeX,
-                                    Math.max(currentDirectionX, currentTimeX)
+                                    currentDirectionX,
+                                    currentTimeX
                             )
                     ) + 3,
                     y + length,
-                    new Color(bgColorR, bgColorG, bgColorB, bgOpacity).getRGB()
+                    new Color(
+                            bgColorR,
+                            bgColorG,
+                            bgColorB,
+                            bgOpacity
+                    ).getRGB()
             );
         }
         // move "pointer" back to the top
@@ -223,7 +209,6 @@ public class HUD_render implements HudRenderCallback {
 
 
         // render the information (text)
-
         for (String pos : order) {
             switch (pos) {
                 case "f":
@@ -292,17 +277,13 @@ public class HUD_render implements HudRenderCallback {
 
     public static String getCurrentTime() {
         String patern;
-        if (timeFormat12) {
-            patern = "HH:mm";
-        } else {
-            patern = "hh:mm";
-        }
+        patern = Config.HANDLER.instance().timeFormat12 ? "HH:mm" : "hh:mm";
 
-        if (showSeconds) {
+        if (Config.HANDLER.instance().showSeconds) {
             patern += ":ss";
         }
 
-        if (showAmPm) {
+        if (Config.HANDLER.instance().showAmPm) {
             patern += " aa";
         }
 
@@ -310,6 +291,58 @@ public class HUD_render implements HudRenderCallback {
         Date date = new Date();
 
         return time.format(date);
+    }
+
+    // toggles the values based on the infoOrder String
+    public static void updateInfoOrder() {
+
+        boolean f = false;
+        boolean c = false;
+        boolean b = false;
+        boolean d = false;
+        boolean cl = false;
+
+        for (String pos : infoOrder.split(",")) {
+            switch (pos) {
+                case "f":
+                    f = true;
+                    Config.HANDLER.instance().toggleFPS = true;
+                    break;
+                case "c":
+                    c = true;
+                    Config.HANDLER.instance().toggleCoords = true;
+                    break;
+                case "b":
+                    b = true;
+                    Config.HANDLER.instance().toggleBiome = true;
+                    break;
+                case "d":
+                    d = true;
+                    Config.HANDLER.instance().toggleDirection = true;
+                    break;
+                case "C":
+                    cl = true;
+                    Config.HANDLER.instance().toggleTime = true;
+                    break;
+            }
+        }
+
+        if (!f) {
+            Config.HANDLER.instance().toggleFPS = false;
+        }
+        if (!c) {
+            Config.HANDLER.instance().toggleCoords = false;
+        }
+        if (!b) {
+            Config.HANDLER.instance().toggleBiome = false;
+        }
+        if (!d) {
+            Config.HANDLER.instance().toggleDirection = false;
+        }
+        if (!cl) {
+            Config.HANDLER.instance().toggleTime = false;
+        }
+        //ConfigOld.saveConfig();
     }
 
     // method to remove specific string from string array
@@ -354,11 +387,11 @@ public class HUD_render implements HudRenderCallback {
 
     public static int getEnabledInfoCount() {
         int count = 0;
-        if (toggleFPS) count++;
-        if (toggleCoords) count++;
-        if (toggleBiome) count++;
-        if (toggleDirection) count++;
-        if (toggleClock) count++;
+        if (Config.HANDLER.instance().toggleFPS) count++;
+        if (Config.HANDLER.instance().toggleCoords) count++;
+        if (Config.HANDLER.instance().toggleBiome) count++;
+        if (Config.HANDLER.instance().toggleDirection) count++;
+        if (Config.HANDLER.instance().toggleTime) count++;
         return count;
     }
 

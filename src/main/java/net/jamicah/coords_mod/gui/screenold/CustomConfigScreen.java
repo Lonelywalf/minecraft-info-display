@@ -1,18 +1,43 @@
-package net.jamicah.coords_mod.configuration;
+package net.jamicah.coords_mod.gui.screenold;
 
+/*
+    This is the old custom-made configuration screen
+    I made from scratch without any other libraries.
+    I later realised how hard it would be to add anything
+    only for it to just look bad.
+
+    So I decided on just using YetAnotherConfigLib (YACL),
+    which looks much better and is easier to maintain.
+    check {net.jamicah.coords_mod.gui.screen.ConfigScreen}
+ */
+
+/*
 import net.jamicah.coords_mod.client.HUD_render;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.SliderWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.*;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
 import java.awt.*;
 
-// TODO: Refactor the entire gui for better readability and maintainability
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
+
+class OpenConfigScreen implements ModMenuApi {
+
+    public static Screen createConfigScreen() {
+        return new CustomConfigScreen(Text.of("Hello World"), MinecraftClient.getInstance().currentScreen);
+    }
+
+    @Override
+    public ConfigScreenFactory<?> getModConfigScreenFactory() {
+        return parent -> createConfigScreen();
+    }
+}
+
 public class CustomConfigScreen extends Screen {
     public CustomConfigScreen(Text title, Screen parent) {
         super(title);
@@ -44,7 +69,7 @@ public class CustomConfigScreen extends Screen {
                         "Enable Info Display: " +
                                 (HUD_render.toggleHud ? "§aOn" : "§cOff")
                 ));
-                Config.saveConfig();
+                ConfigOld.saveConfig();
 
             })
             .dimensions(X_POS_COLUMN1, 40, WIDTH_COLUMN1, 20)
@@ -59,7 +84,7 @@ public class CustomConfigScreen extends Screen {
                         "Show FPS: " +
                                 (HUD_render.toggleFPS ? "§aOn" : "§cOff")
                 ));
-                Config.saveConfig();
+                ConfigOld.saveConfig();
                 updateTextField("f");
             })
             .dimensions(X_POS_COLUMN1, 60, WIDTH_COLUMN1, 15)
@@ -75,7 +100,7 @@ public class CustomConfigScreen extends Screen {
                                 (HUD_render.toggleCoords ? "§aOn" : "§cOff")
                 ));
 
-                Config.saveConfig();
+                ConfigOld.saveConfig();
                 updateTextField("c");
             })
             .dimensions(X_POS_COLUMN1, 75, WIDTH_COLUMN1, 15)
@@ -89,7 +114,7 @@ public class CustomConfigScreen extends Screen {
                         "Show Biome: " +
                                 (HUD_render.toggleBiome ? "§aOn" : "§cOff")
                 ));
-                Config.saveConfig();
+                ConfigOld.saveConfig();
                 updateTextField("b");
             })
             .dimensions(X_POS_COLUMN1, 90, WIDTH_COLUMN1, 15)
@@ -103,7 +128,7 @@ public class CustomConfigScreen extends Screen {
                         "Show Direction: " +
                                 (HUD_render.toggleDirection ? "§aOn" : "§cOff")
                 ));
-                Config.saveConfig();
+                ConfigOld.saveConfig();
                 updateTextField("d");
             })
             .dimensions(X_POS_COLUMN1, 105, WIDTH_COLUMN1, 15)
@@ -127,7 +152,7 @@ public class CustomConfigScreen extends Screen {
                         "Show Time: " +
                                 (HUD_render.toggleClock ? "§aOn" : "§cOff")
                 ));
-                Config.saveConfig();
+                ConfigOld.saveConfig();
                 updateTextField("C");
 
                 clockSettings.visible = HUD_render.toggleClock;
@@ -201,7 +226,7 @@ public class CustomConfigScreen extends Screen {
                 break;
         }
         orderField.setText(text);
-        Config.saveConfig();
+        ConfigOld.saveConfig();
         orderField.isActive();
     }
 
@@ -276,7 +301,7 @@ public class CustomConfigScreen extends Screen {
             public void write(String string) {
                 super.write(string);
                 HUD_render.infoOrder = this.getText();
-                Config.saveConfig();
+                ConfigOld.saveConfig();
                 HUD_render.updateInfoOrder();
 
                 updateAllButtons();
@@ -288,7 +313,7 @@ public class CustomConfigScreen extends Screen {
             @Override
             public boolean isActive() {
                 HUD_render.infoOrder = this.getText();
-                Config.saveConfig();
+                ConfigOld.saveConfig();
                 return super.isActive();
             }
 
@@ -297,7 +322,7 @@ public class CustomConfigScreen extends Screen {
             public void eraseCharacters(int characterOffset) {
                 super.eraseCharacters(characterOffset);
                 HUD_render.infoOrder = this.getText();
-                Config.saveConfig();
+                ConfigOld.saveConfig();
                 HUD_render.updateInfoOrder();
 
                 updateAllButtons();
@@ -362,7 +387,7 @@ public class CustomConfigScreen extends Screen {
             @Override
             protected void applyValue() {
                 HUD_render.bgOpacity = (int)(this.value*255);
-                Config.saveConfig();
+                ConfigOld.saveConfig();
             }
         };
 
@@ -380,7 +405,7 @@ public class CustomConfigScreen extends Screen {
             @Override
             protected void applyValue() {
                 HUD_render.bgColorR = (int)(this.value*255);
-                Config.saveConfig();
+                ConfigOld.saveConfig();
             }
         };
 
@@ -398,7 +423,7 @@ public class CustomConfigScreen extends Screen {
             @Override
             protected void applyValue() {
                 HUD_render.bgColorG = (int)(this.value*255);
-                Config.saveConfig();
+                ConfigOld.saveConfig();
             }
         };
 
@@ -416,7 +441,7 @@ public class CustomConfigScreen extends Screen {
             @Override
             protected void applyValue() {
                 HUD_render.bgColorB = (int)(this.value*255);
-                Config.saveConfig();
+                ConfigOld.saveConfig();
             }
         };
 
@@ -440,7 +465,7 @@ public class CustomConfigScreen extends Screen {
                     bColorSlider.updateMessage();
 
 
-                    Config.saveConfig();
+                    ConfigOld.saveConfig();
                 }).dimensions(X_POS_COLUMN2 + widghtColumn2 + 1, 40, 40, 20).build();
 
 
@@ -459,7 +484,7 @@ public class CustomConfigScreen extends Screen {
             @Override
             protected void applyValue() {
                 HUD_render.textColorR = (int)(this.value*255);
-                Config.saveConfig();
+                ConfigOld.saveConfig();
             }
         };
 
@@ -477,7 +502,7 @@ public class CustomConfigScreen extends Screen {
             @Override
             protected void applyValue() {
                 HUD_render.textColorG = (int)(this.value*255);
-                Config.saveConfig();
+                ConfigOld.saveConfig();
             }
         };
 
@@ -495,7 +520,7 @@ public class CustomConfigScreen extends Screen {
             @Override
             protected void applyValue() {
                 HUD_render.textColorB = (int)(this.value*255);
-                Config.saveConfig();
+                ConfigOld.saveConfig();
             }
         };
 
@@ -515,7 +540,7 @@ public class CustomConfigScreen extends Screen {
                     gTextColorSlider.updateMessage();
                     bTextColorSlider.updateMessage();
 
-                    Config.saveConfig();
+                    ConfigOld.saveConfig();
                 }).dimensions(X_POS_COLUMN2 + widghtColumn2 + 1, 105, 40, 20).build();
 
 
@@ -535,7 +560,7 @@ public class CustomConfigScreen extends Screen {
             @Override
             protected void applyValue() {
                 HUD_render.x = (int)(this.value*HUD_render.screenSizeX);
-                Config.saveConfig();
+                ConfigOld.saveConfig();
             }
         };
         xPositionSlider.setTooltip(
@@ -562,7 +587,7 @@ public class CustomConfigScreen extends Screen {
             @Override
             protected void applyValue() {
                 HUD_render.y = (int)(this.value*HUD_render.screenSizeY);
-                Config.saveConfig();
+                ConfigOld.saveConfig();
             }
         };
         yPositionSlider.setTooltip(
@@ -586,7 +611,7 @@ public class CustomConfigScreen extends Screen {
                             xPositionSlider.updateMessage();
                             yPositionSlider.updateMessage();
 
-                            Config.saveConfig();
+                            ConfigOld.saveConfig();
                         }).dimensions(X_POS_COLUMN2 + widghtColumn2 + 11, 165, 32, 20)
                 .build();
 
@@ -594,14 +619,14 @@ public class CustomConfigScreen extends Screen {
 
         // done button in the bottom center
         ButtonWidget doneButton = ButtonWidget.builder(
-                Text.of("Done"),
+                ScreenTexts.DONE,
                 (btn) -> {
                     assert this.client != null;
                     this.client.setScreen(this.parent);
                 }).dimensions(this.width/2 - 100, this.height - 30, 200, 20).build();
 
 
-        // Register the button widget.
+        // register the button widgets
         this.addDrawableChild(toggleHud);
         this.addDrawableChild(toggleFPS);
         this.addDrawableChild(toggleCoords);
@@ -739,3 +764,6 @@ class Slider extends SliderWidget {
         this.value = value;
     }
 }
+
+
+ */

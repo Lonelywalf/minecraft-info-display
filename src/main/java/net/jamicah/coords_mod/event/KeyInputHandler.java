@@ -1,14 +1,12 @@
 package net.jamicah.coords_mod.event;
 
-import net.jamicah.coords_mod.configuration.Config;
-import net.jamicah.coords_mod.client.HUD_render;
+import net.jamicah.coords_mod.client.Config;
+import net.jamicah.coords_mod.gui.screen.ConfigScreen;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.jamicah.coords_mod.configuration.CustomConfigScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyInputHandler {
@@ -28,46 +26,46 @@ public class KeyInputHandler {
     public static KeyBinding toggle_hud;
     public static KeyBinding toggle_biome;
     public static KeyBinding toggle_fps;
-    public static KeyBinding toggle_Background;
+    public static KeyBinding togggle_coords;
     public static KeyBinding open_config;
     public static KeyBinding toggle_direction;
-    public static KeyBinding toggle_coords;
+    public static KeyBinding toggle_clock;
     public static void registerKeyInputs() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // toggle coords display
             if (toggle_hud.wasPressed()) {
-                HUD_render.toggleHud = !HUD_render.toggleHud;
-                Config.saveConfig();
+                Config.HANDLER.instance().toggleHud = !Config.HANDLER.instance().toggleHud;
+                Config.HANDLER.save();
             }
 
             // toggle biome info
             if (toggle_biome.wasPressed()) {
-                HUD_render.toggleBiome = !HUD_render.toggleBiome;
-                Config.saveConfig();
+                Config.HANDLER.instance().toggleBiome = !Config.HANDLER.instance().toggleBiome;
+                Config.HANDLER.save();
             }
 
             // toggle fps info
             if (toggle_fps.wasPressed()) {
-                HUD_render.toggleFPS = !HUD_render.toggleFPS;
-                Config.saveConfig();
+                Config.HANDLER.instance().toggleFPS = !Config.HANDLER.instance().toggleFPS;
+                Config.HANDLER.save();
             }
 
             // toggle direction info
             if (toggle_biome.wasPressed()) {
-                HUD_render.toggleDirection = !HUD_render.toggleDirection;
-                Config.saveConfig();
+                Config.HANDLER.instance().toggleDirection = !Config.HANDLER.instance().toggleDirection;
+                Config.HANDLER.save();
             }
 
             // toggle clock info
-            if (toggle_Background.wasPressed()) {
-                HUD_render.toggleClock = !HUD_render.toggleClock;
-                Config.saveConfig();
+            if (togggle_coords.wasPressed()) {
+                Config.HANDLER.instance().toggleTime = !Config.HANDLER.instance().toggleTime;
+                Config.HANDLER.save();
             }
 
             // toggle coords info
-            if (toggle_Background.wasPressed()) {
-                HUD_render.toggleCoords = !HUD_render.toggleCoords;
-                Config.saveConfig();
+            if (toggle_clock.wasPressed()) {
+                Config.HANDLER.instance().toggleCoords = !Config.HANDLER.instance().toggleCoords;
+                Config.HANDLER.save();
             }
 
             // open config screen
@@ -75,12 +73,10 @@ public class KeyInputHandler {
                 MinecraftClient
                         .getInstance().
                         setScreen(
-                                new CustomConfigScreen(
-                                        Text.of("Info Display Config"),
-                                        MinecraftClient
-                                                .getInstance()
-                                                .currentScreen
-                                )
+                                new ConfigScreen()
+                                        .createGui(
+                                                MinecraftClient.getInstance().currentScreen
+                                        )
                         );
             }
         });
@@ -104,7 +100,7 @@ public class KeyInputHandler {
                 GLFW.GLFW_DONT_CARE,
                 KEY_CATEGORY
         ));
-        toggle_Background = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        togggle_coords = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_TOGGLECOORDS,
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_DONT_CARE,
@@ -116,7 +112,7 @@ public class KeyInputHandler {
                 GLFW.GLFW_DONT_CARE,
                 KEY_CATEGORY
         ));
-        toggle_coords = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        toggle_clock = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_CLOCK,
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_DONT_CARE,

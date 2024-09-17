@@ -1,48 +1,18 @@
-package net.jamicah.coords_mod.configuration;
+package net.jamicah.coords_mod.gui.screenold;
 
+// moved over to Config.java
 
+/*
 import net.fabricmc.loader.api.FabricLoader;
 import net.jamicah.coords_mod.Coords_mod;
 import net.jamicah.coords_mod.client.HUD_render;
 
 import java.io.*;
 
-public class Config {
-    public static Boolean readToggleConfigBool(String selection) {
-        BufferedReader read;
-        String configFileDir = FabricLoader
-                .getInstance()
-                .getConfigDir()
-                .toString() + "\\coordsDisplay_config.txt";
-        try {
-            read = new BufferedReader(new FileReader(configFileDir));
-            String text;
+public class ConfigOld {
 
-
-            while ((text = read.readLine()) != null) {
-                if (text.equals("Toggle" + selection + ":true")) {
-                    read.close();
-
-                    return true;
-                }
-            }
-            read.close();
-            return false;
-
-        } catch (FileNotFoundException e) { // write config file if it wasn't created yet
-            Coords_mod.LOGGER.info("Config file not found, creating one...");
-
-            writeNewConfig();
-
-            readToggleConfigBool(selection);
-
-        } catch (IOException ignored) {
-
-        }
-        return true;
-    }
-
-    public static Boolean readOtherConfigBool(String selection) {
+    // reads boolean values
+    public static Boolean readConfigBool(String selection) {
         BufferedReader read;
         String configFileDir = FabricLoader
                 .getInstance()
@@ -67,7 +37,7 @@ public class Config {
 
             writeNewConfig();
 
-            readToggleConfigBool(selection);
+            return readConfigBool(selection);
 
         } catch (IOException ignored) {
 
@@ -75,6 +45,7 @@ public class Config {
         return true;
     }
 
+    // reads int values
     public static int readConfigInt(String selection) {
         BufferedReader read;
         String configFileDir = FabricLoader
@@ -107,12 +78,13 @@ public class Config {
                     return 2;
             }
 
-        } catch (FileNotFoundException e) { // write config file if it wasn't created yet
+        } catch (FileNotFoundException e) {
             Coords_mod.LOGGER.info("Config file not found, creating one...");
 
             writeNewConfig();
 
-            readToggleConfigBool(selection);
+            // try reading again
+            return readConfigInt(selection);
 
         } catch (IOException ignored) {
 
@@ -120,8 +92,8 @@ public class Config {
         return 0;
     }
 
-    // read InfoOrder
-    public static String readToggleConfigBool() {
+    // read infoOrder
+    public static String readInfoOrder() {
         String configFileDir = FabricLoader
                 .getInstance()
                 .getConfigDir()
@@ -144,7 +116,7 @@ public class Config {
 
             writeNewConfig();
 
-            readToggleConfigBool();
+            return readInfoOrder();
         } catch (IOException e) {
             Coords_mod.LOGGER.info(e.toString());
         }
@@ -164,6 +136,7 @@ public class Config {
                                     toString() + "\\coordsDisplay_config.txt")
             );
 
+
             write.write("InfoOrder:" + HUD_render.infoOrder + "\n");
             write.write("ToggleHUD:" + HUD_render.toggleHud + "\n");
             write.write("ToggleBiome:" + HUD_render.toggleBiome + "\n");
@@ -171,13 +144,18 @@ public class Config {
             write.write("ToggleClock:" + HUD_render.toggleClock + "\n");
             write.write("ToggleCoords:" + HUD_render.toggleCoords + "\n");
             write.write("ToggleDirection:" + HUD_render.toggleDirection + "\n");
+
+
+
             write.write("\nbgOpacity:" + HUD_render.bgOpacity + "\n");
             write.write("bgColor:" + HUD_render.bgColorR + "\n");
             write.write("bgColor:" + HUD_render.bgColorG + "\n");
             write.write("bgColor:" + HUD_render.bgColorB + "\n");
+
             write.write("\ntextColorR:" + HUD_render.textColorR + "\n");
             write.write("textColorG:" + HUD_render.textColorG + "\n");
             write.write("textColorB:" + HUD_render.textColorB + "\n");
+
             write.write("\nxPos:" + HUD_render.x + "\n");
             write.write("yPos:" + HUD_render.y + "\n");
 
@@ -190,10 +168,9 @@ public class Config {
             Coords_mod.LOGGER.info(ex.toString());
         }
     }
-
+    // write the config file if it hasn't been created yet
     public static void writeNewConfig() {
         BufferedWriter write;
-        // write the config file if it hasn't been created yet
         try {
             write = new BufferedWriter(
                     new FileWriter(
@@ -231,3 +208,5 @@ public class Config {
         }
     }
 }
+*/
+
