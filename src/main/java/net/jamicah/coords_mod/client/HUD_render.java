@@ -1,7 +1,6 @@
 package net.jamicah.coords_mod.client;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.jamicah.coords_mod.gui.screen.ConfigScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
@@ -40,11 +39,6 @@ public class HUD_render implements HudRenderCallback {
     public int x;
     public int y;
 
-    // other configs
-    public boolean timeFormat12;
-    public boolean showAmPm;
-    public boolean showSeconds;
-
 
     /*
     how to add a new config value:
@@ -60,9 +54,6 @@ public class HUD_render implements HudRenderCallback {
     5. go to Config and update
        saveConfig() and writeNewConfig
     */
-
-    public static int screenSizeX;
-    public static int screenSizeY;
 
 
 
@@ -89,9 +80,6 @@ public class HUD_render implements HudRenderCallback {
         x = Config.HANDLER.instance().x;
         y = Config.HANDLER.instance().y;
 
-
-        screenSizeX = client.getWindow().getScaledWidth();
-        screenSizeY = client.getWindow().getScaledHeight();
 
         // hide hud when f1 or toggleHud is false
         if (MinecraftClient
