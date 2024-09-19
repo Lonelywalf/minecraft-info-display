@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 // TODO: relative position
+// TODO: Custom Text
 public class HUD_render implements HudRenderCallback {
 
     // TODO: don't forget to implement this
@@ -40,7 +41,7 @@ public class HUD_render implements HudRenderCallback {
     public int y;
 
 
-    /*
+    /* deprecated
     how to add a new config value:
     1. add it here as a variable
     2. go to Config and update
@@ -54,6 +55,17 @@ public class HUD_render implements HudRenderCallback {
     5. go to Config and update
        saveConfig() and writeNewConfig
     */
+
+    /*
+        how to add a new config:
+        1. add it to Config
+
+        how to add a new info:
+        1. add it to Config
+        2. add it here as a variable
+        3. update updateInfoOrder()
+        4. update removedInvalidChars()
+     */
 
 
 
@@ -206,7 +218,7 @@ public class HUD_render implements HudRenderCallback {
                                 x+3,
                                 yCurrent+3,
                                 new Color(textColorR, textColorG, textColorB).getRGB(),
-                                false
+                                Config.HANDLER.instance().toggleTextShadow
                         );
                         yCurrent += 10;
                     }
@@ -218,7 +230,7 @@ public class HUD_render implements HudRenderCallback {
                                 x+3,
                                 yCurrent+3,
                                 new Color(textColorR, textColorG, textColorB).getRGB(),
-                                false
+                                Config.HANDLER.instance().toggleTextShadow
                         );
                         yCurrent += 10;
                     }
@@ -230,7 +242,7 @@ public class HUD_render implements HudRenderCallback {
                                 x+3,
                                 yCurrent+3,
                                 new Color(textColorR, textColorG, textColorB).getRGB(),
-                                false
+                                Config.HANDLER.instance().toggleTextShadow
                         );
                         yCurrent += 10;
                     }
@@ -242,7 +254,7 @@ public class HUD_render implements HudRenderCallback {
                                 x+3,
                                 yCurrent+3,
                                 new Color(textColorR, textColorG, textColorB).getRGB(),
-                                false
+                                Config.HANDLER.instance().toggleTextShadow
                         );
                         yCurrent += 10;
                     }
@@ -254,7 +266,7 @@ public class HUD_render implements HudRenderCallback {
                                 x+3,
                                 yCurrent+3,
                                 new Color(textColorR, textColorG, textColorB).getRGB(),
-                                false
+                                Config.HANDLER.instance().toggleTextShadow
                         );
                         yCurrent += 10;
                     }

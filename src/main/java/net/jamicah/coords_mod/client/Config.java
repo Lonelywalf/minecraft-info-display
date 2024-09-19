@@ -2,7 +2,6 @@ package net.jamicah.coords_mod.client;
 
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
-import dev.isxander.yacl3.config.v2.api.autogen.ListGroup;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
@@ -46,6 +45,9 @@ public class Config {
 
     @SerialEntry
     public boolean showSeconds = false;
+
+    @SerialEntry
+    public boolean toggleTextShadow = false;
 
 
 

@@ -6,5 +6,18 @@
   "key.coords_mod.toggle_coordsHud_BIOME": "Toggle Biomes Info",
   "key.coords_mod.toggle_coordsHud_DIRECTION": "Toggle Direction",
   "key.coords_mod.toggle_coordsHud_CLOCK": "Toggle Time",
-  "key.coords_mod.open_config": "Open Configuration"
+  "key.coords_mod.open_config": "Open Configuration",
+
+
+  "config.coords_mod.on": "On",
+  "config.coords_mod.off": "Off",
+
+  "config.coords_mod.title": "Info Display Configuration",
+  "config.coords_mod.category.general": "General",
+  "config.coords_mod.category.general.hud_info": "HUD Information",
+  "config.coords_mod.category.general.hud_info.description": "Toggle the display of different information on the HUD",
+
+  "config.coords_mod.category.general.hud_info.FPS": "Enable FPS",
+  "config.coords_mod.category.general.hud_info.FPS.description": "Show the current FPS on the HUD"
+
 }
