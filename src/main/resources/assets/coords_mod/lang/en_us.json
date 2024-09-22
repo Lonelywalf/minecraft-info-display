@@ -9,15 +9,97 @@
   "key.coords_mod.open_config": "Open Configuration",
 
 
-  "config.coords_mod.on": "On",
-  "config.coords_mod.off": "Off",
-
   "config.coords_mod.title": "Info Display Configuration",
   "config.coords_mod.category.general": "General",
   "config.coords_mod.category.general.hud_info": "HUD Information",
   "config.coords_mod.category.general.hud_info.description": "Toggle the display of different information on the HUD",
 
+
+  "config.coords_mod.enable_hud": "Enable Entire Info Display",
+  "config.coords_mod.enable_hud.description": "Toggles the entire HUD",
+
   "config.coords_mod.category.general.hud_info.FPS": "Enable FPS",
-  "config.coords_mod.category.general.hud_info.FPS.description": "Show the current FPS on the HUD"
+  "config.coords_mod.category.general.hud_info.FPS.description": "Shows the current FPS on the HUD",
+
+  "config.coords_mod.enable_coords": "Enable Coordinates",
+  "config.coords_mod.enable_coords.description": "Shows the player's coordinates on the HUD",
+
+  "config.coords_mod.enable_biome": "Enable Biome",
+  "config.coords_mod.enable_biome.description": "Shows the player's current biome on the HUD",
+
+  "config.coords_mod.enable_direction": "Enable Direction",
+  "config.coords_mod.enable_direction.description": "Shows the player's facing direction (without up and down) on the HUD",
+
+  "config.coords_mod.enable_time": "Enable Time",
+  "config.coords_mod.enable_time.description": "Shows the real life time on the HUD",
+
+
+  "config.coords_mod.category.general.time_settings": "Time Settings",
+  "config.coords_mod.category.general.time_settings.description": "Appearance and format of the time",
+
+  "config.coords_mod.show_ampm": "Show AM/PM",
+  "config.coords_mod.show_ampm.description": "Shows AM or PM when using 12 hour time format",
+
+  "config.coords_mod.show_seconds": "Show Seconds",
+  "config.coords_mod.show_seconds.description": "Shows the seconds in the time info",
+
+  "config.coords_mod.time_format": "Time Format",
+  "config.coords_mod.time_format.description": "Toggle between 12 hour and 24 hour time format",
+
+  "config.coords_mod.time_format_24hour": "24 Hour",
+  "config.coords_mod.time_format_12hour": "12 Hour",
+
+
+  "config.coords_mod.order_list": "Order Of Displayed Infos",
+  "config.coords_mod.order_list.description": "Change the order of the displayed information",
+  "config.coords_mod.order_list.FPS": "FPS",
+  "config.coords_mod.order_list.coords": "Coordinates",
+  "config.coords_mod.order_list.biome": "Biome",
+  "config.coords_mod.order_list.direction": "Facing Direction",
+  "config.coords_mod.order_list.time": "Time",
+
+
+  "config.coords_mod.category.appearance": "Appearance",
+  "config.coords_mod.category.appearance.color": "Color",
+  "config.coords_mod.category.appearance.description": "Change the color of the HUD",
+
+  "config.coords_mod.bg_color": "Background Color",
+  "config.coords_mod.bg_color.description": "Background color of the HUD",
+
+  "config.coords_mod.text_color": "Text Color",
+  "config.coords_mod.text_color.description": "Text color of the HUD",
+
+  "config.coords_mod.show_text_shadow": "Enable Text Shadow",
+  "config.coords_mod.show_text_shadow.description": "Show shadow behind the text",
+
+
+  "config.coords_mod.category.appearance.text_customization": "Text Customization",
+  "config.coords_mod.category.appearance.text_customization.description": "Customize the text displayed on the HUD",
+  "config.coords_mod.custom_fps_text": "Custom FPS Text",
+  "config.coords_mod.custom_fps_text.description": "Custom text to display for FPS. Example: \"%s FPS\" will display \"60 FPS\"",
+
+  "config.coords_mod.custom_coords_text": "Custom Coordinates Text",
+  "config.coords_mod.custom_coords_text.description": "Custom text to display for coordinates. Example: \"X: %s, Y: %s, Z: %s\" will display \"X: 0, Y: 0, Z: 0\"",
+
+  "config.coords_mod.custom_biome_text": "Custom Biome Text",
+  "config.coords_mod.custom_biome_text.description": "Custom text to display for biome. Example: \"%s Biome\" will display \"Plains Biome\"",
+  "config.coords_mod.custom_direction_text": "Custom Direction Text",
+  "config.coords_mod.custom_direction_text.description": "Custom text to display for direction. Example: \"%s Direction\" will display \"North Direction\"",
+
+  "config.coords_mod.custom_time_text": "Custom Time Text",
+  "config.coords_mod.custom_time_text.description": "Custom text to display for time. Example: \"Time: %s\" will display \"Time: 12:00\"",
+
+
+  "config.coords_mod.category.position": "Position",
+  "config.coords_mod.category.position.absolute": "Absolute Position",
+
+  "config.coords_mod.more_options_coming_soon": "More Options Coming Soon!",
+
+  "config.coords_mod.pos_x": "X Position",
+  "config.coords_mod.pos_x.description": "Absolute X position of the HUD. Position may change on screen resize",
+
+  "config.coords_mod.pos_y": "Y Position",
+  "config.coords_mod.pos_y.description": "Absolute Y position of the HUD. Position may change on screen resize"
+
 
 }

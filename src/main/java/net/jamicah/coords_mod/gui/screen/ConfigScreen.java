@@ -2,19 +2,17 @@ package net.jamicah.coords_mod.gui.screen;
 
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
+import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
+import dev.isxander.yacl3.gui.controllers.LabelController;
 import net.jamicah.coords_mod.client.Config;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import java.util.Arrays;
-import java.util.List;
-
-
-// TODO: make all texts translatable
+import java.awt.*;
 
 public class ConfigScreen {
 
@@ -26,7 +24,6 @@ public class ConfigScreen {
         Config.HANDLER.load();
     }
 
-
     public Screen createGui(Screen parentScreen) {
         load();
         return YetAnotherConfigLib.createBuilder()
@@ -34,7 +31,6 @@ public class ConfigScreen {
                 .category(ConfigCategory.createBuilder()
                         .name(Text.translatable("config.coords_mod.category.general"))
                         .option(enableHUD)
-                        //.option(orderList)
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("config.coords_mod.category.general.hud_info"))
                                 .description(OptionDescription.createBuilder()
@@ -46,11 +42,12 @@ public class ConfigScreen {
                                 .option(enableBiome)
                                 .option(enableDirection)
                                 .option(enableTime)
+
                                 .build())
                         .group(OptionGroup.createBuilder()
-                                .name(Text.of("Time Settings"))
+                                .name(Text.translatable("config.coords_mod.category.general.time_settings"))
                                 .description(OptionDescription.createBuilder()
-                                        .text(Text.of("Appearance and format of the time"))
+                                        .text(Text.translatable("config.coords_mod.category.general.time_settings.description"))
                                         .build()
                                 )
                                 .option(timeFormat12)
@@ -59,38 +56,47 @@ public class ConfigScreen {
                                 .collapsed(true)
                                 .build()
                         )
-
+                        .group(orderList)
                         .build()
                 )
                 .category(ConfigCategory.createBuilder()
-                        .name(Text.of("Appearance"))
+                        .name(Text.translatable("config.coords_mod.category.appearance"))
                         .group(OptionGroup.createBuilder()
-                                .name(Text.of("Background"))
-                                .option(bgOpacity)
-                                .option(bgColorR)
-                                .option(bgColorG)
-                                .option(bgColorB)
-                                .build()
-                        )
-                        .group(OptionGroup.createBuilder()
-                                .name(Text.of("Text"))
-                                .option(textColorR)
-                                .option(textColorG)
-                                .option(textColorB)
+                                .name(Text.translatable("config.coords_mod.category.appearance.color"))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.translatable("config.coords_mod.category.appearance.description"))
+                                        .build()
+                                )
+                                .option(bgColor)
+                                .option(textColor)
                                 .option(showTextShadow)
                                 .build()
                         )
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.translatable("config.coords_mod.category.appearance.text_customization"))
+                                .description(OptionDescription.createBuilder()
+                                        .image(Identifier.of("coords_mod", "textures/gui/text_customization.png"), 253, 85)
+                                        .text(Text.translatable("config.coords_mod.category.appearance.text_customization.description"))
+                                        .build()
+                                )
+                                .option(customFPSText)
+                                .option(customCoordsText)
+                                .option(customBiomeText)
+                                .option(customDirectionText)
+                                .option(customTimeText)
+                                .build()
+                        )
                         .build()
                 )
                 .category(ConfigCategory.createBuilder()
-                        .name(Text.of("Position"))
+                        .name(Text.translatable("config.coords_mod.category.position"))
                         .group(OptionGroup.createBuilder()
-                                .name(Text.of("Absolute Position"))
+                                .name(Text.translatable("config.coords_mod.category.position.absolute"))
                                 .option(posX)
                                 .option(posY)
                                 .build()
                         )
-                        .option(LabelOption.create(Text.of("More Options Coming Soon!")))
+                        .option(LabelOption.create(Text.translatable("config.coords_mod.more_options_coming_soon")))
                         .build()
                 )
                 .save(this::save)
@@ -103,9 +109,9 @@ public class ConfigScreen {
 
     public Option<Boolean> enableHUD =
             Option.<Boolean>createBuilder()
-                    .name(Text.of("Enable Entire Info Display"))
+                    .name(Text.translatable("config.coords_mod.enable_hud"))
                     .description(OptionDescription.createBuilder()
-                            .text(Text.of("Toggles the entire HUD"))
+                            .text(Text.translatable("config.coords_mod.enable_hud.description"))
                             .build()
                     )
                     .controller(opt -> BooleanControllerBuilder.create(opt)
@@ -122,7 +128,6 @@ public class ConfigScreen {
                     )
                     .instant(true)
                     .build();
-
 
     public Option<Boolean> enableFPS =
             Option.<Boolean>createBuilder()
@@ -151,9 +156,9 @@ public class ConfigScreen {
 
     public Option<Boolean> enableCoords =
             Option.<Boolean>createBuilder()
-                    .name(Text.of("Enable Coordinates"))
+                    .name(Text.translatable("config.coords_mod.enable_coords"))
                     .description(OptionDescription.createBuilder()
-                            .text(Text.of("Shows the player's coordinates"))
+                            .text(Text.translatable("config.coords_mod.enable_coords.description"))
                             .build()
                     )
                     .controller(opt -> BooleanControllerBuilder.create(opt)
@@ -170,16 +175,15 @@ public class ConfigScreen {
                                 Config.HANDLER.instance().toggleCoords = newVal;
                                 save();
                             }
-
                     )
                     .instant(true)
                     .build();
 
     public Option<Boolean> enableBiome =
             Option.<Boolean>createBuilder()
-                    .name(Text.of("Enable Biome"))
+                    .name(Text.translatable("config.coords_mod.enable_biome"))
                     .description(OptionDescription.createBuilder()
-                            .text(Text.of("Shows the player's current biome"))
+                            .text(Text.translatable("config.coords_mod.enable_biome.description"))
                             .build()
                     )
                     .controller(opt -> BooleanControllerBuilder.create(opt)
@@ -196,17 +200,15 @@ public class ConfigScreen {
                                 Config.HANDLER.instance().toggleBiome = newVal;
                                 save();
                             }
-
                     )
                     .instant(true)
                     .build();
 
     public Option<Boolean> enableDirection =
             Option.<Boolean>createBuilder()
-                    .name(Text.of("Enable Direction")
-                    )
+                    .name(Text.translatable("config.coords_mod.enable_direction"))
                     .description(OptionDescription.createBuilder()
-                            .text(Text.of("Shows the player's facing direction (without up and down)"))
+                            .text(Text.translatable("config.coords_mod.enable_direction.description"))
                             .build()
                     )
                     .controller(opt -> BooleanControllerBuilder.create(opt)
@@ -223,16 +225,15 @@ public class ConfigScreen {
                                 Config.HANDLER.instance().toggleDirection = newVal;
                                 save();
                             }
-
                     )
                     .instant(true)
                     .build();
 
     public Option<Boolean> showAmPm =
             Option.<Boolean>createBuilder()
-                    .name(Text.of("Show AM/PM"))
+                    .name(Text.translatable("config.coords_mod.show_ampm"))
                     .description(OptionDescription.createBuilder()
-                            .text(Text.of("Shows AM or PM when using 12 hour time format"))
+                            .text(Text.translatable("config.coords_mod.show_ampm.description"))
                             .build()
                     )
                     .controller(opt -> BooleanControllerBuilder.create(opt)
@@ -256,9 +257,9 @@ public class ConfigScreen {
 
     public Option<Boolean> showSeconds =
             Option.<Boolean>createBuilder()
-                    .name(Text.of("Show Seconds"))
+                    .name(Text.translatable("config.coords_mod.show_seconds"))
                     .description(OptionDescription.createBuilder()
-                            .text(Text.of("Shows the seconds in the time info"))
+                            .text(Text.translatable("config.coords_mod.show_seconds.description"))
                             .build()
                     )
                     .controller(opt -> BooleanControllerBuilder.create(opt)
@@ -275,7 +276,6 @@ public class ConfigScreen {
                                 Config.HANDLER.instance().showSeconds = newVal;
                                 save();
                             }
-
                     )
                     .available(Config.HANDLER.instance().toggleTime)
                     .instant(true)
@@ -283,13 +283,15 @@ public class ConfigScreen {
 
     public Option<Boolean> timeFormat12 =
             Option.<Boolean>createBuilder()
-                    .name(Text.of("Time Format"))
+                    .name(Text.translatable("config.coords_mod.time_format"))
                     .description(OptionDescription.createBuilder()
-                            .text(Text.of("Toggle between 12 hour and 24 hour time format"))
+                            .text(Text.translatable("config.coords_mod.time_format.description"))
                             .build()
                     )
                     .controller(opt -> BooleanControllerBuilder.create(opt)
-                            .formatValue(val -> val ? Text.of("24 Hour") : Text.of("12 Hour"))
+                            .formatValue(val -> val ?
+                                    Text.translatable("config.coords_mod.time_format_24hour") :
+                                    Text.translatable("config.coords_mod.time_format_12hour"))
                     )
                     .binding(
                             Config.HANDLER.defaults().timeFormat12,
@@ -298,7 +300,6 @@ public class ConfigScreen {
                                 Config.HANDLER.instance().timeFormat12 = newVal;
                                 save();
                             }
-
                     )
                     .available(Config.HANDLER.instance().toggleTime)
                     .instant(true)
@@ -306,9 +307,9 @@ public class ConfigScreen {
 
     public Option<Boolean> enableTime =
             Option.<Boolean>createBuilder()
-                    .name(Text.of("Enable Time"))
+                    .name(Text.translatable("config.coords_mod.enable_time"))
                     .description(OptionDescription.createBuilder()
-                            .text(Text.of("Shows the real life time"))
+                            .text(Text.translatable("config.coords_mod.enable_time.description"))
                             .build()
                     )
                     .controller(opt -> BooleanControllerBuilder.create(opt)
@@ -328,7 +329,6 @@ public class ConfigScreen {
                                 showSeconds.setAvailable(newVal);
                                 save();
                             }
-
                     )
                     .instant(true)
                     .build();
@@ -336,164 +336,52 @@ public class ConfigScreen {
 
 
     // Appearance
-
-    public Option<Integer> bgOpacity =
-            Option.<Integer>createBuilder()
-                    .name(Text.of("Background Opacity"))
+    public Option<Color> bgColor =
+            Option.<Color>createBuilder()
+                    .name(Text.translatable("config.coords_mod.bg_color"))
                     .description(OptionDescription.createBuilder()
-                            .text(Text.of("Opacity of the background"))
+                            .text(Text.translatable("config.coords_mod.bg_color.description"))
                             .build()
                     )
-                    .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                            .range(0, 255)
-                            .step(1)
-                    )
+                    .controller(opt -> ColorControllerBuilder.create(opt)
+                            .allowAlpha(true))
                     .binding(
-                            Config.HANDLER.defaults().bgOpacity,
-                            () -> Config.HANDLER.instance().bgOpacity,
+                            Config.HANDLER.defaults().bgColor,
+                            () -> Config.HANDLER.instance().bgColor,
                             newVal -> {
-                                Config.HANDLER.instance().bgOpacity = newVal;
+                                Config.HANDLER.instance().bgColor = newVal;
                                 save();
                             }
                     )
                     .instant(true)
                     .build();
 
-    public Option<Integer> bgColorR =
-            Option.<Integer>createBuilder()
-                    .name(Text.of("Background Red"))
+    public Option<Color> textColor =
+            Option.<Color>createBuilder()
+                    .name(Text.translatable("config.coords_mod.text_color"))
                     .description(OptionDescription.createBuilder()
-                            .text(Text.of("Red value of the background color"))
+                            .text(Text.translatable("config.coords_mod.text_color.description"))
                             .build()
                     )
-                    .instant(true)
-                    .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                            .range(0, 255)
-                            .step(1)
-                    )
+                    .controller(opt -> ColorControllerBuilder.create(opt)
+                            .allowAlpha(true))
                     .binding(
-                            Config.HANDLER.defaults().bgColorR,
-                            () -> Config.HANDLER.instance().bgColorR,
+                            Config.HANDLER.defaults().textColor,
+                            () -> Config.HANDLER.instance().textColor,
                             newVal -> {
-                                Config.HANDLER.instance().bgColorR = newVal;
+                                Config.HANDLER.instance().textColor = newVal;
                                 save();
                             }
                     )
+                    .instant(true)
                     .build();
 
-    public Option<Integer> bgColorG =
-            Option.<Integer>createBuilder()
-                    .name(Text.of("Background Green"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.of("Green value of the background color"))
-                            .build()
-                    )
-                    .instant(true)
-                    .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                            .range(0, 255)
-                            .step(1)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().bgColorG,
-                            () -> Config.HANDLER.instance().bgColorG,
-                            newVal -> {
-                                Config.HANDLER.instance().bgColorG = newVal;
-                                save();
-                            }
-                    )
-                    .build();
-
-    public Option<Integer> bgColorB =
-            Option.<Integer>createBuilder()
-                    .name(Text.of("Background Blue"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.of("Blue value of the background color"))
-                            .build()
-                    )
-                    .instant(true)
-                    .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                            .range(0, 255)
-                            .step(1)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().bgColorB,
-                            () -> Config.HANDLER.instance().bgColorB,
-                            newVal -> {
-                                Config.HANDLER.instance().bgColorB = newVal;
-                                save();
-                            }
-                    )
-                    .build();
-
-    public Option<Integer> textColorR =
-            Option.<Integer>createBuilder()
-                    .name(Text.of("Text Red"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.of("Red value of the text color"))
-                            .build()
-                    )
-                    .instant(true)
-                    .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                            .range(0, 255)
-                            .step(1)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().textColorR,
-                            () -> Config.HANDLER.instance().textColorR,
-                            newVal -> {
-                                Config.HANDLER.instance().textColorR = newVal;
-                                save();
-                            }
-                    )
-                    .build();
-
-    public Option<Integer> textColorG =
-            Option.<Integer>createBuilder()
-                    .name(Text.of("Text Green"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.of("Green value of the text color"))
-                            .build())
-                    .instant(true)
-                    .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                            .range(0, 255)
-                            .step(1)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().textColorG,
-                            () -> Config.HANDLER.instance().textColorG,
-                            newVal -> {
-                                Config.HANDLER.instance().textColorG = newVal;
-                                save();
-                            }
-                    )
-                    .build();
-
-    public Option<Integer> textColorB =
-            Option.<Integer>createBuilder()
-                    .name(Text.of("Text Blue"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.of("Blue value of the text color"))
-                            .build())
-                    .instant(true)
-                    .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                            .range(0, 255)
-                            .step(1)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().textColorB,
-                            () -> Config.HANDLER.instance().textColorB,
-                            newVal -> {
-                                Config.HANDLER.instance().textColorB = newVal;
-                                save();
-                            }
-                    )
-                    .build();
 
     public Option<Boolean> showTextShadow =
             Option.<Boolean>createBuilder()
-                    .name(Text.of("Enable Text Shadow"))
+                    .name(Text.translatable("config.coords_mod.show_text_shadow"))
                     .description(OptionDescription.createBuilder()
-                            .text(Text.of("Show shadow behind the text"))
+                            .text(Text.translatable("config.coords_mod.show_text_shadow.description"))
                             .image(Identifier.of("coords_mod", "textures/gui/textshadow.png"), 1, 1)
                             .build()
                     )
@@ -515,15 +403,104 @@ public class ConfigScreen {
                     .instant(true)
                     .build();
 
+    public Option<String> customFPSText =
+            Option.<String>createBuilder()
+                    .name(Text.translatable("config.coords_mod.custom_fps_text"))
+                    .description(OptionDescription.createBuilder()
+                            .text(Text.translatable("config.coords_mod.custom_fps_text.description"))
+                            .build()
+                    )
+                    .controller(StringControllerBuilder::create)
+                    .binding(
+                            Config.HANDLER.defaults().customFPSText,
+                            () -> Config.HANDLER.instance().customFPSText,
+                            newVal -> {
+                                Config.HANDLER.instance().customFPSText = newVal;
+                                save();
+                            }
+                    )
+                    .build();
+
+    public Option<String> customCoordsText =
+            Option.<String>createBuilder()
+                    .name(Text.translatable("config.coords_mod.custom_coords_text"))
+                    .description(OptionDescription.createBuilder()
+                            .text(Text.translatable("config.coords_mod.custom_coords_text.description"))
+                            .build()
+                    )
+                    .controller(StringControllerBuilder::create)
+                    .binding(
+                            Config.HANDLER.defaults().customCoordsText,
+                            () -> Config.HANDLER.instance().customCoordsText,
+                            newVal -> {
+                                Config.HANDLER.instance().customCoordsText = newVal;
+                                save();
+                            }
+                    )
+                    .build();
+
+    public Option<String> customBiomeText =
+            Option.<String>createBuilder()
+                    .name(Text.translatable("config.coords_mod.custom_biome_text"))
+                    .description(OptionDescription.createBuilder()
+                            .text(Text.translatable("config.coords_mod.custom_biome_text.description"))
+                            .build()
+                    )
+                    .controller(StringControllerBuilder::create)
+                    .binding(
+                            Config.HANDLER.defaults().customBiomeText,
+                            () -> Config.HANDLER.instance().customBiomeText,
+                            newVal -> {
+                                Config.HANDLER.instance().customBiomeText = newVal;
+                                save();
+                            }
+                    )
+                    .build();
+
+    public Option<String> customDirectionText =
+            Option.<String>createBuilder()
+                    .name(Text.translatable("config.coords_mod.custom_direction_text"))
+                    .description(OptionDescription.createBuilder()
+                            .text(Text.translatable("config.coords_mod.custom_direction_text.description"))
+                            .build()
+                    )
+                    .controller(StringControllerBuilder::create)
+                    .binding(
+                            Config.HANDLER.defaults().customDirectionText,
+                            () -> Config.HANDLER.instance().customDirectionText,
+                            newVal -> {
+                                Config.HANDLER.instance().customDirectionText = newVal;
+                                save();
+                            }
+                    )
+                    .build();
+
+    public Option<String> customTimeText =
+            Option.<String>createBuilder()
+                    .name(Text.translatable("config.coords_mod.custom_time_text"))
+                    .description(OptionDescription.createBuilder()
+                            .text(Text.translatable("config.coords_mod.custom_time_text.description"))
+                            .build()
+                    )
+                    .controller(StringControllerBuilder::create)
+                    .binding(
+                            Config.HANDLER.defaults().customTimeText,
+                            () -> Config.HANDLER.instance().customTimeText,
+                            newVal -> {
+                                Config.HANDLER.instance().customTimeText = newVal;
+                                save();
+                            }
+                    )
+                    .build();
 
 
     // Position
 
     public Option<Integer> posX =
             Option.<Integer>createBuilder()
-                    .name(Text.of("X Position"))
+                    .name(Text.translatable("config.coords_mod.pos_x"))
                     .description(OptionDescription.createBuilder()
-                            .text(Text.of("Absolute X position of the HUD. Position may change on screen resize"))
+                            .text(Text.translatable("config.coords_mod.pos_x.description"))
                             .build())
                     .instant(true)
                     .controller(opt -> IntegerSliderControllerBuilder.create(opt)
@@ -542,9 +519,9 @@ public class ConfigScreen {
 
     public Option<Integer> posY =
             Option.<Integer>createBuilder()
-                    .name(Text.of("Y Position"))
+                    .name(Text.translatable("config.coords_mod.pos_y"))
                     .description(OptionDescription.createBuilder()
-                            .text(Text.of("Absolute Y position of the HUD. Position may change on screen resize"))
+                            .text(Text.translatable("config.coords_mod.pos_y.description"))
                             .build())
                     .instant(true)
                     .controller(opt -> IntegerSliderControllerBuilder.create(opt)
@@ -561,38 +538,27 @@ public class ConfigScreen {
                     )
                     .build();
 
-
-
-
-
     // Order List
-    List<String> optionsList = Arrays.asList(
-            "FPS",
-            "Coordinates",
-            "Biome",
-            "Facing Direction",
-            "Time"
-    );
-    public ListOption<String> orderList =
-            ListOption.<String>createBuilder()
-                    .name(Text.of("Order of Info Display"))
-                    .binding(
-                            optionsList,
-                            () -> optionsList,
-                            newVal -> optionsList = newVal
+    // change the order of the list of options to display on the HUD
+
+
+    // TODO: Show actual displayed text in the list
+    public ListOption<Text> orderList =
+            ListOption.<Text>createBuilder()
+                    .name(Text.translatable("config.coords_mod.order_list"))
+                    .description(OptionDescription.createBuilder()
+                            .text(Text.translatable("config.coords_mod.order_list.description"))
+                            .build()
                     )
-                    .controller(StringControllerBuilder::create)
-                    .initial("")
+                    .binding(
+                            Config.HANDLER.defaults().optionsList,
+                            () -> Config.HANDLER.instance().optionsList,
+                            newVal -> Config.HANDLER.instance().optionsList = newVal
+                    )
+                    .customController(LabelController::new)
+                    .initial(Text.of(""))
                     .maximumNumberOfEntries(5)
                     .minimumNumberOfEntries(5)
-                    .collapsed(true)
+                    .collapsed(false)
                     .build();
-
-
-
-
-
-
-
-
 }

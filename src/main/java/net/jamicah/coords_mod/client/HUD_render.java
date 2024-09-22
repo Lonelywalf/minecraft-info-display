@@ -4,19 +4,15 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.text.Text;
 
-import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+
 // TODO: relative position
-// TODO: Custom Text
 public class HUD_render implements HudRenderCallback {
-
-    // TODO: don't forget to implement this
-    public static String infoOrder = "f,c,b,d,C";
-
     // toggleable options
     public Boolean toggleHud;
     public Boolean toggleFPS;
@@ -26,19 +22,21 @@ public class HUD_render implements HudRenderCallback {
     public Boolean toggleClock;
 
     // background color
-    public int bgOpacity;
-    public int bgColorR;
-    public int bgColorG;
-    public int bgColorB;
+    public int bgColor;
 
     // text color
-    public int textColorR;
-    public int textColorG;
-    public int textColorB;
+    public int textColor;
 
     // position
     public int x;
     public int y;
+
+    // information
+    public static String currentFPS;
+    public static String currentCoords;
+    public static String currentBiome;
+    public static String currentDirection;
+    public static String currentTime;
 
 
     /* deprecated
@@ -63,8 +61,7 @@ public class HUD_render implements HudRenderCallback {
         how to add a new info:
         1. add it to Config
         2. add it here as a variable
-        3. update updateInfoOrder()
-        4. update removedInvalidChars()
+        3. update ConfigScreen's correctOrderList() method
      */
 
 
@@ -80,14 +77,8 @@ public class HUD_render implements HudRenderCallback {
         toggleDirection = Config.HANDLER.instance().toggleDirection;
         toggleClock = Config.HANDLER.instance().toggleTime;
 
-        bgOpacity = Config.HANDLER.instance().bgOpacity;
-        bgColorR = Config.HANDLER.instance().bgColorR;
-        bgColorG = Config.HANDLER.instance().bgColorG;
-        bgColorB = Config.HANDLER.instance().bgColorB;
-
-        textColorR = Config.HANDLER.instance().textColorR;
-        textColorG = Config.HANDLER.instance().textColorG;
-        textColorB = Config.HANDLER.instance().textColorB;
+        bgColor = Config.HANDLER.instance().bgColor.getRGB();
+        textColor = Config.HANDLER.instance().textColor.getRGB();
 
         x = Config.HANDLER.instance().x;
         y = Config.HANDLER.instance().y;
@@ -112,69 +103,89 @@ public class HUD_render implements HudRenderCallback {
 
         // gather information
 
-        String[] order =
-                removeString(infoOrder.split(","),
-                " "
-                );
-        order = removeInvalidChars(order);
-        order = removeDoubleChars(order);
         int length = getEnabledInfoCount() * 10 + 3;
 
         // FPS info
-        String currentFPS = "";
+        currentFPS = Config.HANDLER.instance().customFPSText;
         int currentFPSx = 0;
         if (toggleFPS) {
             // gather the required information
-            currentFPS = client.getCurrentFps() + " FPS";
+
+            // if the player enters an invalid format, the default format will be used
+            try {
+                currentFPS = String.format(currentFPS, client.getCurrentFps());
+            } catch (Exception e) {
+                currentFPS = Config.HANDLER.defaults().customFPSText;
+                Config.HANDLER.instance().customFPSText = Config.HANDLER.defaults().customFPSText;
+            }
             currentFPSx = x + dynamicSizeX(currentFPS);
             yCurrent += 10;
         }
 
         // Coordinates info
-        String currentCoords = "";
+        currentCoords = Config.HANDLER.instance().customCoordsText;
         int currentCoordsX = 0;
         if (toggleCoords) {
             assert client.player != null;
 
             // gather the required information
-            int x_pos = (int) client.getCameraEntity().getX();
-            int y_pos = (int) client.getCameraEntity().getY();
-            int z_pos = (int) client.getCameraEntity().getZ();
-            currentCoords = x_pos + " "
-                        + y_pos + " "
-                        + z_pos;
+            String x_pos = String.valueOf((int)client.getCameraEntity().getX());
+            String y_pos = String.valueOf((int)client.getCameraEntity().getY());
+            String z_pos = String.valueOf((int)client.getCameraEntity().getZ());
+            try {
+                currentCoords = String.format(currentCoords, x_pos, y_pos, z_pos);
+            } catch (Exception e) {
+                currentCoords = Config.HANDLER.defaults().customCoordsText;
+                Config.HANDLER.instance().customCoordsText = Config.HANDLER.defaults().customCoordsText;
+            }
+
+
             currentCoordsX = x + dynamicSizeX(currentCoords);
             yCurrent += 10;
         }
 
         // Biomes info
-        String currentBiome = "";
+        currentBiome = Config.HANDLER.instance().customBiomeText;
         int currentBiomeX = 0;
         if (toggleBiome) {
             // gather the required information
-            currentBiome = "Biome: " + getCurrentBiome();
+            try {
+                currentBiome = String.format(currentBiome, getCurrentBiome());
+            } catch (Exception e) {
+                currentBiome = Config.HANDLER.defaults().customBiomeText;
+                Config.HANDLER.instance().customBiomeText = Config.HANDLER.defaults().customBiomeText;
+            }
             currentBiomeX = x + dynamicSizeX(currentBiome);
             yCurrent += 10;
         }
 
         // Facing Direction info
         assert client.player != null;
-        String currentDirection = client.player.getMovementDirection().asString();
+        currentDirection = Config.HANDLER.instance().customDirectionText;
         int currentDirectionX = 0;
         if (toggleDirection) {
             String dir = client.player.getMovementDirection().asString();
-            currentDirection = "Facing: " + Character.toUpperCase(dir.charAt(0))
-                    + dir.substring(1
-            );
+            try {
+                currentDirection = String.format(currentDirection, Character.toUpperCase(dir.charAt(0)) + dir.substring(1));
+            } catch (Exception e) {
+                currentDirection = Config.HANDLER.defaults().customDirectionText;
+                Config.HANDLER.instance().customDirectionText = Config.HANDLER.defaults().customDirectionText;
+            }
 
             currentDirectionX = x + dynamicSizeX(currentDirection);
             yCurrent += 10;
         }
 
 
-        String currentTime = getCurrentTime();
+        currentTime = Config.HANDLER.instance().customTimeText;
         int currentTimeX = 0;
         if (toggleClock) {
+            try {
+                currentTime = String.format(currentTime, getCurrentTime());
+            } catch (Exception e) {
+                currentTime = Config.HANDLER.defaults().customTimeText;
+                Config.HANDLER.instance().customTimeText = Config.HANDLER.defaults().customTimeText;
+            }
             currentTimeX = x + dynamicSizeX(currentTime);
             yCurrent += 10;
         }
@@ -196,12 +207,7 @@ public class HUD_render implements HudRenderCallback {
                             )
                     ) + 3,
                     y + length,
-                    new Color(
-                            bgColorR,
-                            bgColorG,
-                            bgColorB,
-                            bgOpacity
-                    ).getRGB()
+                    bgColor
             );
         }
         // move "pointer" back to the top
@@ -209,63 +215,63 @@ public class HUD_render implements HudRenderCallback {
 
 
         // render the information (text)
-        for (String pos : order) {
-            switch (pos) {
-                case "f":
+        for (Text pos : Config.HANDLER.instance().optionsList) {
+            switch (pos.getString()) {
+                case "FPS":
                     if (toggleFPS) {
                         drawContext.drawText(client.textRenderer,
                                 currentFPS,
                                 x+3,
                                 yCurrent+3,
-                                new Color(textColorR, textColorG, textColorB).getRGB(),
+                                textColor,
                                 Config.HANDLER.instance().toggleTextShadow
                         );
                         yCurrent += 10;
                     }
                     break;
-                case "c":
+                case "Coordinates":
                     if (toggleCoords) {
                         drawContext.drawText(client.textRenderer,
                                 currentCoords,
                                 x+3,
                                 yCurrent+3,
-                                new Color(textColorR, textColorG, textColorB).getRGB(),
+                                textColor,
                                 Config.HANDLER.instance().toggleTextShadow
                         );
                         yCurrent += 10;
                     }
                     break;
-                case "C":
+                case "Time":
                     if (toggleClock) {
                         drawContext.drawText(client.textRenderer,
                                 currentTime,
                                 x+3,
                                 yCurrent+3,
-                                new Color(textColorR, textColorG, textColorB).getRGB(),
+                                textColor,
                                 Config.HANDLER.instance().toggleTextShadow
                         );
                         yCurrent += 10;
                     }
                     break;
-                case "b":
+                case "Biome":
                     if (toggleBiome) {
                         drawContext.drawText(client.textRenderer,
                                 currentBiome,
                                 x+3,
                                 yCurrent+3,
-                                new Color(textColorR, textColorG, textColorB).getRGB(),
+                                textColor,
                                 Config.HANDLER.instance().toggleTextShadow
                         );
                         yCurrent += 10;
                     }
                     break;
-                case "d":
+                case "Facing Direction":
                     if (toggleDirection) {
                         drawContext.drawText(client.textRenderer,
                                 currentDirection,
                                 x+3,
                                 yCurrent+3,
-                                new Color(textColorR, textColorG, textColorB).getRGB(),
+                                textColor,
                                 Config.HANDLER.instance().toggleTextShadow
                         );
                         yCurrent += 10;
@@ -293,97 +299,6 @@ public class HUD_render implements HudRenderCallback {
         return time.format(date);
     }
 
-    // toggles the values based on the infoOrder String
-    public static void updateInfoOrder() {
-
-        boolean f = false;
-        boolean c = false;
-        boolean b = false;
-        boolean d = false;
-        boolean cl = false;
-
-        for (String pos : infoOrder.split(",")) {
-            switch (pos) {
-                case "f":
-                    f = true;
-                    Config.HANDLER.instance().toggleFPS = true;
-                    break;
-                case "c":
-                    c = true;
-                    Config.HANDLER.instance().toggleCoords = true;
-                    break;
-                case "b":
-                    b = true;
-                    Config.HANDLER.instance().toggleBiome = true;
-                    break;
-                case "d":
-                    d = true;
-                    Config.HANDLER.instance().toggleDirection = true;
-                    break;
-                case "C":
-                    cl = true;
-                    Config.HANDLER.instance().toggleTime = true;
-                    break;
-            }
-        }
-
-        if (!f) {
-            Config.HANDLER.instance().toggleFPS = false;
-        }
-        if (!c) {
-            Config.HANDLER.instance().toggleCoords = false;
-        }
-        if (!b) {
-            Config.HANDLER.instance().toggleBiome = false;
-        }
-        if (!d) {
-            Config.HANDLER.instance().toggleDirection = false;
-        }
-        if (!cl) {
-            Config.HANDLER.instance().toggleTime = false;
-        }
-        //ConfigOld.saveConfig();
-    }
-
-    // method to remove specific string from string array
-    public static String[] removeString(String[] arr, String str) {
-        int length = arr.length;
-        int count = 0;
-        for (String s : arr) {
-            if (s.equals(str)) {
-                count++;
-            }
-        }
-        String[] newArr = new String[length-count];
-        int i = 0;
-        for (String s : arr) {
-            if (!s.equals(str)) {
-                newArr[i] = s;
-                i++;
-            }
-        }
-        return newArr;
-    }
-
-    private String[] removeInvalidChars(String[] order) {
-        for (int i = 0; i < order.length; i++) {
-            if (!order[i].equals("f") && !order[i].equals("c") && !order[i].equals("b") && !order[i].equals("d") && !order[i].equals("C")) {
-                order = removeString(order, order[i]);
-            }
-        }
-
-        return order;
-    }
-
-    // remove double characters
-    private String[] removeDoubleChars(String[] order) {
-        for (int i = 0; i < order.length; i++) {
-            if (order[i].equals(" ")) {
-                order = removeString(order, " ");
-            }
-        }
-        return order;
-    }
 
     public static int getEnabledInfoCount() {
         int count = 0;
@@ -453,4 +368,96 @@ public class HUD_render implements HudRenderCallback {
         return totalPixelWidth+2; // 3 padding on the right side (+2 because of the extra pixel of the empty char)
     }
 
+    /* deprecated methods
+    // toggles the values based on the infoOrder String
+    public static void updateInfoOrder() {
+
+        boolean f = false;
+        boolean c = false;
+        boolean b = false;
+        boolean d = false;
+        boolean cl = false;
+
+        for (String pos : infoOrder.split(",")) {
+            switch (pos) {
+                case "f":
+                    f = true;
+                    Config.HANDLER.instance().toggleFPS = true;
+                    break;
+                case "c":
+                    c = true;
+                    Config.HANDLER.instance().toggleCoords = true;
+                    break;
+                case "b":
+                    b = true;
+                    Config.HANDLER.instance().toggleBiome = true;
+                    break;
+                case "d":
+                    d = true;
+                    Config.HANDLER.instance().toggleDirection = true;
+                    break;
+                case "C":
+                    cl = true;
+                    Config.HANDLER.instance().toggleTime = true;
+                    break;
+            }
+        }
+
+        if (!f) {
+            Config.HANDLER.instance().toggleFPS = false;
+        }
+        if (!c) {
+            Config.HANDLER.instance().toggleCoords = false;
+        }
+        if (!b) {
+            Config.HANDLER.instance().toggleBiome = false;
+        }
+        if (!d) {
+            Config.HANDLER.instance().toggleDirection = false;
+        }
+        if (!cl) {
+            Config.HANDLER.instance().toggleTime = false;
+        }
+        //ConfigOld.saveConfig();
+    }
+        private String[] removeInvalidChars(String[] order) {
+        for (int i = 0; i < order.length; i++) {
+            if (!order[i].equals("f") && !order[i].equals("c") && !order[i].equals("b") && !order[i].equals("d") && !order[i].equals("C")) {
+                order = removeString(order, order[i]);
+            }
+        }
+
+        return order;
+    }
+
+    // remove double characters
+    private String[] removeDoubleChars(String[] order) {
+        for (int i = 0; i < order.length; i++) {
+            if (order[i].equals(" ")) {
+                order = removeString(order, " ");
+            }
+        }
+        return order;
+    }
+
+        // method to remove specific string from string array
+    public static String[] removeString(String[] arr, String str) {
+        int length = arr.length;
+        int count = 0;
+        for (String s : arr) {
+            if (s.equals(str)) {
+                count++;
+            }
+        }
+        String[] newArr = new String[length-count];
+        int i = 0;
+        for (String s : arr) {
+            if (!s.equals(str)) {
+                newArr[i] = s;
+                i++;
+            }
+        }
+        return newArr;
+    }
+    */
 }
