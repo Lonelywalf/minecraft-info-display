@@ -26,15 +26,14 @@ Customization:
 ### TODO:
 - more customization options
 - more info to display
-- make it easier to change order of the display
-- be able to change the displayed text (for example, change the "Facing: " to whatever you want)
 
 ## Requirements
 - Fabric API
+- YetAnotherConfigLib
 - Mod Menu (optional)
 ## How to install
 1. Download the latest release on [modrinth](https://modrinth.com/mod/simple-info-display/versions) or from the [releases](https://github.com/Lonelywalf/minecraft-info-display/releases) page
 2. Put the downloaded jar file into your mods folder
 3. Launch the game
 ## How to use
-- Press `F7` to open the config menu
+- Open the configuration menu by either running the command `/infodisplay`, opening it using Mod Menu, or setting a keybind for it in the controls menu
