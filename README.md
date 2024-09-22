@@ -28,9 +28,9 @@ Customization:
 - more info to display
 
 ## Requirements
-- Fabric API
-- YetAnotherConfigLib
-- Mod Menu (optional)
+- [Fabric API](https://modrinth.com/mod/fabric-api/versions)
+- [YetAnotherConfigLib](https://modrinth.com/mod/yacl/versions)
+- [Mod Menu](https://modrinth.com/mod/modmenu/versions) (optional)
 ## How to install
 1. Download the latest release on [modrinth](https://modrinth.com/mod/simple-info-display/versions) or from the [releases](https://github.com/Lonelywalf/minecraft-info-display/releases) page
 2. Put the downloaded jar file into your mods folder
