@@ -5,7 +5,7 @@ A simple, yet customizable, mod that can display some useful infos on the hud, s
 
 I am very new to fabric modding, so if you have suggestions or find any bugs, DM me on Discord: @jamicah or open an issue on GitHub.
 ## Features
-Info Display:
+### Info Display:
 - FPS
 - Coordinates
 - Biome
@@ -14,7 +14,7 @@ Info Display:
 
 Toggle all of them on/off using a keybind or in the config menu.
 
-Customization:
+### Customization:
 - Change the display order
 - Change the (absolute) position of the HUD
 - Change the color of the text
