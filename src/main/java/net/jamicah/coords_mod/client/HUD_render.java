@@ -13,6 +13,7 @@ import java.util.Date;
 
 // TODO: relative position
 public class HUD_render implements HudRenderCallback {
+
     // toggleable options
     public Boolean toggleHud;
     public Boolean toggleFPS;
@@ -38,6 +39,28 @@ public class HUD_render implements HudRenderCallback {
     public static String currentDirection;
     public static String currentTime;
 
+    public static String[] order = getOrder();
+
+    public boolean load = false;
+    private static String[] getOrder() {
+        String[] readOrder = new String[Config.HANDLER.instance().optionsList.size()];
+        for (int i = 0; i < Config.HANDLER.instance().optionsList.size(); i++) {
+            readOrder[i] =
+                    Config.HANDLER.instance()
+                            .optionsList
+                            .get(i)
+                            .toString()
+                            .replaceAll(
+                                    "translation\\{key='config\\.coords_mod\\.order_list\\.",
+                                    ""
+                            )
+                            .replaceAll(
+                                    "', args=\\[]}",
+                                    ""
+                            );
+        }
+        return readOrder;
+    }
 
     /* deprecated
     how to add a new config value:
@@ -70,6 +93,14 @@ public class HUD_render implements HudRenderCallback {
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
 
+        // load the config on first run
+        if (!load) {
+            load = true;
+            Config.HANDLER.load();
+            order = getOrder();
+        }
+
+        // load the config
         toggleHud = Config.HANDLER.instance().toggleHud;
         toggleFPS = Config.HANDLER.instance().toggleFPS;
         toggleBiome = Config.HANDLER.instance().toggleBiome;
@@ -111,13 +142,25 @@ public class HUD_render implements HudRenderCallback {
         if (toggleFPS) {
             // gather the required information
 
+            // custom formatted text
             // if the player enters an invalid format, the default format will be used
             try {
                 currentFPS = String.format(currentFPS, client.getCurrentFps());
             } catch (Exception e) {
+                assert client.player != null;
+                client.player.sendMessage(
+                        Text.translatable(
+                                "config.coords_mod.category.appearance.custom_text.invalid_error",
+                                currentFPS,
+                                "%s"
+                        ), false
+                );
                 currentFPS = Config.HANDLER.defaults().customFPSText;
                 Config.HANDLER.instance().customFPSText = Config.HANDLER.defaults().customFPSText;
+                Config.HANDLER.save();
             }
+
+            // calculate length of the text (to compare which is the longest later)
             currentFPSx = x + dynamicSizeX(currentFPS);
             yCurrent += 10;
         }
@@ -132,13 +175,21 @@ public class HUD_render implements HudRenderCallback {
             String x_pos = String.valueOf((int)client.getCameraEntity().getX());
             String y_pos = String.valueOf((int)client.getCameraEntity().getY());
             String z_pos = String.valueOf((int)client.getCameraEntity().getZ());
+
             try {
                 currentCoords = String.format(currentCoords, x_pos, y_pos, z_pos);
             } catch (Exception e) {
+                client.player.sendMessage(
+                        Text.translatable(
+                                "config.coords_mod.category.appearance.custom_text.invalid_error",
+                                currentCoords,
+                                "%s %s %s"
+                        ), false
+                );
                 currentCoords = Config.HANDLER.defaults().customCoordsText;
                 Config.HANDLER.instance().customCoordsText = Config.HANDLER.defaults().customCoordsText;
+                Config.HANDLER.save();
             }
-
 
             currentCoordsX = x + dynamicSizeX(currentCoords);
             yCurrent += 10;
@@ -152,8 +203,17 @@ public class HUD_render implements HudRenderCallback {
             try {
                 currentBiome = String.format(currentBiome, getCurrentBiome());
             } catch (Exception e) {
+                assert client.player != null;
+                client.player.sendMessage(
+                        Text.translatable(
+                                "config.coords_mod.category.appearance.custom_text.invalid_error",
+                                currentBiome,
+                                "%s"
+                        ), false
+                );
                 currentBiome = Config.HANDLER.defaults().customBiomeText;
                 Config.HANDLER.instance().customBiomeText = Config.HANDLER.defaults().customBiomeText;
+                Config.HANDLER.save();
             }
             currentBiomeX = x + dynamicSizeX(currentBiome);
             yCurrent += 10;
@@ -168,10 +228,17 @@ public class HUD_render implements HudRenderCallback {
             try {
                 currentDirection = String.format(currentDirection, Character.toUpperCase(dir.charAt(0)) + dir.substring(1));
             } catch (Exception e) {
+                client.player.sendMessage(
+                        Text.translatable(
+                                "config.coords_mod.category.appearance.custom_text.invalid_error",
+                                currentDirection,
+                                "%s"
+                        ), false
+                );
                 currentDirection = Config.HANDLER.defaults().customDirectionText;
                 Config.HANDLER.instance().customDirectionText = Config.HANDLER.defaults().customDirectionText;
+                Config.HANDLER.save();
             }
-
             currentDirectionX = x + dynamicSizeX(currentDirection);
             yCurrent += 10;
         }
@@ -183,8 +250,17 @@ public class HUD_render implements HudRenderCallback {
             try {
                 currentTime = String.format(currentTime, getCurrentTime());
             } catch (Exception e) {
+                assert client.player != null;
+                client.player.sendMessage(
+                        Text.translatable(
+                                "config.coords_mod.category.appearance.custom_text.invalid_error",
+                                currentTime,
+                                "%s"
+                        ), false
+                );
                 currentTime = Config.HANDLER.defaults().customTimeText;
                 Config.HANDLER.instance().customTimeText = Config.HANDLER.defaults().customTimeText;
+                Config.HANDLER.save();
             }
             currentTimeX = x + dynamicSizeX(currentTime);
             yCurrent += 10;
@@ -214,9 +290,10 @@ public class HUD_render implements HudRenderCallback {
         yCurrent = y;
 
 
+
         // render the information (text)
-        for (Text pos : Config.HANDLER.instance().optionsList) {
-            switch (pos.getString()) {
+        for (String info : order) {
+            switch (info) {
                 case "FPS":
                     if (toggleFPS) {
                         drawContext.drawText(client.textRenderer,
@@ -229,7 +306,7 @@ public class HUD_render implements HudRenderCallback {
                         yCurrent += 10;
                     }
                     break;
-                case "Coordinates":
+                case "coords":
                     if (toggleCoords) {
                         drawContext.drawText(client.textRenderer,
                                 currentCoords,
@@ -241,7 +318,7 @@ public class HUD_render implements HudRenderCallback {
                         yCurrent += 10;
                     }
                     break;
-                case "Time":
+                case "time":
                     if (toggleClock) {
                         drawContext.drawText(client.textRenderer,
                                 currentTime,
@@ -253,7 +330,7 @@ public class HUD_render implements HudRenderCallback {
                         yCurrent += 10;
                     }
                     break;
-                case "Biome":
+                case "biome":
                     if (toggleBiome) {
                         drawContext.drawText(client.textRenderer,
                                 currentBiome,
@@ -265,7 +342,7 @@ public class HUD_render implements HudRenderCallback {
                         yCurrent += 10;
                     }
                     break;
-                case "Facing Direction":
+                case "direction":
                     if (toggleDirection) {
                         drawContext.drawText(client.textRenderer,
                                 currentDirection,
@@ -346,26 +423,7 @@ public class HUD_render implements HudRenderCallback {
     // method to dynamically change the size of the rectangle based on the length of the biome name,
     // shorter char like i, l, t, I, k and f are also taken into account
     public static int dynamicSizeX(String text) {
-
-        int total_length = text.length();
-        int totalPixelWidth = 0;
-        for (int i = 0; i < total_length; i++) {
-
-            char c = text.charAt(i);
-            if (c == 'i' || c == ':') {
-                totalPixelWidth += 1;
-            } else if (c == 'l') {
-                totalPixelWidth += 2;
-            } else if (c == 't' || c == 'I' || c == ' ') {
-                totalPixelWidth += 3;
-            } else if (c == 'k' || c == 'f') {
-                totalPixelWidth += 4;
-            } else {
-                totalPixelWidth += 5;
-            }
-            totalPixelWidth++;
-        }
-        return totalPixelWidth+2; // 3 padding on the right side (+2 because of the extra pixel of the empty char)
+        return MinecraftClient.getInstance().textRenderer.getWidth(text)+2; // +2 padding
     }
 
     /* deprecated methods

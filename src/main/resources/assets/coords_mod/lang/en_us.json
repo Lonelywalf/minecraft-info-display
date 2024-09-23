@@ -9,6 +9,7 @@
   "key.coords_mod.open_config": "Open Configuration",
 
 
+
   "config.coords_mod.title": "Info Display Configuration",
   "config.coords_mod.category.general": "General",
   "config.coords_mod.category.general.hud_info": "HUD Information",
@@ -89,11 +90,12 @@
   "config.coords_mod.custom_time_text": "Custom Time Text",
   "config.coords_mod.custom_time_text.description": "Custom text to display for time. Example: \"Time: %s\" will display \"Time: 12:00\"",
 
+  "config.coords_mod.category.appearance.custom_text.invalid_error": "[Info Display] Invalid format for custom text \"%s\". Please use \"%s\" for the value",
+
 
   "config.coords_mod.category.position": "Position",
   "config.coords_mod.category.position.absolute": "Absolute Position",
 
-  "config.coords_mod.more_options_coming_soon": "More Options Coming Soon!",
 
   "config.coords_mod.pos_x": "X Position",
   "config.coords_mod.pos_x.description": "Absolute X position of the HUD. Position may change on screen resize",

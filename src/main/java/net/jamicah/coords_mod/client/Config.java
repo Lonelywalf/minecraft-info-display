@@ -71,7 +71,7 @@ public class Config {
     @SerialEntry
     public int y = 2;
 
-    @SerialEntry
+    @SerialEntry(comment = "Order for the Text labels")
     public List<Text> optionsList = Arrays.asList(
         Text.translatable("config.coords_mod.order_list.FPS"),
         Text.translatable("config.coords_mod.order_list.coords"),

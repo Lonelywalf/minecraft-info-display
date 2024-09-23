@@ -7,6 +7,7 @@ import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import dev.isxander.yacl3.gui.controllers.LabelController;
 import net.jamicah.coords_mod.client.Config;
+import net.jamicah.coords_mod.client.HUD_render;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -34,7 +35,8 @@ public class ConfigScreen {
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("config.coords_mod.category.general.hud_info"))
                                 .description(OptionDescription.createBuilder()
-                                        .text(Text.translatable("config.coords_mod.category.general.hud_info.description"))
+                                        .text(Text.translatable(
+                                                "config.coords_mod.category.general.hud_info.description"))
                                         .build()
                                 )
                                 .option(enableFPS)
@@ -96,7 +98,7 @@ public class ConfigScreen {
                                 .option(posY)
                                 .build()
                         )
-                        .option(LabelOption.create(Text.translatable("config.coords_mod.more_options_coming_soon")))
+                        .option(LabelOption.create(Text.of("More Options Coming Soon!")))
                         .build()
                 )
                 .save(this::save)
@@ -350,6 +352,7 @@ public class ConfigScreen {
                             () -> Config.HANDLER.instance().bgColor,
                             newVal -> {
                                 Config.HANDLER.instance().bgColor = newVal;
+                                System.out.println(newVal);
                                 save();
                             }
                     )
@@ -540,9 +543,6 @@ public class ConfigScreen {
 
     // Order List
     // change the order of the list of options to display on the HUD
-
-
-    // TODO: Show actual displayed text in the list
     public ListOption<Text> orderList =
             ListOption.<Text>createBuilder()
                     .name(Text.translatable("config.coords_mod.order_list"))
@@ -553,7 +553,10 @@ public class ConfigScreen {
                     .binding(
                             Config.HANDLER.defaults().optionsList,
                             () -> Config.HANDLER.instance().optionsList,
-                            newVal -> Config.HANDLER.instance().optionsList = newVal
+                            newVal -> {
+                                Config.HANDLER.instance().optionsList = newVal;
+                                saveOrder();
+                            }
                     )
                     .customController(LabelController::new)
                     .initial(Text.of(""))
@@ -561,4 +564,25 @@ public class ConfigScreen {
                     .minimumNumberOfEntries(5)
                     .collapsed(false)
                     .build();
+
+    // separate order for HUD_render
+    // since orderlist can vary from language to language
+    private void saveOrder() {
+        for (int i = 0; i < Config.HANDLER.instance().optionsList.size(); i++) {
+            HUD_render.order[i] =
+                    Config.HANDLER.instance()
+                            .optionsList
+                            .get(i)
+                            .toString()
+                            .replaceAll(
+                                    "translation\\{key='config\\.coords_mod\\.order_list\\.",
+                                    ""
+                            )
+                            .replaceAll(
+                                    "', args=\\[]}",
+                                    ""
+                            );
+        }
+
+    }
 }
