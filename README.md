@@ -22,6 +22,7 @@ Customization:
 - Customize the HUD text
 - and more!
 
+![Screenshot](https://github.com/Lonelywalf/minecraft-info-display/tree/1.21/images)
 ![Screenshot](https://github.com/Lonelywalf/minecraft-info-display/blob/1.21/images/img_config.png)
 
 ### TODO:
