@@ -38,7 +38,7 @@ Customization:
 2. Put the downloaded jar file into your mods folder
 3. Launch the game
 ## How to use
-- Open the configuration menu by either:
+Open the configuration menu by either:
 1. running the command `/infodisplay`
 2. opening it using Mod Menu
 3. setting a keybind for it in the controls menu
