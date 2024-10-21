@@ -11,7 +11,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 
-// TODO: relative position
+// TODO: relative text position for absolute position
+// FIXME: absolute position is not working
 public class HUD_render implements HudRenderCallback {
 
     // toggleable options
@@ -31,6 +32,9 @@ public class HUD_render implements HudRenderCallback {
     // position
     public int x;
     public int y;
+    public boolean relativeRight;
+    public boolean relativeTop;
+    public boolean relativeMode = true;
 
     // information
     public static String currentFPS;
@@ -93,6 +97,8 @@ public class HUD_render implements HudRenderCallback {
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
 
+        setRelativePosition();
+
         // load the config on first run
         if (!load) {
             load = true;
@@ -128,6 +134,7 @@ public class HUD_render implements HudRenderCallback {
 
         // dynamic y position
         int yCurrent = y;
+
 
         // the background depends on the length of the text
         // so the background is drawn first
@@ -266,6 +273,30 @@ public class HUD_render implements HudRenderCallback {
             yCurrent += 10;
         }
 
+        int longestX = Collections.max(
+                Arrays.asList(
+                        currentFPSx,
+                        currentCoordsX,
+                        currentBiomeX,
+                        currentDirectionX,
+                        currentTimeX
+                )
+        );
+
+        if (relativeMode) {
+            if (relativeRight) {
+                // -2 padding
+                x = client.getWindow().getScaledWidth() - 2;
+            } else {
+                x = 2;
+            }
+
+            if (relativeTop) {
+                y = 2;
+            } else {
+                y = client.getWindow().getScaledHeight() - length - 2;
+            }
+        }
 
         // render rectangle bg
         if (yCurrent != y) {
@@ -273,15 +304,8 @@ public class HUD_render implements HudRenderCallback {
             drawContext.fill(
                     x,
                     y,
-                    Collections.max(
-                            Arrays.asList(
-                                    currentFPSx,
-                                    currentCoordsX,
-                                    currentBiomeX,
-                                    currentDirectionX,
-                                    currentTimeX
-                            )
-                    ) + 3,
+                    // 3 padding left right
+                    x + ((longestX + 3) * (relativeRight ? -1 : 1)),
                     y + length,
                     bgColor
             );
@@ -298,7 +322,10 @@ public class HUD_render implements HudRenderCallback {
                     if (toggleFPS) {
                         drawContext.drawText(client.textRenderer,
                                 currentFPS,
-                                x+3,
+                                // if the pos is relative right, then subtract the length of the text
+                                // -2 padding for relative right because idk
+                                x + (dynamicSizeX(currentFPS) * (relativeRight ? -1 : 0)) +
+                                        (relativeRight ? -2 : 3),
                                 yCurrent+3,
                                 textColor,
                                 Config.HANDLER.instance().toggleTextShadow
@@ -310,7 +337,8 @@ public class HUD_render implements HudRenderCallback {
                     if (toggleCoords) {
                         drawContext.drawText(client.textRenderer,
                                 currentCoords,
-                                x+3,
+                                x + (dynamicSizeX(currentCoords) * (relativeRight ? -1 : 0)) +
+                                        (relativeRight ? -2 : 3),
                                 yCurrent+3,
                                 textColor,
                                 Config.HANDLER.instance().toggleTextShadow
@@ -322,7 +350,8 @@ public class HUD_render implements HudRenderCallback {
                     if (toggleClock) {
                         drawContext.drawText(client.textRenderer,
                                 currentTime,
-                                x+3,
+                                x + (dynamicSizeX(currentTime) * (relativeRight ? -1 : 0)) +
+                                        (relativeRight ? -2 : 3),
                                 yCurrent+3,
                                 textColor,
                                 Config.HANDLER.instance().toggleTextShadow
@@ -334,7 +363,8 @@ public class HUD_render implements HudRenderCallback {
                     if (toggleBiome) {
                         drawContext.drawText(client.textRenderer,
                                 currentBiome,
-                                x+3,
+                                x + (dynamicSizeX(currentBiome) * (relativeRight ? -1 : 0)) +
+                                        (relativeRight ? -2 : 3),
                                 yCurrent+3,
                                 textColor,
                                 Config.HANDLER.instance().toggleTextShadow
@@ -346,7 +376,8 @@ public class HUD_render implements HudRenderCallback {
                     if (toggleDirection) {
                         drawContext.drawText(client.textRenderer,
                                 currentDirection,
-                                x+3,
+                                x + (dynamicSizeX(currentDirection) * (relativeRight ? -1 : 0)) +
+                                        (relativeRight ? -2 : 3),
                                 yCurrent+3,
                                 textColor,
                                 Config.HANDLER.instance().toggleTextShadow
@@ -357,6 +388,23 @@ public class HUD_render implements HudRenderCallback {
             }
         }
     }
+
+    public void setRelativePosition() {
+        if (Config.HANDLER.instance().relativePosition == Config.HANDLER.instance().relativePosition.TOP_RIGHT) {
+            relativeRight = true;
+            relativeTop = true;
+        } else if (Config.HANDLER.instance().relativePosition == Config.HANDLER.instance().relativePosition.BOTTOM_LEFT) {
+            relativeRight = false;
+            relativeTop = false;
+        } else if (Config.HANDLER.instance().relativePosition == Config.HANDLER.instance().relativePosition.BOTTOM_RIGHT) {
+            relativeRight = true;
+            relativeTop = false;
+        } else {
+            relativeRight = false;
+            relativeTop = true;
+        }
+    }
+
 
     public static String getCurrentTime() {
         String patern;
@@ -422,8 +470,8 @@ public class HUD_render implements HudRenderCallback {
 
     // method to dynamically change the size of the rectangle based on the length of the biome name,
     // shorter char like i, l, t, I, k and f are also taken into account
-    public static int dynamicSizeX(String text) {
-        return MinecraftClient.getInstance().textRenderer.getWidth(text)+2; // +2 padding
+    public int dynamicSizeX(String text) {
+        return MinecraftClient.getInstance().textRenderer.getWidth(text);
     }
 
     /* deprecated methods

@@ -1,10 +1,7 @@
 package net.jamicah.coords_mod.gui.screen;
 
 import dev.isxander.yacl3.api.*;
-import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
-import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
-import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
-import dev.isxander.yacl3.api.controller.StringControllerBuilder;
+import dev.isxander.yacl3.api.controller.*;
 import dev.isxander.yacl3.gui.controllers.LabelController;
 import net.jamicah.coords_mod.client.Config;
 import net.jamicah.coords_mod.client.HUD_render;
@@ -12,8 +9,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicReference;
+
 
 public class ConfigScreen {
 
@@ -21,17 +21,46 @@ public class ConfigScreen {
         Config.HANDLER.save();
     }
 
-    public void load() {
-        Config.HANDLER.load();
-    }
 
     public Screen createGui(Screen parentScreen) {
-        load();
-        return YetAnotherConfigLib.createBuilder()
+        AtomicReference<Option<Boolean>> showAmPm = new AtomicReference<>();
+        AtomicReference<Option<Boolean>> showSeconds = new AtomicReference<>();
+        AtomicReference<Option<Boolean>> timeFormat12 = new AtomicReference<>();
+
+        AtomicReference<Option<Integer>> x = new AtomicReference<>();
+        AtomicReference<Option<Integer>> y = new AtomicReference<>();
+
+        AtomicReference<Option<Config.RelativePositions>> relativePosition = new AtomicReference<>();
+        return YetAnotherConfigLib.create(Config.HANDLER, (defaults, config, builder) -> builder
                 .title(Text.translatable("config.coords_mod.title"))
+                // general
                 .category(ConfigCategory.createBuilder()
                         .name(Text.translatable("config.coords_mod.category.general"))
-                        .option(enableHUD)
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.translatable("config.coords_mod.enable_hud"))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.translatable("config.coords_mod.enable_hud.description"))
+                                        .build()
+                                )
+                                .controller(opt -> BooleanControllerBuilder.create(opt)
+                                        .formatValue(val -> val ?
+                                                Text.translatable("options.on") :
+                                                Text.translatable("options.off")
+                                        )
+                                        .coloured(true)
+                                )
+                                .binding(
+                                        defaults.toggleHud,
+                                        () -> config.toggleHud,
+                                        newVal ->  {
+                                            config.toggleHud = newVal;
+                                            save();
+                                        }
+                                )
+                                .instant(true)
+                                .build()
+                        )
+                        // HUD info
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("config.coords_mod.category.general.hud_info"))
                                 .description(OptionDescription.createBuilder()
@@ -39,41 +68,325 @@ public class ConfigScreen {
                                                 "config.coords_mod.category.general.hud_info.description"))
                                         .build()
                                 )
-                                .option(enableFPS)
-                                .option(enableCoords)
-                                .option(enableBiome)
-                                .option(enableDirection)
-                                .option(enableTime)
-
-                                .build())
+                                .option(Option.<Boolean>createBuilder()
+                                        .name(Text.translatable("config.coords_mod.category.general.hud_info.FPS"))
+                                        .description(OptionDescription.createBuilder()
+                                                .text(Text.translatable("config.coords_mod.category.general.hud_info.FPS.description"))
+                                                .build()
+                                        )
+                                        .controller(opt -> BooleanControllerBuilder.create(opt)
+                                                .formatValue(val -> val ?
+                                                        Text.translatable("options.on") :
+                                                        Text.translatable("options.off")
+                                                )
+                                                .coloured(true)
+                                        )
+                                        .binding(
+                                                defaults.toggleFPS,
+                                                () -> config.toggleFPS,
+                                                newVal -> {
+                                                    config.toggleFPS = newVal;
+                                                    save();
+                                                }
+                                        )
+                                        .instant(true)
+                                        .build()
+                                )
+                                .option(Option.<Boolean>createBuilder()
+                                        .name(Text.translatable("config.coords_mod.enable_coords"))
+                                        .description(OptionDescription.createBuilder()
+                                                .text(Text.translatable("config.coords_mod.enable_coords.description"))
+                                                .build()
+                                        )
+                                        .controller(opt -> BooleanControllerBuilder.create(opt)
+                                                .formatValue(val -> val ?
+                                                        Text.translatable("options.on") :
+                                                        Text.translatable("options.off")
+                                                )
+                                                .coloured(true)
+                                        )
+                                        .binding(
+                                                defaults.toggleCoords,
+                                                () -> config.toggleCoords,
+                                                newVal -> {
+                                                    config.toggleCoords = newVal;
+                                                    save();
+                                                }
+                                        )
+                                        .instant(true)
+                                        .build()
+                                )
+                                .option(Option.<Boolean>createBuilder()
+                                        .name(Text.translatable("config.coords_mod.enable_biome"))
+                                        .description(OptionDescription.createBuilder()
+                                                .text(Text.translatable("config.coords_mod.enable_biome.description"))
+                                                .build()
+                                        )
+                                        .controller(opt -> BooleanControllerBuilder.create(opt)
+                                                .formatValue(val -> val ?
+                                                        Text.translatable("options.on") :
+                                                        Text.translatable("options.off")
+                                                )
+                                                .coloured(true)
+                                        )
+                                        .binding(
+                                                defaults.toggleBiome,
+                                                () -> config.toggleBiome,
+                                                newVal -> {
+                                                    config.toggleBiome = newVal;
+                                                    save();
+                                                }
+                                        )
+                                        .instant(true)
+                                        .build()
+                                )
+                                .option(Option.<Boolean>createBuilder()
+                                        .name(Text.translatable("config.coords_mod.enable_direction"))
+                                        .description(OptionDescription.createBuilder()
+                                                .text(Text.translatable("config.coords_mod.enable_direction.description"))
+                                                .build()
+                                        )
+                                        .controller(opt -> BooleanControllerBuilder.create(opt)
+                                                .formatValue(val -> val ?
+                                                        Text.translatable("options.on") :
+                                                        Text.translatable("options.off")
+                                                )
+                                                .coloured(true)
+                                        )
+                                        .binding(
+                                                defaults.toggleDirection,
+                                                () -> config.toggleDirection,
+                                                newVal -> {
+                                                    config.toggleDirection = newVal;
+                                                    save();
+                                                }
+                                        )
+                                        .instant(true)
+                                        .build()
+                                )
+                                .option(Option.<Boolean>createBuilder()
+                                        .name(Text.translatable("config.coords_mod.enable_time"))
+                                        .description(OptionDescription.createBuilder()
+                                                .text(Text.translatable("config.coords_mod.enable_time.description"))
+                                                .build()
+                                        )
+                                        .controller(opt -> BooleanControllerBuilder.create(opt)
+                                                .formatValue(val -> val ?
+                                                        Text.translatable("options.on") :
+                                                        Text.translatable("options.off")
+                                                )
+                                                .coloured(true)
+                                        )
+                                        .binding(
+                                                defaults.toggleTime,
+                                                () -> config.toggleTime,
+                                                newVal -> {
+                                                    config.toggleTime = newVal;
+                                                    save();
+                                                    showAmPm.get().setAvailable(newVal);
+                                                    showSeconds.get().setAvailable(newVal);
+                                                    timeFormat12.get().setAvailable(newVal);
+                                                }
+                                        )
+                                        .instant(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        // time settings
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("config.coords_mod.category.general.time_settings"))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.translatable("config.coords_mod.category.general.time_settings.description"))
                                         .build()
                                 )
-                                .option(timeFormat12)
-                                .option(showAmPm)
-                                .option(showSeconds)
+                                .option(Util.make(() -> {
+                                    var option = Option.<Boolean>createBuilder()
+                                            .name(Text.translatable("config.coords_mod.time_format"))
+                                            .description(OptionDescription.createBuilder()
+                                                    .text(Text.translatable("config.coords_mod.time_format.description"))
+                                                    .build()
+                                            )
+                                            .controller(opt -> BooleanControllerBuilder.create(opt)
+                                                    .formatValue(val -> val ?
+                                                            Text.translatable("config.coords_mod.time_format_24hour") :
+                                                            Text.translatable("config.coords_mod.time_format_12hour"))
+                                            )
+                                            .binding(
+                                                    defaults.timeFormat12,
+                                                    () -> config.timeFormat12,
+                                                    newVal -> {
+                                                        config.timeFormat12 = newVal;
+                                                        save();
+                                                    }
+                                            )
+                                            .available(Config.HANDLER.instance().toggleTime)
+                                            .instant(true)
+                                            .build();
+                                    timeFormat12.set(option);
+                                    return option;
+                                }))
+                                .option(Util.make(() -> {
+                                    var option =
+                                            Option.<Boolean>createBuilder()
+                                                    .name(Text.translatable("config.coords_mod.show_ampm"))
+                                                    .description(OptionDescription.createBuilder()
+                                                            .text(Text.translatable("config.coords_mod.show_ampm.description"))
+                                                            .build()
+                                                    )
+                                                    .controller(opt -> BooleanControllerBuilder.create(opt)
+                                                            .formatValue(val -> val ?
+                                                                    Text.translatable("options.on") :
+                                                                    Text.translatable("options.off")
+                                                            )
+                                                            .coloured(true)
+                                                    )
+                                                    .binding(
+                                                            defaults.showAmPm,
+                                                            () -> config.showAmPm,
+                                                            newVal -> {
+                                                                config.showAmPm = newVal;
+                                                                save();
+                                                            }
+                                                    )
+                                                    .available(Config.HANDLER.instance().toggleTime)
+                                                    .instant(true)
+                                                    .build();
+                                    showAmPm.set(option);
+                                    return option;
+                                }))
+                                .option(Util.make(() -> {
+                                    var option = Option.<Boolean>createBuilder()
+                                            .name(Text.translatable("config.coords_mod.show_seconds"))
+                                            .description(OptionDescription.createBuilder()
+                                                    .text(Text.translatable("config.coords_mod.show_seconds.description"))
+                                                    .build()
+                                            )
+                                            .controller(opt -> BooleanControllerBuilder.create(opt)
+                                                    .formatValue(val -> val ?
+                                                            Text.translatable("options.on") :
+                                                            Text.translatable("options.off")
+                                                    )
+                                                    .coloured(true)
+                                            )
+                                            .binding(
+                                                    defaults.showSeconds,
+                                                    () -> config.showSeconds,
+                                                    newVal -> {
+                                                        config.showSeconds = newVal;
+                                                        save();
+                                                    }
+                                            )
+                                            .available(Config.HANDLER.instance().toggleTime)
+                                            .instant(true)
+                                            .build();
+                                    showSeconds.set(option);
+                                    return option;
+                                }))
                                 .collapsed(true)
                                 .build()
                         )
-                        .group(orderList)
+                        .group(ListOption.<Text>createBuilder()
+                                .name(Text.translatable("config.coords_mod.order_list"))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.translatable("config.coords_mod.order_list.description"))
+                                        .build()
+                                )
+                                .binding(
+                                        defaults.optionsList,
+                                        () -> config.optionsList,
+                                        newVal -> {
+                                            config.optionsList = newVal;
+                                            save();
+                                            saveOrder();
+                                        }
+
+                                )
+                                .customController(LabelController::new)
+                                .initial(Text.of(""))
+                                .maximumNumberOfEntries(5)
+                                .minimumNumberOfEntries(5)
+                                .collapsed(false)
+                                .build()
+                        )
                         .build()
                 )
+                // appearance
                 .category(ConfigCategory.createBuilder()
                         .name(Text.translatable("config.coords_mod.category.appearance"))
+                        // appearance
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("config.coords_mod.category.appearance.color"))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.translatable("config.coords_mod.category.appearance.description"))
                                         .build()
                                 )
-                                .option(bgColor)
-                                .option(textColor)
-                                .option(showTextShadow)
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.translatable("config.coords_mod.bg_color"))
+                                        .description(OptionDescription.createBuilder()
+                                                .text(Text.translatable("config.coords_mod.bg_color.description"))
+                                                .build()
+                                        )
+                                        .controller(opt -> ColorControllerBuilder.create(opt)
+                                                .allowAlpha(true))
+                                        .binding(
+                                                defaults.bgColor,
+                                                () -> config.bgColor,
+                                                newVal -> {
+                                                    config.bgColor = newVal;
+                                                    save();
+                                                }
+                                        )
+                                        .instant(true)
+                                        .build()
+                                )
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.translatable("config.coords_mod.text_color"))
+                                        .description(OptionDescription.createBuilder()
+                                                .text(Text.translatable("config.coords_mod.text_color.description"))
+                                                .build()
+                                        )
+                                        .controller(opt -> ColorControllerBuilder.create(opt)
+                                                .allowAlpha(true))
+                                        .binding(
+                                                defaults.textColor,
+                                                () -> config.textColor,
+                                                newVal -> {
+                                                    config.textColor = newVal;
+                                                    save();
+                                                }
+                                        )
+                                        .instant(true)
+                                        .build()
+                                )
+                                .option(Option.<Boolean>createBuilder()
+                                        .name(Text.translatable("config.coords_mod.show_text_shadow"))
+                                        .description(OptionDescription.createBuilder()
+                                                .text(Text.translatable("config.coords_mod.show_text_shadow.description"))
+                                                .image(Identifier.of("coords_mod", "textures/gui/textshadow.png"), 1, 1)
+                                                .build()
+                                        )
+                                        .controller(opt -> BooleanControllerBuilder.create(opt)
+                                                .formatValue(val -> val ?
+                                                        Text.translatable("options.on") :
+                                                        Text.translatable("options.off")
+                                                )
+                                                .coloured(true)
+                                        )
+                                        .binding(
+                                                defaults.toggleTextShadow,
+                                                () -> config.toggleTextShadow,
+                                                newVal -> {
+                                                    config.toggleTextShadow = newVal;
+                                                    save();
+                                                }
+                                        )
+                                        .instant(true)
+                                        .build()
+                                )
                                 .build()
                         )
+                        // text customization
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("config.coords_mod.category.appearance.text_customization"))
                                 .description(OptionDescription.createBuilder()
@@ -81,489 +394,237 @@ public class ConfigScreen {
                                         .text(Text.translatable("config.coords_mod.category.appearance.text_customization.description"))
                                         .build()
                                 )
-                                .option(customFPSText)
-                                .option(customCoordsText)
-                                .option(customBiomeText)
-                                .option(customDirectionText)
-                                .option(customTimeText)
+                                .option(Option.<String>createBuilder()
+                                        .name(Text.translatable("config.coords_mod.custom_fps_text"))
+                                        .description(OptionDescription.createBuilder()
+                                                .text(Text.translatable("config.coords_mod.custom_fps_text.description"))
+                                                .build()
+                                        )
+                                        .controller(StringControllerBuilder::create)
+                                        .binding(
+                                                defaults.customFPSText,
+                                                () -> config.customFPSText,
+                                                newVal -> {
+                                                    config.customFPSText = newVal;
+                                                    save();
+                                                }
+                                        )
+                                        .build()
+                                )
+                                .option(Option.<String>createBuilder()
+                                        .name(Text.translatable("config.coords_mod.custom_coords_text"))
+                                        .description(OptionDescription.createBuilder()
+                                                .text(Text.translatable("config.coords_mod.custom_coords_text.description"))
+                                                .build()
+                                        )
+                                        .controller(StringControllerBuilder::create)
+                                        .binding(
+                                                defaults.customCoordsText,
+                                                () -> config.customCoordsText,
+                                                newVal -> {
+                                                    config.customCoordsText = newVal;
+                                                    save();
+                                                }
+                                        )
+                                        .build()
+                                )
+                                .option(Option.<String>createBuilder()
+                                        .name(Text.translatable("config.coords_mod.custom_biome_text"))
+                                        .description(OptionDescription.createBuilder()
+                                                .text(Text.translatable("config.coords_mod.custom_biome_text.description"))
+                                                .build()
+                                        )
+                                        .controller(StringControllerBuilder::create)
+                                        .binding(
+                                                defaults.customBiomeText,
+                                                () -> config.customBiomeText,
+                                                newVal -> {
+                                                    config.customBiomeText = newVal;
+                                                    save();
+                                                }
+                                        )
+                                        .build()
+                                )
+                                .option(Option.<String>createBuilder()
+                                        .name(Text.translatable("config.coords_mod.custom_direction_text"))
+                                        .description(OptionDescription.createBuilder()
+                                                .text(Text.translatable("config.coords_mod.custom_direction_text.description"))
+                                                .build()
+                                        )
+                                        .controller(StringControllerBuilder::create)
+                                        .binding(
+                                                defaults.customDirectionText,
+                                                () -> config.customDirectionText,
+                                                newVal -> {
+                                                    config.customDirectionText = newVal;
+                                                    save();
+                                                }
+                                        )
+                                        .build()
+                                )
+                                .option(Option.<String>createBuilder()
+                                        .name(Text.translatable("config.coords_mod.custom_time_text"))
+                                        .description(OptionDescription.createBuilder()
+                                                .text(Text.translatable("config.coords_mod.custom_time_text.description"))
+                                                .build()
+                                        )
+                                        .controller(StringControllerBuilder::create)
+                                        .binding(
+                                                defaults.customTimeText,
+                                                () -> config.customTimeText,
+                                                newVal -> {
+                                                    config.customTimeText = newVal;
+                                                    save();
+                                                }
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
                 )
+                // position
+
                 .category(ConfigCategory.createBuilder()
-                        .name(Text.translatable("config.coords_mod.category.position"))
-                        .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("config.coords_mod.category.position.absolute"))
-                                .option(posX)
-                                .option(posY)
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.translatable("config.coords_mod.category.position.positionMode"))
+                                .binding(
+                                        defaults.absoluteMode,
+                                        () -> config.absoluteMode,
+                                        newVal -> {
+                                            config.absoluteMode = newVal;
+
+                                            relativePosition.get().setAvailable(!newVal);
+
+                                            x.get().setAvailable(newVal);
+                                            y.get().setAvailable(newVal);
+
+                                            // if relative mode is enabled, set x and y to 2
+                                            if (!newVal) {
+                                                config.x = 2;
+                                                config.y = 2;
+                                            }
+
+                                            save();
+                                        }
+                                )
+                                .controller(opt -> BooleanControllerBuilder.create(opt)
+                                        .formatValue(val -> val ?
+                                                Text.translatable("config.coords_mod.category.position.absolute") :
+                                                Text.translatable("config.coords_mod.category.position.relativeMode")
+                                        )
+                                        .coloured(false)
+                                )
+                                .instant(true)
                                 .build()
                         )
-                        .option(LabelOption.create(Text.of("More Options Coming Soon!")))
+                        .name(Text.translatable("config.coords_mod.category.position"))
+
+                        // relative position
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.translatable("config.coords_mod.category.position.relativePosition"))
+                                .option(Util.make(() -> {
+                                    var option = Option.<Config.RelativePositions>createBuilder()
+                                            .name(Text.translatable("config.coords_mod.relative_position"))
+                                            .binding(
+                                                    defaults.relativePosition,
+                                                    () -> config.relativePosition,
+                                                    newVal -> {
+                                                        config.relativePosition = newVal;
+                                                        save();
+                                                    }
+                                            )
+                                            .controller(opt -> EnumControllerBuilder.create(opt)
+                                                    .enumClass(Config.RelativePositions.class)
+                                                    .formatValue(value -> Text.translatable("config.coords_mod.category.position.relativePosition." + value.name().toLowerCase()))
+                                            )
+                                            .available(!config.absoluteMode)
+                                            .instant(true)
+                                            .build();
+                                    relativePosition.set(option);
+                                    return option;
+                                }))
+                                .build())
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.translatable("config.coords_mod.category.position.absolutePosition"))
+                                .option(Util.make(() -> {
+                                    var option = Option.<Integer>createBuilder()
+                                            .name(Text.translatable("config.coords_mod.pos_x"))
+                                            .description(OptionDescription.createBuilder()
+                                                    .text(Text.translatable("config.coords_mod.pos_x.description"))
+                                                    .build())
+                                            .instant(true)
+                                            .controller(opt -> IntegerSliderControllerBuilder.create(opt)
+                                                    .range(0, MinecraftClient.getInstance().getWindow().getScaledWidth())
+                                                    .step(1)
+                                            )
+                                            .binding(
+                                                    defaults.x,
+                                                    () -> config.x,
+                                                    newVal -> {
+                                                        config.x = newVal;
+                                                        save();
+                                                    }
+                                            )
+                                            .available(config.absoluteMode)
+                                            .build();
+                                    x.set(option);
+                                    return option;
+                                }))
+                                .option(Util.make(() -> {
+                                    var option = Option.<Integer>createBuilder()
+                                            .name(Text.translatable("config.coords_mod.pos_y"))
+                                            .description(OptionDescription.createBuilder()
+                                                    .text(Text.translatable("config.coords_mod.pos_y.description"))
+                                                    .build())
+                                            .instant(true)
+                                            .controller(opt -> IntegerSliderControllerBuilder.create(opt)
+                                                    .range(0, MinecraftClient.getInstance().getWindow().getScaledHeight())
+                                                    .step(1)
+                                            )
+                                            .binding(
+                                                    defaults.y,
+                                                    () -> config.y,
+                                                    newVal -> {
+                                                        config.y = newVal;
+                                                        save();
+                                                    }
+                                            )
+                                            .available(config.absoluteMode)
+                                            .build();
+                                    y.set(option);
+                                    return option;
+                                }))
+                                .build()
+                        )
+                         /*
+                        .option(Option.<Config.RelativePositions>createBuilder()
+                                .name(Text.translatable("config.coords_mod.relative_position"))
+                                .binding(
+                                        defaults.relativePosition,
+                                        () -> config.relativePosition,
+                                        newVal -> {
+                                            Config.HANDLER.instance().relativePosition = newVal;
+                                            save();
+                                        }
+                                )
+                                .controller(opt -> EnumDropdownControllerBuilder.create(opt)
+                                        .formatValue(
+                                                formatting -> Text.literal(
+                                                        capitalizeWords(
+                                                                formatting.name().replaceAll(
+                                                                        "_", " "
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                                .build())
+                          */
                         .build()
                 )
-                .save(this::save)
-                .build()
-                .generateScreen(parentScreen);
+        ).generateScreen(parentScreen);
     }
-
-
-    // General
-
-    public Option<Boolean> enableHUD =
-            Option.<Boolean>createBuilder()
-                    .name(Text.translatable("config.coords_mod.enable_hud"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.enable_hud.description"))
-                            .build()
-                    )
-                    .controller(opt -> BooleanControllerBuilder.create(opt)
-                            .formatValue(val -> val ?
-                                    Text.translatable("options.on") :
-                                    Text.translatable("options.off")
-                            )
-                            .coloured(true)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().toggleHud,
-                            () -> Config.HANDLER.instance().toggleHud,
-                            newVal -> Config.HANDLER.instance().toggleHud = newVal
-                    )
-                    .instant(true)
-                    .build();
-
-    public Option<Boolean> enableFPS =
-            Option.<Boolean>createBuilder()
-                    .name(Text.translatable("config.coords_mod.category.general.hud_info.FPS"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.category.general.hud_info.FPS.description"))
-                            .build()
-                    )
-                    .controller(opt -> BooleanControllerBuilder.create(opt)
-                            .formatValue(val -> val ?
-                                    Text.translatable("options.on") :
-                                    Text.translatable("options.off")
-                            )
-                            .coloured(true)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().toggleFPS,
-                            () -> Config.HANDLER.instance().toggleFPS,
-                            newVal -> {
-                                Config.HANDLER.instance().toggleFPS = newVal;
-                                save();
-                            }
-                    )
-                    .instant(true)
-                    .build();
-
-    public Option<Boolean> enableCoords =
-            Option.<Boolean>createBuilder()
-                    .name(Text.translatable("config.coords_mod.enable_coords"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.enable_coords.description"))
-                            .build()
-                    )
-                    .controller(opt -> BooleanControllerBuilder.create(opt)
-                            .formatValue(val -> val ?
-                                    Text.translatable("options.on") :
-                                    Text.translatable("options.off")
-                            )
-                            .coloured(true)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().toggleCoords,
-                            () -> Config.HANDLER.instance().toggleCoords,
-                            newVal -> {
-                                Config.HANDLER.instance().toggleCoords = newVal;
-                                save();
-                            }
-                    )
-                    .instant(true)
-                    .build();
-
-    public Option<Boolean> enableBiome =
-            Option.<Boolean>createBuilder()
-                    .name(Text.translatable("config.coords_mod.enable_biome"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.enable_biome.description"))
-                            .build()
-                    )
-                    .controller(opt -> BooleanControllerBuilder.create(opt)
-                            .formatValue(val -> val ?
-                                    Text.translatable("options.on") :
-                                    Text.translatable("options.off")
-                            )
-                            .coloured(true)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().toggleBiome,
-                            () -> Config.HANDLER.instance().toggleBiome,
-                            newVal -> {
-                                Config.HANDLER.instance().toggleBiome = newVal;
-                                save();
-                            }
-                    )
-                    .instant(true)
-                    .build();
-
-    public Option<Boolean> enableDirection =
-            Option.<Boolean>createBuilder()
-                    .name(Text.translatable("config.coords_mod.enable_direction"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.enable_direction.description"))
-                            .build()
-                    )
-                    .controller(opt -> BooleanControllerBuilder.create(opt)
-                            .formatValue(val -> val ?
-                                    Text.translatable("options.on") :
-                                    Text.translatable("options.off")
-                            )
-                            .coloured(true)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().toggleDirection,
-                            () -> Config.HANDLER.instance().toggleDirection,
-                            newVal -> {
-                                Config.HANDLER.instance().toggleDirection = newVal;
-                                save();
-                            }
-                    )
-                    .instant(true)
-                    .build();
-
-    public Option<Boolean> showAmPm =
-            Option.<Boolean>createBuilder()
-                    .name(Text.translatable("config.coords_mod.show_ampm"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.show_ampm.description"))
-                            .build()
-                    )
-                    .controller(opt -> BooleanControllerBuilder.create(opt)
-                            .formatValue(val -> val ?
-                                    Text.translatable("options.on") :
-                                    Text.translatable("options.off")
-                            )
-                            .coloured(true)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().showAmPm,
-                            () -> Config.HANDLER.instance().showAmPm,
-                            newVal -> {
-                                Config.HANDLER.instance().showAmPm = newVal;
-                                save();
-                            }
-                    )
-                    .available(Config.HANDLER.instance().toggleTime)
-                    .instant(true)
-                    .build();
-
-    public Option<Boolean> showSeconds =
-            Option.<Boolean>createBuilder()
-                    .name(Text.translatable("config.coords_mod.show_seconds"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.show_seconds.description"))
-                            .build()
-                    )
-                    .controller(opt -> BooleanControllerBuilder.create(opt)
-                            .formatValue(val -> val ?
-                                    Text.translatable("options.on") :
-                                    Text.translatable("options.off")
-                            )
-                            .coloured(true)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().showSeconds,
-                            () -> Config.HANDLER.instance().showSeconds,
-                            newVal -> {
-                                Config.HANDLER.instance().showSeconds = newVal;
-                                save();
-                            }
-                    )
-                    .available(Config.HANDLER.instance().toggleTime)
-                    .instant(true)
-                    .build();
-
-    public Option<Boolean> timeFormat12 =
-            Option.<Boolean>createBuilder()
-                    .name(Text.translatable("config.coords_mod.time_format"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.time_format.description"))
-                            .build()
-                    )
-                    .controller(opt -> BooleanControllerBuilder.create(opt)
-                            .formatValue(val -> val ?
-                                    Text.translatable("config.coords_mod.time_format_24hour") :
-                                    Text.translatable("config.coords_mod.time_format_12hour"))
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().timeFormat12,
-                            () -> Config.HANDLER.instance().timeFormat12,
-                            newVal -> {
-                                Config.HANDLER.instance().timeFormat12 = newVal;
-                                save();
-                            }
-                    )
-                    .available(Config.HANDLER.instance().toggleTime)
-                    .instant(true)
-                    .build();
-
-    public Option<Boolean> enableTime =
-            Option.<Boolean>createBuilder()
-                    .name(Text.translatable("config.coords_mod.enable_time"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.enable_time.description"))
-                            .build()
-                    )
-                    .controller(opt -> BooleanControllerBuilder.create(opt)
-                            .formatValue(val -> val ?
-                                    Text.translatable("options.on") :
-                                    Text.translatable("options.off")
-                            )
-                            .coloured(true)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().toggleTime,
-                            () -> Config.HANDLER.instance().toggleTime,
-                            newVal -> {
-                                Config.HANDLER.instance().toggleTime = newVal;
-                                timeFormat12.setAvailable(newVal);
-                                showAmPm.setAvailable(newVal);
-                                showSeconds.setAvailable(newVal);
-                                save();
-                            }
-                    )
-                    .instant(true)
-                    .build();
-
-
-
-    // Appearance
-    public Option<Color> bgColor =
-            Option.<Color>createBuilder()
-                    .name(Text.translatable("config.coords_mod.bg_color"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.bg_color.description"))
-                            .build()
-                    )
-                    .controller(opt -> ColorControllerBuilder.create(opt)
-                            .allowAlpha(true))
-                    .binding(
-                            Config.HANDLER.defaults().bgColor,
-                            () -> Config.HANDLER.instance().bgColor,
-                            newVal -> {
-                                Config.HANDLER.instance().bgColor = newVal;
-                                System.out.println(newVal);
-                                save();
-                            }
-                    )
-                    .instant(true)
-                    .build();
-
-    public Option<Color> textColor =
-            Option.<Color>createBuilder()
-                    .name(Text.translatable("config.coords_mod.text_color"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.text_color.description"))
-                            .build()
-                    )
-                    .controller(opt -> ColorControllerBuilder.create(opt)
-                            .allowAlpha(true))
-                    .binding(
-                            Config.HANDLER.defaults().textColor,
-                            () -> Config.HANDLER.instance().textColor,
-                            newVal -> {
-                                Config.HANDLER.instance().textColor = newVal;
-                                save();
-                            }
-                    )
-                    .instant(true)
-                    .build();
-
-
-    public Option<Boolean> showTextShadow =
-            Option.<Boolean>createBuilder()
-                    .name(Text.translatable("config.coords_mod.show_text_shadow"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.show_text_shadow.description"))
-                            .image(Identifier.of("coords_mod", "textures/gui/textshadow.png"), 1, 1)
-                            .build()
-                    )
-                    .controller(opt -> BooleanControllerBuilder.create(opt)
-                            .formatValue(val -> val ?
-                                    Text.translatable("options.on") :
-                                    Text.translatable("options.off")
-                            )
-                            .coloured(true)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().toggleTextShadow,
-                            () -> Config.HANDLER.instance().toggleTextShadow,
-                            newVal -> {
-                                Config.HANDLER.instance().toggleTextShadow = newVal;
-                                save();
-                            }
-                    )
-                    .instant(true)
-                    .build();
-
-    public Option<String> customFPSText =
-            Option.<String>createBuilder()
-                    .name(Text.translatable("config.coords_mod.custom_fps_text"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.custom_fps_text.description"))
-                            .build()
-                    )
-                    .controller(StringControllerBuilder::create)
-                    .binding(
-                            Config.HANDLER.defaults().customFPSText,
-                            () -> Config.HANDLER.instance().customFPSText,
-                            newVal -> {
-                                Config.HANDLER.instance().customFPSText = newVal;
-                                save();
-                            }
-                    )
-                    .build();
-
-    public Option<String> customCoordsText =
-            Option.<String>createBuilder()
-                    .name(Text.translatable("config.coords_mod.custom_coords_text"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.custom_coords_text.description"))
-                            .build()
-                    )
-                    .controller(StringControllerBuilder::create)
-                    .binding(
-                            Config.HANDLER.defaults().customCoordsText,
-                            () -> Config.HANDLER.instance().customCoordsText,
-                            newVal -> {
-                                Config.HANDLER.instance().customCoordsText = newVal;
-                                save();
-                            }
-                    )
-                    .build();
-
-    public Option<String> customBiomeText =
-            Option.<String>createBuilder()
-                    .name(Text.translatable("config.coords_mod.custom_biome_text"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.custom_biome_text.description"))
-                            .build()
-                    )
-                    .controller(StringControllerBuilder::create)
-                    .binding(
-                            Config.HANDLER.defaults().customBiomeText,
-                            () -> Config.HANDLER.instance().customBiomeText,
-                            newVal -> {
-                                Config.HANDLER.instance().customBiomeText = newVal;
-                                save();
-                            }
-                    )
-                    .build();
-
-    public Option<String> customDirectionText =
-            Option.<String>createBuilder()
-                    .name(Text.translatable("config.coords_mod.custom_direction_text"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.custom_direction_text.description"))
-                            .build()
-                    )
-                    .controller(StringControllerBuilder::create)
-                    .binding(
-                            Config.HANDLER.defaults().customDirectionText,
-                            () -> Config.HANDLER.instance().customDirectionText,
-                            newVal -> {
-                                Config.HANDLER.instance().customDirectionText = newVal;
-                                save();
-                            }
-                    )
-                    .build();
-
-    public Option<String> customTimeText =
-            Option.<String>createBuilder()
-                    .name(Text.translatable("config.coords_mod.custom_time_text"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.custom_time_text.description"))
-                            .build()
-                    )
-                    .controller(StringControllerBuilder::create)
-                    .binding(
-                            Config.HANDLER.defaults().customTimeText,
-                            () -> Config.HANDLER.instance().customTimeText,
-                            newVal -> {
-                                Config.HANDLER.instance().customTimeText = newVal;
-                                save();
-                            }
-                    )
-                    .build();
-
-
-    // Position
-
-    public Option<Integer> posX =
-            Option.<Integer>createBuilder()
-                    .name(Text.translatable("config.coords_mod.pos_x"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.pos_x.description"))
-                            .build())
-                    .instant(true)
-                    .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                            .range(0, MinecraftClient.getInstance().getWindow().getScaledWidth())
-                            .step(1)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().x,
-                            () -> Config.HANDLER.instance().x,
-                            newVal -> {
-                                Config.HANDLER.instance().x = newVal;
-                                save();
-                            }
-                    )
-                    .build();
-
-    public Option<Integer> posY =
-            Option.<Integer>createBuilder()
-                    .name(Text.translatable("config.coords_mod.pos_y"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.pos_y.description"))
-                            .build())
-                    .instant(true)
-                    .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                            .range(0, MinecraftClient.getInstance().getWindow().getScaledHeight())
-                            .step(1)
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().y,
-                            () -> Config.HANDLER.instance().y,
-                            newVal -> {
-                                Config.HANDLER.instance().y = newVal;
-                                save();
-                            }
-                    )
-                    .build();
-
-    // Order List
-    // change the order of the list of options to display on the HUD
-    public ListOption<Text> orderList =
-            ListOption.<Text>createBuilder()
-                    .name(Text.translatable("config.coords_mod.order_list"))
-                    .description(OptionDescription.createBuilder()
-                            .text(Text.translatable("config.coords_mod.order_list.description"))
-                            .build()
-                    )
-                    .binding(
-                            Config.HANDLER.defaults().optionsList,
-                            () -> Config.HANDLER.instance().optionsList,
-                            newVal -> {
-                                Config.HANDLER.instance().optionsList = newVal;
-                                saveOrder();
-                            }
-                    )
-                    .customController(LabelController::new)
-                    .initial(Text.of(""))
-                    .maximumNumberOfEntries(5)
-                    .minimumNumberOfEntries(5)
-                    .collapsed(false)
-                    .build();
 
     // separate order for HUD_render
     // since orderlist can vary from language to language
@@ -585,4 +646,24 @@ public class ConfigScreen {
         }
 
     }
+
+    public static String capitalizeWords(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+
+        String[] words = str.split("\\s+");
+        StringBuilder capitalized = new StringBuilder();
+
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                capitalized.append(Character.toUpperCase(word.charAt(0)))
+                        .append(word.substring(1).toLowerCase())
+                        .append(" ");
+            }
+        }
+
+        return capitalized.toString().trim();
+    }
 }
+

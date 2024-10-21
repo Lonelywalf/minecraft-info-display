@@ -71,6 +71,19 @@ public class Config {
     @SerialEntry
     public int y = 2;
 
+    @SerialEntry
+    public RelativePositions relativePosition = RelativePositions.TOP_LEFT;
+
+    public enum RelativePositions {
+        TOP_LEFT,
+        TOP_RIGHT,
+        BOTTOM_LEFT,
+        BOTTOM_RIGHT
+    }
+
+    @SerialEntry
+    public boolean absoluteMode = false;
+
     @SerialEntry(comment = "Order for the Text labels")
     public List<Text> optionsList = Arrays.asList(
         Text.translatable("config.coords_mod.order_list.FPS"),
@@ -94,4 +107,5 @@ public class Config {
 
     @SerialEntry
     public String customTimeText = "%s";
+
 }
