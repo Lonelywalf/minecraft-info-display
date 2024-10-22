@@ -499,11 +499,6 @@ public class ConfigScreen {
                                             x.get().setAvailable(newVal);
                                             y.get().setAvailable(newVal);
 
-                                            // if relative mode is enabled, set x and y to 2
-                                            if (!newVal) {
-                                                config.x = 2;
-                                                config.y = 2;
-                                            }
 
                                             save();
                                         }

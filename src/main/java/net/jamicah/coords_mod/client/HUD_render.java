@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 
 // TODO: relative text position for absolute position
-// FIXME: absolute position is not working
+// TODO: custom padding
 public class HUD_render implements HudRenderCallback {
 
     // toggleable options
@@ -34,7 +34,7 @@ public class HUD_render implements HudRenderCallback {
     public int y;
     public boolean relativeRight;
     public boolean relativeTop;
-    public boolean relativeMode = true;
+    public boolean relativeMode;
 
     // information
     public static String currentFPS;
@@ -99,6 +99,7 @@ public class HUD_render implements HudRenderCallback {
 
         setRelativePosition();
 
+
         // load the config on first run
         if (!load) {
             load = true;
@@ -113,11 +114,12 @@ public class HUD_render implements HudRenderCallback {
         toggleCoords = Config.HANDLER.instance().toggleCoords;
         toggleDirection = Config.HANDLER.instance().toggleDirection;
         toggleClock = Config.HANDLER.instance().toggleTime;
+        relativeMode = !Config.HANDLER.instance().absoluteMode;
 
         bgColor = Config.HANDLER.instance().bgColor.getRGB();
         textColor = Config.HANDLER.instance().textColor.getRGB();
 
-        x = Config.HANDLER.instance().x;
+        x = (!relativeMode ? Config.HANDLER.instance().x : 2);
         y = Config.HANDLER.instance().y;
 
 
@@ -129,8 +131,7 @@ public class HUD_render implements HudRenderCallback {
         }
 
         // pos of the gui
-        int x = Config.HANDLER.instance().x;
-        int y = Config.HANDLER.instance().y;
+
 
         // dynamic y position
         int yCurrent = y;
@@ -168,7 +169,7 @@ public class HUD_render implements HudRenderCallback {
             }
 
             // calculate length of the text (to compare which is the longest later)
-            currentFPSx = x + dynamicSizeX(currentFPS);
+            currentFPSx = x * (relativeMode ? 1 : 0) + dynamicSizeX(currentFPS);
             yCurrent += 10;
         }
 
@@ -198,7 +199,7 @@ public class HUD_render implements HudRenderCallback {
                 Config.HANDLER.save();
             }
 
-            currentCoordsX = x + dynamicSizeX(currentCoords);
+            currentCoordsX = x * (relativeMode ? 1 : 0) + dynamicSizeX(currentCoords);
             yCurrent += 10;
         }
 
@@ -222,7 +223,7 @@ public class HUD_render implements HudRenderCallback {
                 Config.HANDLER.instance().customBiomeText = Config.HANDLER.defaults().customBiomeText;
                 Config.HANDLER.save();
             }
-            currentBiomeX = x + dynamicSizeX(currentBiome);
+            currentBiomeX = x * (relativeMode ? 1 : 0) + dynamicSizeX(currentBiome);
             yCurrent += 10;
         }
 
@@ -246,7 +247,7 @@ public class HUD_render implements HudRenderCallback {
                 Config.HANDLER.instance().customDirectionText = Config.HANDLER.defaults().customDirectionText;
                 Config.HANDLER.save();
             }
-            currentDirectionX = x + dynamicSizeX(currentDirection);
+            currentDirectionX = x * (relativeMode ? 1 : 0) + dynamicSizeX(currentDirection);
             yCurrent += 10;
         }
 
@@ -269,7 +270,7 @@ public class HUD_render implements HudRenderCallback {
                 Config.HANDLER.instance().customTimeText = Config.HANDLER.defaults().customTimeText;
                 Config.HANDLER.save();
             }
-            currentTimeX = x + dynamicSizeX(currentTime);
+            currentTimeX = x * (relativeMode ? 1 : 0) + dynamicSizeX(currentTime);
             yCurrent += 10;
         }
 
@@ -298,14 +299,34 @@ public class HUD_render implements HudRenderCallback {
             }
         }
 
+        /*
+            Layout of the HUD:
+            - 2 padding left and right from the edge of the screen for the rectangle
+            - 3 padding on all sides from the inside of the rectangle to the text
+
+
+           2px..+---------------------+
+             3px|...FPS: 60           |
+                |   12 23 34          |
+                |   Biome: Forest     |
+                +---------------------+
+         */
+
         // render rectangle bg
         if (yCurrent != y) {
-            // compare which of the text is the longest
+            // determine the x length of the rectangle
+            int x2;
+            if (relativeMode) {
+                x2 = x + (relativeRight ? -1 : 1) * (longestX + 3);
+            } else {
+                x2 = x + longestX + 3 + 2;
+            }
             drawContext.fill(
                     x,
                     y,
                     // 3 padding left right
-                    x + ((longestX + 3) * (relativeRight ? -1 : 1)),
+                    // if it's in absolute mode, it should just add the longestX (+3 padding)
+                    x2,
                     y + length,
                     bgColor
             );
@@ -316,75 +337,146 @@ public class HUD_render implements HudRenderCallback {
 
 
         // render the information (text)
-        for (String info : order) {
-            switch (info) {
-                case "FPS":
-                    if (toggleFPS) {
-                        drawContext.drawText(client.textRenderer,
-                                currentFPS,
-                                // if the pos is relative right, then subtract the length of the text
-                                // -2 padding for relative right because idk
-                                x + (dynamicSizeX(currentFPS) * (relativeRight ? -1 : 0)) +
-                                        (relativeRight ? -2 : 3),
-                                yCurrent+3,
-                                textColor,
-                                Config.HANDLER.instance().toggleTextShadow
-                        );
-                        yCurrent += 10;
-                    }
-                    break;
-                case "coords":
-                    if (toggleCoords) {
-                        drawContext.drawText(client.textRenderer,
-                                currentCoords,
-                                x + (dynamicSizeX(currentCoords) * (relativeRight ? -1 : 0)) +
-                                        (relativeRight ? -2 : 3),
-                                yCurrent+3,
-                                textColor,
-                                Config.HANDLER.instance().toggleTextShadow
-                        );
-                        yCurrent += 10;
-                    }
-                    break;
-                case "time":
-                    if (toggleClock) {
-                        drawContext.drawText(client.textRenderer,
-                                currentTime,
-                                x + (dynamicSizeX(currentTime) * (relativeRight ? -1 : 0)) +
-                                        (relativeRight ? -2 : 3),
-                                yCurrent+3,
-                                textColor,
-                                Config.HANDLER.instance().toggleTextShadow
-                        );
-                        yCurrent += 10;
-                    }
-                    break;
-                case "biome":
-                    if (toggleBiome) {
-                        drawContext.drawText(client.textRenderer,
-                                currentBiome,
-                                x + (dynamicSizeX(currentBiome) * (relativeRight ? -1 : 0)) +
-                                        (relativeRight ? -2 : 3),
-                                yCurrent+3,
-                                textColor,
-                                Config.HANDLER.instance().toggleTextShadow
-                        );
-                        yCurrent += 10;
-                    }
-                    break;
-                case "direction":
-                    if (toggleDirection) {
-                        drawContext.drawText(client.textRenderer,
-                                currentDirection,
-                                x + (dynamicSizeX(currentDirection) * (relativeRight ? -1 : 0)) +
-                                        (relativeRight ? -2 : 3),
-                                yCurrent+3,
-                                textColor,
-                                Config.HANDLER.instance().toggleTextShadow
-                        );
-                        yCurrent += 10;
-                    }
-                    break;
+
+        // relative mode
+        if (relativeMode) {
+            for (String info : order) {
+                switch (info) {
+                    case "FPS":
+                        if (toggleFPS) {
+                            drawContext.drawText(client.textRenderer,
+                                    currentFPS,
+                                    // if the pos is relative right, then subtract the length of the text
+                                    // -2 padding for relative right because idk
+                                    x + (dynamicSizeX(currentFPS) * (relativeRight ? -1 : 0)) +
+                                            (relativeRight ? -2 : 3),
+                                    yCurrent + 3,
+                                    textColor,
+                                    Config.HANDLER.instance().toggleTextShadow
+                            );
+                            yCurrent += 10;
+                        }
+                        break;
+                    case "coords":
+                        if (toggleCoords) {
+                            drawContext.drawText(client.textRenderer,
+                                    currentCoords,
+                                    x + (dynamicSizeX(currentCoords) * (relativeRight ? -1 : 0)) +
+                                            (relativeRight ? -2 : 3),
+                                    yCurrent + 3,
+                                    textColor,
+                                    Config.HANDLER.instance().toggleTextShadow
+                            );
+                            yCurrent += 10;
+                        }
+                        break;
+                    case "time":
+                        if (toggleClock) {
+                            drawContext.drawText(client.textRenderer,
+                                    currentTime,
+                                    x + (dynamicSizeX(currentTime) * (relativeRight ? -1 : 0)) +
+                                            (relativeRight ? -2 : 3),
+                                    yCurrent + 3,
+                                    textColor,
+                                    Config.HANDLER.instance().toggleTextShadow
+                            );
+                            yCurrent += 10;
+                        }
+                        break;
+                    case "biome":
+                        if (toggleBiome) {
+                            drawContext.drawText(client.textRenderer,
+                                    currentBiome,
+                                    x + (dynamicSizeX(currentBiome) * (relativeRight ? -1 : 0)) +
+                                            (relativeRight ? -2 : 3),
+                                    yCurrent + 3,
+                                    textColor,
+                                    Config.HANDLER.instance().toggleTextShadow
+                            );
+                            yCurrent += 10;
+                        }
+                        break;
+                    case "direction":
+                        if (toggleDirection) {
+                            drawContext.drawText(client.textRenderer,
+                                    currentDirection,
+                                    x + (dynamicSizeX(currentDirection) * (relativeRight ? -1 : 0)) +
+                                            (relativeRight ? -2 : 3),
+                                    yCurrent + 3,
+                                    textColor,
+                                    Config.HANDLER.instance().toggleTextShadow
+                            );
+                            yCurrent += 10;
+                        }
+                        break;
+                }
+            }
+
+        // absolute mode
+        } else {
+            for (String info : order) {
+                switch (info) {
+                    case "FPS":
+                        if (toggleFPS) {
+                            drawContext.drawText(client.textRenderer,
+                                    currentFPS,
+                                    x + 3,
+                                    yCurrent + 3,
+                                    textColor,
+                                    Config.HANDLER.instance().toggleTextShadow
+                            );
+                            yCurrent += 10;
+                        }
+                        break;
+                    case "coords":
+                        if (toggleCoords) {
+                            drawContext.drawText(client.textRenderer,
+                                    currentCoords,
+                                    x + 3,
+                                    yCurrent + 3,
+                                    textColor,
+                                    Config.HANDLER.instance().toggleTextShadow
+                            );
+                            yCurrent += 10;
+                        }
+                        break;
+                    case "time":
+                        if (toggleClock) {
+                            drawContext.drawText(client.textRenderer,
+                                    currentTime,
+                                    x + 3,
+                                    yCurrent + 3,
+                                    textColor,
+                                    Config.HANDLER.instance().toggleTextShadow
+                            );
+                            yCurrent += 10;
+                        }
+                        break;
+                    case "biome":
+                        if (toggleBiome) {
+                            drawContext.drawText(client.textRenderer,
+                                    currentBiome,
+                                    x + 3,
+                                    yCurrent + 3,
+                                    textColor,
+                                    Config.HANDLER.instance().toggleTextShadow
+                            );
+                            yCurrent += 10;
+                        }
+                        break;
+                    case "direction":
+                        if (toggleDirection) {
+                            drawContext.drawText(client.textRenderer,
+                                    currentDirection,
+                                    x + 3,
+                                    yCurrent + 3,
+                                    textColor,
+                                    Config.HANDLER.instance().toggleTextShadow
+                            );
+                            yCurrent += 10;
+                        }
+                        break;
+                }
             }
         }
     }
