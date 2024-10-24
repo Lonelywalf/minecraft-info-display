@@ -101,7 +101,15 @@
 
   "config.coords_mod.category.position": "Position",
   "config.coords_mod.category.position.absolutePosition": "Absolute Position",
+  "config.coords_mod.category.position.absolutePosition.description": "Absolute Mode Options",
   "config.coords_mod.category.position.relativePosition": "Relative Position",
+  "config.coords_mod.category.position.relativePosition.description2": "Relative Mode Options",
+
+  "config.coords_mod.category.position.relativePosition.description": "Position of the HUD relative to the screen corners",
+  "config.coords_mod.category.position.relativePosition.top_left": "Top Left",
+  "config.coords_mod.category.position.relativePosition.top_right": "Top Right",
+  "config.coords_mod.category.position.relativePosition.bottom_left": "Bottom Left",
+  "config.coords_mod.category.position.relativePosition.bottom_right": "Bottom Right",
 
 
   "config.coords_mod.pos_x": "X Position",
@@ -109,10 +117,6 @@
 
   "config.coords_mod.pos_y": "Y Position",
   "config.coords_mod.pos_y.description": "Absolute Y position of the HUD. Position may change on screen resize",
-  "config.coords_mod.relative_position": "Relative Position",
+  "config.coords_mod.relative_position": "Relative Position"
 
-  "config.coords_mod.category.position.relativePosition.top_left": "Top Left",
-  "config.coords_mod.category.position.relativePosition.top_right": "Top Right",
-  "config.coords_mod.category.position.relativePosition.bottom_left": "Bottom Left",
-  "config.coords_mod.category.position.relativePosition.bottom_right": "Bottom Right"
 }

@@ -488,6 +488,10 @@ public class ConfigScreen {
                 .category(ConfigCategory.createBuilder()
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.translatable("config.coords_mod.category.position.positionMode"))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.translatable("config.coords_mod.category.position.positionMode.description"))
+                                        .build()
+                                )
                                 .binding(
                                         defaults.absoluteMode,
                                         () -> config.absoluteMode,
@@ -518,9 +522,17 @@ public class ConfigScreen {
                         // relative position
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("config.coords_mod.category.position.relativePosition"))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.translatable("config.coords_mod.category.position.relativePosition.description2"))
+                                        .build()
+                                )
                                 .option(Util.make(() -> {
                                     var option = Option.<Config.RelativePositions>createBuilder()
-                                            .name(Text.translatable("config.coords_mod.relative_position"))
+                                            .name(Text.translatable("config.coords_mod.category.position.relativePosition"))
+                                            .description(OptionDescription.createBuilder()
+                                                    .text(Text.translatable("config.coords_mod.category.position.relativePosition.description"))
+                                                    .build()
+                                            )
                                             .binding(
                                                     defaults.relativePosition,
                                                     () -> config.relativePosition,
@@ -542,6 +554,10 @@ public class ConfigScreen {
                                 .build())
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("config.coords_mod.category.position.absolutePosition"))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.translatable("config.coords_mod.category.position.absolutePosition.description"))
+                                        .build()
+                                )
                                 .option(Util.make(() -> {
                                     var option = Option.<Integer>createBuilder()
                                             .name(Text.translatable("config.coords_mod.pos_x"))
