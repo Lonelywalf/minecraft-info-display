@@ -82,6 +82,15 @@ public class Config {
     }
 
     @SerialEntry
+    public TextAlignment textAlignment = TextAlignment.LEFT;
+
+    public enum TextAlignment {
+        LEFT,
+        CENTER,
+        RIGHT
+    }
+
+    @SerialEntry
     public boolean absoluteMode = false;
 
     @SerialEntry(comment = "Order for the Text labels")

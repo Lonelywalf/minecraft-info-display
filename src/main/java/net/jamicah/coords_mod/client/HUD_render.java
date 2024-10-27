@@ -11,8 +11,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 
-// TODO: relative text position for absolute position
-// TODO: custom padding
 public class HUD_render implements HudRenderCallback {
 
     // toggleable options
@@ -300,7 +298,7 @@ public class HUD_render implements HudRenderCallback {
         }
 
         /*
-            Layout of the HUD:
+            Standard Layout of the HUD:
             - 2 padding left and right from the edge of the screen for the rectangle
             - 3 padding on all sides from the inside of the rectangle to the text
 
@@ -313,9 +311,11 @@ public class HUD_render implements HudRenderCallback {
          */
 
         // render rectangle bg
+        // outside the if statement because
+        // it is used for the text alignment later
+        int x2 = 0;
         if (yCurrent != y) {
             // determine the x length of the rectangle
-            int x2;
             if (relativeMode) {
                 x2 = x + (relativeRight ? -1 : 1) * (longestX + 3);
             } else {
@@ -347,7 +347,7 @@ public class HUD_render implements HudRenderCallback {
                             drawContext.drawText(client.textRenderer,
                                     currentFPS,
                                     // if the pos is relative right, then subtract the length of the text
-                                    // -2 padding for relative right because idk
+                                    // -2 padding for relative right because IDK
                                     x + (dynamicSizeX(currentFPS) * (relativeRight ? -1 : 0)) +
                                             (relativeRight ? -2 : 3),
                                     yCurrent + 3,
@@ -420,7 +420,7 @@ public class HUD_render implements HudRenderCallback {
                         if (toggleFPS) {
                             drawContext.drawText(client.textRenderer,
                                     currentFPS,
-                                    x + 3,
+                                    getTextAlignmentXPosition(currentFPS, x2),
                                     yCurrent + 3,
                                     textColor,
                                     Config.HANDLER.instance().toggleTextShadow
@@ -432,7 +432,7 @@ public class HUD_render implements HudRenderCallback {
                         if (toggleCoords) {
                             drawContext.drawText(client.textRenderer,
                                     currentCoords,
-                                    x + 3,
+                                    getTextAlignmentXPosition(currentCoords, x2),
                                     yCurrent + 3,
                                     textColor,
                                     Config.HANDLER.instance().toggleTextShadow
@@ -444,7 +444,7 @@ public class HUD_render implements HudRenderCallback {
                         if (toggleClock) {
                             drawContext.drawText(client.textRenderer,
                                     currentTime,
-                                    x + 3,
+                                    getTextAlignmentXPosition(currentTime, x2),
                                     yCurrent + 3,
                                     textColor,
                                     Config.HANDLER.instance().toggleTextShadow
@@ -456,7 +456,7 @@ public class HUD_render implements HudRenderCallback {
                         if (toggleBiome) {
                             drawContext.drawText(client.textRenderer,
                                     currentBiome,
-                                    x + 3,
+                                    getTextAlignmentXPosition(currentBiome, x2),
                                     yCurrent + 3,
                                     textColor,
                                     Config.HANDLER.instance().toggleTextShadow
@@ -468,7 +468,7 @@ public class HUD_render implements HudRenderCallback {
                         if (toggleDirection) {
                             drawContext.drawText(client.textRenderer,
                                     currentDirection,
-                                    x + 3,
+                                    getTextAlignmentXPosition(currentDirection, x2),
                                     yCurrent + 3,
                                     textColor,
                                     Config.HANDLER.instance().toggleTextShadow
@@ -479,6 +479,24 @@ public class HUD_render implements HudRenderCallback {
                 }
             }
         }
+    }
+
+    // gets the x position of the text alignment
+    // relative to the background
+    // parameter x2 is the end x position of the rectangle
+    public int getTextAlignmentXPosition(String text, int x2) {
+        int xPos;
+        Config.TextAlignment alignment = Config.HANDLER.instance().textAlignment;
+        if (Config.HANDLER.instance().absoluteMode) {
+            xPos = switch (alignment) {
+                case LEFT -> x + 3;
+                case CENTER -> x + ((x2 - x) / 2)+1 - dynamicSizeX(text) / 2;
+                case RIGHT -> x2 - dynamicSizeX(text) - 2;
+            };
+        } else {
+            xPos = x + 3;
+        }
+        return xPos;
     }
 
     public void setRelativePosition() {

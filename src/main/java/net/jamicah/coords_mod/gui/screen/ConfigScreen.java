@@ -14,6 +14,7 @@ import net.minecraft.util.Util;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+// TODO: Enum Values Translation
 
 public class ConfigScreen {
 
@@ -29,6 +30,7 @@ public class ConfigScreen {
 
         AtomicReference<Option<Integer>> x = new AtomicReference<>();
         AtomicReference<Option<Integer>> y = new AtomicReference<>();
+        AtomicReference<Option<Config.TextAlignment>> textAlignment = new AtomicReference<>();
 
         AtomicReference<Option<Config.RelativePositions>> relativePosition = new AtomicReference<>();
         return YetAnotherConfigLib.create(Config.HANDLER, (defaults, config, builder) -> builder
@@ -394,6 +396,39 @@ public class ConfigScreen {
                                         .text(Text.translatable("config.coords_mod.category.appearance.text_customization.description"))
                                         .build()
                                 )
+                                .option(Util.make(() -> {
+                                    var option = Option.<Config.TextAlignment>createBuilder()
+                                            .name(Text.translatable("config.coords_mod.category.position.absolutePosition.textAlignment"))
+                                            .description(OptionDescription.createBuilder()
+                                                    .text(Text.translatable("config.coords_mod.category.position.absolutePosition.textAlignment.description"))
+                                                    .build()
+                                            )
+                                            .binding(
+                                                    defaults.textAlignment,
+                                                    () -> config.textAlignment,
+                                                    newVal -> {
+                                                        config.textAlignment = newVal;
+                                                        save();
+                                                    }
+                                            )
+                                            .controller(opt -> EnumControllerBuilder.create(opt)
+                                                    .enumClass(Config.TextAlignment.class)
+                                                    .formatValue(
+                                                            formatting -> Text.literal(
+                                                                    capitalizeWords(
+                                                                            formatting.name().replaceAll(
+                                                                                    "_", " "
+                                                                            )
+                                                                    )
+                                                            )
+                                                    )
+                                            )
+                                            .available(config.absoluteMode)
+                                            .instant(true)
+                                            .build();
+                                    textAlignment.set(option);
+                                    return option;
+                                }))
                                 .option(Option.<String>createBuilder()
                                         .name(Text.translatable("config.coords_mod.custom_fps_text"))
                                         .description(OptionDescription.createBuilder()
@@ -499,6 +534,7 @@ public class ConfigScreen {
                                             config.absoluteMode = newVal;
 
                                             relativePosition.get().setAvailable(!newVal);
+                                            textAlignment.get().setAvailable(newVal);
 
                                             x.get().setAvailable(newVal);
                                             y.get().setAvailable(newVal);
