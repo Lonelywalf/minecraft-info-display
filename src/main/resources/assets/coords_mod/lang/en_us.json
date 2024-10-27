@@ -105,6 +105,9 @@
   "config.coords_mod.category.position.relativePosition": "Relative Position",
   "config.coords_mod.category.position.relativePosition.description2": "Relative Mode Options",
   "config.coords_mod.category.position.absolutePosition.textAlignment": "Text Alignment",
+  "config.coords_mod.category.position.absolutePosition.textAlignment.left": "Left",
+  "config.coords_mod.category.position.absolutePosition.textAlignment.center": "Center",
+  "config.coords_mod.category.position.absolutePosition.textAlignment.right": "Right",
   "config.coords_mod.category.position.absolutePosition.textAlignment.description": "Alignment of the text relative to the background. (Only works for Absolute Position Mode)",
 
   "config.coords_mod.category.position.relativePosition.description": "Position of the HUD relative to the screen corners",

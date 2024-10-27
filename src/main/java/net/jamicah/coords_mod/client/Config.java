@@ -1,5 +1,6 @@
 package net.jamicah.coords_mod.client;
 
+import dev.isxander.yacl3.api.NameableEnum;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
@@ -74,20 +75,36 @@ public class Config {
     @SerialEntry
     public RelativePositions relativePosition = RelativePositions.TOP_LEFT;
 
-    public enum RelativePositions {
+    public enum RelativePositions implements NameableEnum {
         TOP_LEFT,
         TOP_RIGHT,
         BOTTOM_LEFT,
-        BOTTOM_RIGHT
+        BOTTOM_RIGHT;
+
+        @Override
+        public Text getDisplayName() {
+            return Text.translatable(
+                    "config.coords_mod.category.position.relativePosition."
+                            + name().toLowerCase()
+            );
+        }
     }
 
     @SerialEntry
     public TextAlignment textAlignment = TextAlignment.LEFT;
 
-    public enum TextAlignment {
+    public enum TextAlignment implements NameableEnum {
         LEFT,
         CENTER,
-        RIGHT
+        RIGHT;
+
+        @Override
+        public Text getDisplayName() {
+            return Text.translatable(
+                    "config.coords_mod.category.position.absolutePosition.textAlignment."
+                            + name().toLowerCase()
+            );
+        }
     }
 
     @SerialEntry

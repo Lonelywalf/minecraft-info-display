@@ -14,8 +14,6 @@ import net.minecraft.util.Util;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-// TODO: Enum Values Translation
-
 public class ConfigScreen {
 
     public void save() {
@@ -396,39 +394,6 @@ public class ConfigScreen {
                                         .text(Text.translatable("config.coords_mod.category.appearance.text_customization.description"))
                                         .build()
                                 )
-                                .option(Util.make(() -> {
-                                    var option = Option.<Config.TextAlignment>createBuilder()
-                                            .name(Text.translatable("config.coords_mod.category.position.absolutePosition.textAlignment"))
-                                            .description(OptionDescription.createBuilder()
-                                                    .text(Text.translatable("config.coords_mod.category.position.absolutePosition.textAlignment.description"))
-                                                    .build()
-                                            )
-                                            .binding(
-                                                    defaults.textAlignment,
-                                                    () -> config.textAlignment,
-                                                    newVal -> {
-                                                        config.textAlignment = newVal;
-                                                        save();
-                                                    }
-                                            )
-                                            .controller(opt -> EnumControllerBuilder.create(opt)
-                                                    .enumClass(Config.TextAlignment.class)
-                                                    .formatValue(
-                                                            formatting -> Text.literal(
-                                                                    capitalizeWords(
-                                                                            formatting.name().replaceAll(
-                                                                                    "_", " "
-                                                                            )
-                                                                    )
-                                                            )
-                                                    )
-                                            )
-                                            .available(config.absoluteMode)
-                                            .instant(true)
-                                            .build();
-                                    textAlignment.set(option);
-                                    return option;
-                                }))
                                 .option(Option.<String>createBuilder()
                                         .name(Text.translatable("config.coords_mod.custom_fps_text"))
                                         .description(OptionDescription.createBuilder()
@@ -579,7 +544,6 @@ public class ConfigScreen {
                                             )
                                             .controller(opt -> EnumControllerBuilder.create(opt)
                                                     .enumClass(Config.RelativePositions.class)
-                                                    .formatValue(value -> Text.translatable("config.coords_mod.category.position.relativePosition." + value.name().toLowerCase()))
                                             )
                                             .available(!config.absoluteMode)
                                             .instant(true)
@@ -588,12 +552,37 @@ public class ConfigScreen {
                                     return option;
                                 }))
                                 .build())
+                        // absolute position
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("config.coords_mod.category.position.absolutePosition"))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.translatable("config.coords_mod.category.position.absolutePosition.description"))
                                         .build()
                                 )
+                                .option(Util.make(() -> {
+                                    var option = Option.<Config.TextAlignment>createBuilder()
+                                            .name(Text.translatable("config.coords_mod.category.position.absolutePosition.textAlignment"))
+                                            .description(OptionDescription.createBuilder()
+                                                    .text(Text.translatable("config.coords_mod.category.position.absolutePosition.textAlignment.description"))
+                                                    .build()
+                                            )
+                                            .binding(
+                                                    defaults.textAlignment,
+                                                    () -> config.textAlignment,
+                                                    newVal -> {
+                                                        config.textAlignment = newVal;
+                                                        save();
+                                                    }
+                                            )
+                                            .controller(opt -> EnumControllerBuilder.create(opt)
+                                                    .enumClass(Config.TextAlignment.class)
+                                            )
+                                            .available(config.absoluteMode)
+                                            .instant(true)
+                                            .build();
+                                    textAlignment.set(option);
+                                    return option;
+                                }))
                                 .option(Util.make(() -> {
                                     var option = Option.<Integer>createBuilder()
                                             .name(Text.translatable("config.coords_mod.pos_x"))
