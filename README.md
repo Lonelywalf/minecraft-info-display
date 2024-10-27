@@ -16,10 +16,10 @@ Toggle all of them on/off using a keybind or in the config menu.
 
 ### Customization:
 - Change the display order
-- Change the (absolute) position of the HUD
+- Change the (relative/absolute) position of the HUD
 - Change the color of the text
 - Change the background color
-- Customize the HUD text
+- Customize the HUD texts
 - and more!
 
 ![Screenshot](https://github.com/Lonelywalf/minecraft-info-display/blob/1.21/images/customizationExamples.png)
@@ -28,7 +28,6 @@ Toggle all of them on/off using a keybind or in the config menu.
 ### TODO:
 - more customization options
 - more info to display
-- relative HUD position
 
 ## Requirements
 - [Fabric API](https://modrinth.com/mod/fabric-api/versions)

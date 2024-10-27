@@ -484,7 +484,6 @@ public class ConfigScreen {
                         .build()
                 )
                 // position
-
                 .category(ConfigCategory.createBuilder()
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.translatable("config.coords_mod.category.position.positionMode"))
@@ -585,9 +584,9 @@ public class ConfigScreen {
                                 }))
                                 .option(Util.make(() -> {
                                     var option = Option.<Integer>createBuilder()
-                                            .name(Text.translatable("config.coords_mod.pos_x"))
+                                            .name(Text.translatable("config.coords_mod.category.position.absolutePosition.xPos"))
                                             .description(OptionDescription.createBuilder()
-                                                    .text(Text.translatable("config.coords_mod.pos_x.description"))
+                                                    .text(Text.translatable("config.coords_mod.category.position.absolutePosition.xPos.description"))
                                                     .build())
                                             .instant(true)
                                             .controller(opt -> IntegerSliderControllerBuilder.create(opt)
@@ -609,9 +608,9 @@ public class ConfigScreen {
                                 }))
                                 .option(Util.make(() -> {
                                     var option = Option.<Integer>createBuilder()
-                                            .name(Text.translatable("config.coords_mod.pos_y"))
+                                            .name(Text.translatable("config.coords_mod.category.position.absolutePosition.yPos"))
                                             .description(OptionDescription.createBuilder()
-                                                    .text(Text.translatable("config.coords_mod.pos_y.description"))
+                                                    .text(Text.translatable("config.coords_mod.category.position.absolutePosition.yPos.description"))
                                                     .build())
                                             .instant(true)
                                             .controller(opt -> IntegerSliderControllerBuilder.create(opt)
