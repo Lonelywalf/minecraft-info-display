@@ -5,6 +5,7 @@ import dev.isxander.yacl3.api.controller.*;
 import dev.isxander.yacl3.gui.controllers.LabelController;
 import net.jamicah.coords_mod.client.Config;
 import net.jamicah.coords_mod.client.HUD_render;
+import net.jamicah.coords_mod.client.InfoDisplays.InfoDisplay;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -49,15 +50,14 @@ public class ConfigScreen {
                                         )
                                         .coloured(true)
                                 )
-                                .binding(
+                                // instantly update instead of the deprecated .instant(boolean)
+                                .stateManager(StateManager.createInstant(
                                         defaults.toggleHud,
                                         () -> config.toggleHud,
-                                        newVal ->  {
+                                        newVal -> {
                                             config.toggleHud = newVal;
                                             save();
-                                        }
-                                )
-                                .instant(true)
+                                        }))
                                 .build()
                         )
                         // HUD info
@@ -81,15 +81,13 @@ public class ConfigScreen {
                                                 )
                                                 .coloured(true)
                                         )
-                                        .binding(
+                                        .stateManager(StateManager.createInstant(
                                                 defaults.toggleFPS,
                                                 () -> config.toggleFPS,
                                                 newVal -> {
                                                     config.toggleFPS = newVal;
                                                     save();
-                                                }
-                                        )
-                                        .instant(true)
+                                                }))
                                         .build()
                                 )
                                 .option(Option.<Boolean>createBuilder()
@@ -105,15 +103,12 @@ public class ConfigScreen {
                                                 )
                                                 .coloured(true)
                                         )
-                                        .binding(
-                                                defaults.toggleCoords,
+                                        .stateManager(StateManager.createInstant(defaults.toggleCoords,
                                                 () -> config.toggleCoords,
                                                 newVal -> {
                                                     config.toggleCoords = newVal;
                                                     save();
-                                                }
-                                        )
-                                        .instant(true)
+                                                }))
                                         .build()
                                 )
                                 .option(Option.<Boolean>createBuilder()
@@ -129,15 +124,13 @@ public class ConfigScreen {
                                                 )
                                                 .coloured(true)
                                         )
-                                        .binding(
+                                        .stateManager(StateManager.createInstant(
                                                 defaults.toggleBiome,
                                                 () -> config.toggleBiome,
                                                 newVal -> {
                                                     config.toggleBiome = newVal;
                                                     save();
-                                                }
-                                        )
-                                        .instant(true)
+                                                }))
                                         .build()
                                 )
                                 .option(Option.<Boolean>createBuilder()
@@ -153,15 +146,13 @@ public class ConfigScreen {
                                                 )
                                                 .coloured(true)
                                         )
-                                        .binding(
+                                        .stateManager(StateManager.createInstant(
                                                 defaults.toggleDirection,
                                                 () -> config.toggleDirection,
                                                 newVal -> {
                                                     config.toggleDirection = newVal;
                                                     save();
-                                                }
-                                        )
-                                        .instant(true)
+                                                }))
                                         .build()
                                 )
                                 .option(Option.<Boolean>createBuilder()
@@ -177,7 +168,7 @@ public class ConfigScreen {
                                                 )
                                                 .coloured(true)
                                         )
-                                        .binding(
+                                        .stateManager(StateManager.createInstant(
                                                 defaults.toggleTime,
                                                 () -> config.toggleTime,
                                                 newVal -> {
@@ -187,8 +178,7 @@ public class ConfigScreen {
                                                     showSeconds.get().setAvailable(newVal);
                                                     timeFormat12.get().setAvailable(newVal);
                                                 }
-                                        )
-                                        .instant(true)
+                                        ))
                                         .build()
                                 )
                                 .build()
@@ -212,16 +202,14 @@ public class ConfigScreen {
                                                             Text.translatable("config.coords_mod.time_format_24hour") :
                                                             Text.translatable("config.coords_mod.time_format_12hour"))
                                             )
-                                            .binding(
+                                            .available(Config.HANDLER.instance().toggleTime)
+                                            .stateManager(StateManager.createInstant(
                                                     defaults.timeFormat12,
                                                     () -> config.timeFormat12,
                                                     newVal -> {
                                                         config.timeFormat12 = newVal;
                                                         save();
-                                                    }
-                                            )
-                                            .available(Config.HANDLER.instance().toggleTime)
-                                            .instant(true)
+                                                    }))
                                             .build();
                                     timeFormat12.set(option);
                                     return option;
@@ -241,16 +229,15 @@ public class ConfigScreen {
                                                             )
                                                             .coloured(true)
                                                     )
-                                                    .binding(
+                                                    .available(Config.HANDLER.instance().toggleTime)
+                                                    .stateManager(StateManager.createInstant(
                                                             defaults.showAmPm,
                                                             () -> config.showAmPm,
                                                             newVal -> {
                                                                 config.showAmPm = newVal;
                                                                 save();
                                                             }
-                                                    )
-                                                    .available(Config.HANDLER.instance().toggleTime)
-                                                    .instant(true)
+                                                    ))
                                                     .build();
                                     showAmPm.set(option);
                                     return option;
@@ -269,16 +256,15 @@ public class ConfigScreen {
                                                     )
                                                     .coloured(true)
                                             )
-                                            .binding(
+                                            .available(Config.HANDLER.instance().toggleTime)
+                                            .stateManager(StateManager.createInstant(
                                                     defaults.showSeconds,
                                                     () -> config.showSeconds,
                                                     newVal -> {
                                                         config.showSeconds = newVal;
                                                         save();
                                                     }
-                                            )
-                                            .available(Config.HANDLER.instance().toggleTime)
-                                            .instant(true)
+                                            ))
                                             .build();
                                     showSeconds.set(option);
                                     return option;
@@ -292,7 +278,7 @@ public class ConfigScreen {
                                         .text(Text.translatable("config.coords_mod.order_list.description"))
                                         .build()
                                 )
-                                .binding(
+                                .state(StateManager.createInstant(
                                         defaults.optionsList,
                                         () -> config.optionsList,
                                         newVal -> {
@@ -300,12 +286,11 @@ public class ConfigScreen {
                                             save();
                                             saveOrder();
                                         }
-
-                                )
+                                ))
                                 .customController(LabelController::new)
                                 .initial(Text.of(""))
-                                .maximumNumberOfEntries(5)
-                                .minimumNumberOfEntries(5)
+                                .maximumNumberOfEntries(InfoDisplay.totalInfoDisplayInstances)
+                                .minimumNumberOfEntries(InfoDisplay.totalInfoDisplayInstances)
                                 .collapsed(false)
                                 .build()
                         )
@@ -329,15 +314,14 @@ public class ConfigScreen {
                                         )
                                         .controller(opt -> ColorControllerBuilder.create(opt)
                                                 .allowAlpha(true))
-                                        .binding(
+                                        .stateManager(StateManager.createInstant(
                                                 defaults.bgColor,
                                                 () -> config.bgColor,
                                                 newVal -> {
                                                     config.bgColor = newVal;
                                                     save();
-                                                }
+                                                })
                                         )
-                                        .instant(true)
                                         .build()
                                 )
                                 .option(Option.<Color>createBuilder()
@@ -348,15 +332,14 @@ public class ConfigScreen {
                                         )
                                         .controller(opt -> ColorControllerBuilder.create(opt)
                                                 .allowAlpha(true))
-                                        .binding(
+                                        .stateManager(StateManager.createInstant(
                                                 defaults.textColor,
                                                 () -> config.textColor,
                                                 newVal -> {
                                                     config.textColor = newVal;
                                                     save();
-                                                }
+                                                })
                                         )
-                                        .instant(true)
                                         .build()
                                 )
                                 .option(Option.<Boolean>createBuilder()
@@ -373,15 +356,14 @@ public class ConfigScreen {
                                                 )
                                                 .coloured(true)
                                         )
-                                        .binding(
+                                        .stateManager(StateManager.createInstant(
                                                 defaults.toggleTextShadow,
                                                 () -> config.toggleTextShadow,
                                                 newVal -> {
                                                     config.toggleTextShadow = newVal;
                                                     save();
-                                                }
+                                                })
                                         )
-                                        .instant(true)
                                         .build()
                                 )
                                 .build()
@@ -491,7 +473,14 @@ public class ConfigScreen {
                                         .text(Text.translatable("config.coords_mod.category.position.positionMode.description"))
                                         .build()
                                 )
-                                .binding(
+                                .controller(opt -> BooleanControllerBuilder.create(opt)
+                                        .formatValue(val -> val ?
+                                                Text.translatable("config.coords_mod.category.position.absolute") :
+                                                Text.translatable("config.coords_mod.category.position.relativeMode")
+                                        )
+                                        .coloured(false)
+                                )
+                                .stateManager(StateManager.createInstant(
                                         defaults.absoluteMode,
                                         () -> config.absoluteMode,
                                         newVal -> {
@@ -505,16 +494,8 @@ public class ConfigScreen {
 
 
                                             save();
-                                        }
+                                        })
                                 )
-                                .controller(opt -> BooleanControllerBuilder.create(opt)
-                                        .formatValue(val -> val ?
-                                                Text.translatable("config.coords_mod.category.position.absolute") :
-                                                Text.translatable("config.coords_mod.category.position.relativeMode")
-                                        )
-                                        .coloured(false)
-                                )
-                                .instant(true)
                                 .build()
                         )
                         .name(Text.translatable("config.coords_mod.category.position"))
@@ -533,19 +514,17 @@ public class ConfigScreen {
                                                     .text(Text.translatable("config.coords_mod.category.position.relativePosition.description"))
                                                     .build()
                                             )
-                                            .binding(
+                                            .controller(opt -> EnumControllerBuilder.create(opt)
+                                                    .enumClass(Config.RelativePositions.class)
+                                            )
+                                            .available(!config.absoluteMode)
+                                            .stateManager(StateManager.createInstant(
                                                     defaults.relativePosition,
                                                     () -> config.relativePosition,
                                                     newVal -> {
                                                         config.relativePosition = newVal;
                                                         save();
-                                                    }
-                                            )
-                                            .controller(opt -> EnumControllerBuilder.create(opt)
-                                                    .enumClass(Config.RelativePositions.class)
-                                            )
-                                            .available(!config.absoluteMode)
-                                            .instant(true)
+                                                    }))
                                             .build();
                                     relativePosition.set(option);
                                     return option;
@@ -565,19 +544,17 @@ public class ConfigScreen {
                                                     .text(Text.translatable("config.coords_mod.category.position.absolutePosition.textAlignment.description"))
                                                     .build()
                                             )
-                                            .binding(
+                                            .controller(opt -> EnumControllerBuilder.create(opt)
+                                                    .enumClass(Config.TextAlignment.class)
+                                            )
+                                            .available(config.absoluteMode)
+                                            .stateManager(StateManager.createInstant(
                                                     defaults.textAlignment,
                                                     () -> config.textAlignment,
                                                     newVal -> {
                                                         config.textAlignment = newVal;
                                                         save();
-                                                    }
-                                            )
-                                            .controller(opt -> EnumControllerBuilder.create(opt)
-                                                    .enumClass(Config.TextAlignment.class)
-                                            )
-                                            .available(config.absoluteMode)
-                                            .instant(true)
+                                                    }))
                                             .build();
                                     textAlignment.set(option);
                                     return option;
@@ -588,18 +565,17 @@ public class ConfigScreen {
                                             .description(OptionDescription.createBuilder()
                                                     .text(Text.translatable("config.coords_mod.category.position.absolutePosition.xPos.description"))
                                                     .build())
-                                            .instant(true)
                                             .controller(opt -> IntegerSliderControllerBuilder.create(opt)
                                                     .range(0, MinecraftClient.getInstance().getWindow().getScaledWidth())
                                                     .step(1)
                                             )
-                                            .binding(
+                                            .stateManager(StateManager.createInstant(
                                                     defaults.x,
                                                     () -> config.x,
                                                     newVal -> {
                                                         config.x = newVal;
                                                         save();
-                                                    }
+                                                    })
                                             )
                                             .available(config.absoluteMode)
                                             .build();
@@ -612,18 +588,17 @@ public class ConfigScreen {
                                             .description(OptionDescription.createBuilder()
                                                     .text(Text.translatable("config.coords_mod.category.position.absolutePosition.yPos.description"))
                                                     .build())
-                                            .instant(true)
                                             .controller(opt -> IntegerSliderControllerBuilder.create(opt)
                                                     .range(0, MinecraftClient.getInstance().getWindow().getScaledHeight())
                                                     .step(1)
                                             )
-                                            .binding(
+                                            .stateManager(StateManager.createInstant(
                                                     defaults.y,
                                                     () -> config.y,
                                                     newVal -> {
                                                         config.y = newVal;
                                                         save();
-                                                    }
+                                                    })
                                             )
                                             .available(config.absoluteMode)
                                             .build();
@@ -664,6 +639,8 @@ public class ConfigScreen {
     // separate order for HUD_render
     // since orderlist can vary from language to language
     private void saveOrder() {
+        HUD_render.infoDisplays = HUD_render.getOrder();
+        /*
         for (int i = 0; i < Config.HANDLER.instance().optionsList.size(); i++) {
             HUD_render.order[i] =
                     Config.HANDLER.instance()
@@ -679,6 +656,8 @@ public class ConfigScreen {
                                     ""
                             );
         }
+
+         */
 
     }
 

@@ -61,8 +61,8 @@
 
 
   "config.coords_mod.category.appearance": "Appearance",
-  "config.coords_mod.category.appearance.color": "Color",
-  "config.coords_mod.category.appearance.description": "Change the color of the HUD",
+  "config.coords_mod.category.appearance.color": "Font",
+  "config.coords_mod.category.appearance.description": "Change the font of the HUD",
 
   "config.coords_mod.bg_color": "Background Color",
   "config.coords_mod.bg_color.description": "Background color of the HUD",
@@ -90,7 +90,7 @@
   "config.coords_mod.custom_time_text": "Custom Time Text",
   "config.coords_mod.custom_time_text.description": "Custom text to display for time. Example: \"Time: %s\" will display \"Time: 12:00\"",
 
-  "config.coords_mod.category.appearance.custom_text.invalid_error": "[Info Display] Invalid format for custom text \"%s\". Please use \"%s\" for the value",
+  "config.coords_mod.category.appearance.custom_text.invalid_error": "[Info Display] Invalid format for custom text \"%s\". Please use \"%s\" for the info value(s)",
 
 
   "config.coords_mod.category.position.positionMode": "Position Mode",

@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.7-SNAPSHOT'
+	id 'fabric-loom' version '1.10-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -48,7 +48,6 @@ dependencies {
 	 */
 
 	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
-	modApi "com.terraformersmc:modmenu:11.0.1"
 }
 
 processResources {

@@ -1,68 +1,76 @@
 package net.jamicah.coords_mod.client;
 
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
+import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
+import net.jamicah.coords_mod.Coords_mod;
+import net.jamicah.coords_mod.client.InfoDisplays.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
+public class HUD_render implements HudLayerRegistrationCallback {
+    public static final Identifier INFO_LAYER = Identifier.of(Coords_mod.MOD_ID, "info-layer");
 
-public class HUD_render implements HudRenderCallback {
-
-    // toggleable options
-    public Boolean toggleHud;
-    public Boolean toggleFPS;
-    public Boolean toggleBiome;
-    public Boolean toggleCoords;
-    public Boolean toggleDirection;
-    public Boolean toggleClock;
-
-    // background color
-    public int bgColor;
-
-    // text color
-    public int textColor;
-
-    // position
-    public int x;
-    public int y;
-    public boolean relativeRight;
-    public boolean relativeTop;
-    public boolean relativeMode;
+    public static FPSDisplay fpsDisplay = new FPSDisplay(Config.HANDLER.instance().toggleFPS);
+    public static CoordinatesDisplay coordsDisplay = new CoordinatesDisplay(Config.HANDLER.instance().toggleCoords);
+    public static BiomeDisplay biomeDisplay = new BiomeDisplay(Config.HANDLER.instance().toggleBiome);
+    public static DirectionDisplay directionDisplay = new DirectionDisplay(Config.HANDLER.instance().toggleDirection);
+    public static ClockDisplay clockDisplay = new ClockDisplay(Config.HANDLER.instance().toggleTime);
 
     // information
-    public static String currentFPS;
-    public static String currentCoords;
-    public static String currentBiome;
-    public static String currentDirection;
-    public static String currentTime;
-
-    public static String[] order = getOrder();
+    public static InfoDisplay[] infoDisplays = {
+            fpsDisplay,
+            coordsDisplay,
+            biomeDisplay,
+            directionDisplay,
+            clockDisplay
+    };
 
     public boolean load = false;
-    private static String[] getOrder() {
-        String[] readOrder = new String[Config.HANDLER.instance().optionsList.size()];
+
+    public static InfoDisplay[] getOrder() {
+        InfoDisplay[] readOrder = new InfoDisplay[Config.HANDLER.instance().optionsList.size()];
         for (int i = 0; i < Config.HANDLER.instance().optionsList.size(); i++) {
-            readOrder[i] =
-                    Config.HANDLER.instance()
-                            .optionsList
-                            .get(i)
-                            .toString()
-                            .replaceAll(
-                                    "translation\\{key='config\\.coords_mod\\.order_list\\.",
-                                    ""
-                            )
-                            .replaceAll(
-                                    "', args=\\[]}",
-                                    ""
-                            );
+            String read =  Config.HANDLER.instance()
+                    .optionsList
+                    .get(i)
+                    .toString()
+                    .replaceAll(
+                            "translation\\{key='config\\.coords_mod\\.order_list\\.",
+                            ""
+                    )
+                    .replaceAll(
+                            "', args=\\[]}",
+                            ""
+                    );
+
+            // set order of infoDisplays
+            // and also check if the list is still valid
+            boolean isStillVailList = false;
+            for (InfoDisplay infoDisplay : infoDisplays) {
+                if (read.equals(infoDisplay.displayName)) {
+                    isStillVailList = true;
+                    readOrder[i] = infoDisplay;
+                    break;
+                }
+            }
+            // reset to default order if the list is not valid
+            if (!isStillVailList) {
+                readOrder = new InfoDisplay[]{
+                        fpsDisplay,
+                        coordsDisplay,
+                        biomeDisplay,
+                        directionDisplay,
+                        clockDisplay
+                };
+                break;
+            }
         }
         return readOrder;
     }
+
 
     /* deprecated
     how to add a new config value:
@@ -85,506 +93,77 @@ public class HUD_render implements HudRenderCallback {
 
         how to add a new info:
         1. add it to Config
-        2. add it here as a variable
-        3. update ConfigScreen's correctOrderList() method
+        2. create new InfoDisplay class
+        3. add it to the infoDisplays array
      */
 
-
-
-    @Override
-    public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
+    public void renderInfoDisplay(DrawContext drawContext, RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
 
-        setRelativePosition();
-
+        InfoDisplay.setRelativePosition();
 
         // load the config on first run
         if (!load) {
             load = true;
             Config.HANDLER.load();
-            order = getOrder();
+            infoDisplays = getOrder();
         }
 
         // load the config
-        toggleHud = Config.HANDLER.instance().toggleHud;
-        toggleFPS = Config.HANDLER.instance().toggleFPS;
-        toggleBiome = Config.HANDLER.instance().toggleBiome;
-        toggleCoords = Config.HANDLER.instance().toggleCoords;
-        toggleDirection = Config.HANDLER.instance().toggleDirection;
-        toggleClock = Config.HANDLER.instance().toggleTime;
-        relativeMode = !Config.HANDLER.instance().absoluteMode;
+        InfoDisplay.loadGlobalConfiguration();
 
-        bgColor = Config.HANDLER.instance().bgColor.getRGB();
-        textColor = Config.HANDLER.instance().textColor.getRGB();
-
-        x = (!relativeMode ? Config.HANDLER.instance().x : 2);
-        y = Config.HANDLER.instance().y;
+        for (InfoDisplay infoDisplay : infoDisplays) {
+            infoDisplay.loadConfiguration();
+        }
 
 
         // hide hud when f1 or toggleHud is false
-        if (MinecraftClient
-                .getInstance()
-                .options.hudHidden || !toggleHud) {
+        if (client.options.hudHidden || !InfoDisplay.isHudEnabled) {
             return;
         }
 
-        // pos of the gui
-
-
         // dynamic y position
-        int yCurrent = y;
+        InfoDisplay.yCurrent = InfoDisplay.y;
 
 
-        // the background depends on the length of the text
-        // so the background is drawn first
-
-        // gather information
-
-        int length = getEnabledInfoCount() * 10 + 3;
-
-        // FPS info
-        currentFPS = Config.HANDLER.instance().customFPSText;
-        int currentFPSx = 0;
-        if (toggleFPS) {
-            // gather the required information
-
-            // custom formatted text
-            // if the player enters an invalid format, the default format will be used
-            try {
-                currentFPS = String.format(currentFPS, client.getCurrentFps());
-            } catch (Exception e) {
-                assert client.player != null;
-                client.player.sendMessage(
-                        Text.translatable(
-                                "config.coords_mod.category.appearance.custom_text.invalid_error",
-                                currentFPS,
-                                "%s"
-                        ), false
-                );
-                currentFPS = Config.HANDLER.defaults().customFPSText;
-                Config.HANDLER.instance().customFPSText = Config.HANDLER.defaults().customFPSText;
-                Config.HANDLER.save();
-            }
-
-            // calculate length of the text (to compare which is the longest later)
-            currentFPSx = x * (relativeMode ? 1 : 0) + dynamicSizeX(currentFPS);
-            yCurrent += 10;
-        }
-
-        // Coordinates info
-        currentCoords = Config.HANDLER.instance().customCoordsText;
-        int currentCoordsX = 0;
-        if (toggleCoords) {
-            assert client.player != null;
-
-            // gather the required information
-            String x_pos = String.valueOf((int)client.getCameraEntity().getX());
-            String y_pos = String.valueOf((int)client.getCameraEntity().getY());
-            String z_pos = String.valueOf((int)client.getCameraEntity().getZ());
-
-            try {
-                currentCoords = String.format(currentCoords, x_pos, y_pos, z_pos);
-            } catch (Exception e) {
-                client.player.sendMessage(
-                        Text.translatable(
-                                "config.coords_mod.category.appearance.custom_text.invalid_error",
-                                currentCoords,
-                                "%s %s %s"
-                        ), false
-                );
-                currentCoords = Config.HANDLER.defaults().customCoordsText;
-                Config.HANDLER.instance().customCoordsText = Config.HANDLER.defaults().customCoordsText;
-                Config.HANDLER.save();
-            }
-
-            currentCoordsX = x * (relativeMode ? 1 : 0) + dynamicSizeX(currentCoords);
-            yCurrent += 10;
-        }
-
-        // Biomes info
-        currentBiome = Config.HANDLER.instance().customBiomeText;
-        int currentBiomeX = 0;
-        if (toggleBiome) {
-            // gather the required information
-            try {
-                currentBiome = String.format(currentBiome, getCurrentBiome());
-            } catch (Exception e) {
-                assert client.player != null;
-                client.player.sendMessage(
-                        Text.translatable(
-                                "config.coords_mod.category.appearance.custom_text.invalid_error",
-                                currentBiome,
-                                "%s"
-                        ), false
-                );
-                currentBiome = Config.HANDLER.defaults().customBiomeText;
-                Config.HANDLER.instance().customBiomeText = Config.HANDLER.defaults().customBiomeText;
-                Config.HANDLER.save();
-            }
-            currentBiomeX = x * (relativeMode ? 1 : 0) + dynamicSizeX(currentBiome);
-            yCurrent += 10;
-        }
-
-        // Facing Direction info
-        assert client.player != null;
-        currentDirection = Config.HANDLER.instance().customDirectionText;
-        int currentDirectionX = 0;
-        if (toggleDirection) {
-            String dir = client.player.getMovementDirection().asString();
-            try {
-                currentDirection = String.format(currentDirection, Character.toUpperCase(dir.charAt(0)) + dir.substring(1));
-            } catch (Exception e) {
-                client.player.sendMessage(
-                        Text.translatable(
-                                "config.coords_mod.category.appearance.custom_text.invalid_error",
-                                currentDirection,
-                                "%s"
-                        ), false
-                );
-                currentDirection = Config.HANDLER.defaults().customDirectionText;
-                Config.HANDLER.instance().customDirectionText = Config.HANDLER.defaults().customDirectionText;
-                Config.HANDLER.save();
-            }
-            currentDirectionX = x * (relativeMode ? 1 : 0) + dynamicSizeX(currentDirection);
-            yCurrent += 10;
-        }
-
-
-        currentTime = Config.HANDLER.instance().customTimeText;
-        int currentTimeX = 0;
-        if (toggleClock) {
-            try {
-                currentTime = String.format(currentTime, getCurrentTime());
-            } catch (Exception e) {
-                assert client.player != null;
-                client.player.sendMessage(
-                        Text.translatable(
-                                "config.coords_mod.category.appearance.custom_text.invalid_error",
-                                currentTime,
-                                "%s"
-                        ), false
-                );
-                currentTime = Config.HANDLER.defaults().customTimeText;
-                Config.HANDLER.instance().customTimeText = Config.HANDLER.defaults().customTimeText;
-                Config.HANDLER.save();
-            }
-            currentTimeX = x * (relativeMode ? 1 : 0) + dynamicSizeX(currentTime);
-            yCurrent += 10;
-        }
-
-        int longestX = Collections.max(
-                Arrays.asList(
-                        currentFPSx,
-                        currentCoordsX,
-                        currentBiomeX,
-                        currentDirectionX,
-                        currentTimeX
-                )
-        );
-
-        if (relativeMode) {
-            if (relativeRight) {
-                // -2 padding
-                x = client.getWindow().getScaledWidth() - 2;
-            } else {
-                x = 2;
-            }
-
-            if (relativeTop) {
-                y = 2;
-            } else {
-                y = client.getWindow().getScaledHeight() - length - 2;
+        // iterate through all existing infoDisplays and update
+        // their information
+        for (InfoDisplay infoDisplay : infoDisplays) {
+            infoDisplay.textLength = 0;
+            if (infoDisplay.isEnabled) {
+                infoDisplay.updateInformation(client);
             }
         }
 
-        /*
-            Standard Layout of the HUD:
-            - 2 padding left and right from the edge of the screen for the rectangle
-            - 3 padding on all sides from the inside of the rectangle to the text
+        int longestX = 0;
+        // get the longest text length
+        for (InfoDisplay infoDisplay : infoDisplays) {
+            if (infoDisplay.textLength > longestX) {
+                longestX = infoDisplay.textLength;
+            }
+        }
 
-
-           2px..+---------------------+
-             3px|...FPS: 60           |
-                |   12 23 34          |
-                |   Biome: Forest     |
-                +---------------------+
-         */
+        if (InfoDisplay.isInRelativeMode) {
+            InfoDisplay.updateRelativePosition(client);
+        }
 
         // render rectangle bg
-        // outside the if statement because
-        // it is used for the text alignment later
-        int x2 = 0;
-        if (yCurrent != y) {
-            // determine the x length of the rectangle
-            if (relativeMode) {
-                x2 = x + (relativeRight ? -1 : 1) * (longestX + 3);
-            } else {
-                x2 = x + longestX + 3 + 2;
-            }
-            drawContext.fill(
-                    x,
-                    y,
-                    // 3 padding left right
-                    // if it's in absolute mode, it should just add the longestX (+3 padding)
-                    x2,
-                    y + length,
-                    bgColor
-            );
-        }
-        // move "pointer" back to the top
-        yCurrent = y;
+        InfoDisplay.renderRectangle(drawContext, longestX);
 
-
-
-        // render the information (text)
-
-        // relative mode
-        if (relativeMode) {
-            for (String info : order) {
-                switch (info) {
-                    case "FPS":
-                        if (toggleFPS) {
-                            drawContext.drawText(client.textRenderer,
-                                    currentFPS,
-                                    // if the pos is relative right, then subtract the length of the text
-                                    // -2 padding for relative right because IDK
-                                    x + (dynamicSizeX(currentFPS) * (relativeRight ? -1 : 0)) +
-                                            (relativeRight ? -2 : 3),
-                                    yCurrent + 3,
-                                    textColor,
-                                    Config.HANDLER.instance().toggleTextShadow
-                            );
-                            yCurrent += 10;
-                        }
-                        break;
-                    case "coords":
-                        if (toggleCoords) {
-                            drawContext.drawText(client.textRenderer,
-                                    currentCoords,
-                                    x + (dynamicSizeX(currentCoords) * (relativeRight ? -1 : 0)) +
-                                            (relativeRight ? -2 : 3),
-                                    yCurrent + 3,
-                                    textColor,
-                                    Config.HANDLER.instance().toggleTextShadow
-                            );
-                            yCurrent += 10;
-                        }
-                        break;
-                    case "time":
-                        if (toggleClock) {
-                            drawContext.drawText(client.textRenderer,
-                                    currentTime,
-                                    x + (dynamicSizeX(currentTime) * (relativeRight ? -1 : 0)) +
-                                            (relativeRight ? -2 : 3),
-                                    yCurrent + 3,
-                                    textColor,
-                                    Config.HANDLER.instance().toggleTextShadow
-                            );
-                            yCurrent += 10;
-                        }
-                        break;
-                    case "biome":
-                        if (toggleBiome) {
-                            drawContext.drawText(client.textRenderer,
-                                    currentBiome,
-                                    x + (dynamicSizeX(currentBiome) * (relativeRight ? -1 : 0)) +
-                                            (relativeRight ? -2 : 3),
-                                    yCurrent + 3,
-                                    textColor,
-                                    Config.HANDLER.instance().toggleTextShadow
-                            );
-                            yCurrent += 10;
-                        }
-                        break;
-                    case "direction":
-                        if (toggleDirection) {
-                            drawContext.drawText(client.textRenderer,
-                                    currentDirection,
-                                    x + (dynamicSizeX(currentDirection) * (relativeRight ? -1 : 0)) +
-                                            (relativeRight ? -2 : 3),
-                                    yCurrent + 3,
-                                    textColor,
-                                    Config.HANDLER.instance().toggleTextShadow
-                            );
-                            yCurrent += 10;
-                        }
-                        break;
-                }
-            }
-
-        // absolute mode
-        } else {
-            for (String info : order) {
-                switch (info) {
-                    case "FPS":
-                        if (toggleFPS) {
-                            drawContext.drawText(client.textRenderer,
-                                    currentFPS,
-                                    getTextAlignmentXPosition(currentFPS, x2),
-                                    yCurrent + 3,
-                                    textColor,
-                                    Config.HANDLER.instance().toggleTextShadow
-                            );
-                            yCurrent += 10;
-                        }
-                        break;
-                    case "coords":
-                        if (toggleCoords) {
-                            drawContext.drawText(client.textRenderer,
-                                    currentCoords,
-                                    getTextAlignmentXPosition(currentCoords, x2),
-                                    yCurrent + 3,
-                                    textColor,
-                                    Config.HANDLER.instance().toggleTextShadow
-                            );
-                            yCurrent += 10;
-                        }
-                        break;
-                    case "time":
-                        if (toggleClock) {
-                            drawContext.drawText(client.textRenderer,
-                                    currentTime,
-                                    getTextAlignmentXPosition(currentTime, x2),
-                                    yCurrent + 3,
-                                    textColor,
-                                    Config.HANDLER.instance().toggleTextShadow
-                            );
-                            yCurrent += 10;
-                        }
-                        break;
-                    case "biome":
-                        if (toggleBiome) {
-                            drawContext.drawText(client.textRenderer,
-                                    currentBiome,
-                                    getTextAlignmentXPosition(currentBiome, x2),
-                                    yCurrent + 3,
-                                    textColor,
-                                    Config.HANDLER.instance().toggleTextShadow
-                            );
-                            yCurrent += 10;
-                        }
-                        break;
-                    case "direction":
-                        if (toggleDirection) {
-                            drawContext.drawText(client.textRenderer,
-                                    currentDirection,
-                                    getTextAlignmentXPosition(currentDirection, x2),
-                                    yCurrent + 3,
-                                    textColor,
-                                    Config.HANDLER.instance().toggleTextShadow
-                            );
-                            yCurrent += 10;
-                        }
-                        break;
-                }
+        // render the text
+        for (InfoDisplay infoDisplay : infoDisplays) {
+            if (infoDisplay.isEnabled) {
+                infoDisplay.drawText(drawContext, client);
             }
         }
     }
 
-    // gets the x position of the text alignment
-    // relative to the background
-    // parameter x2 is the end x position of the rectangle
-    public int getTextAlignmentXPosition(String text, int x2) {
-        int xPos;
-        Config.TextAlignment alignment = Config.HANDLER.instance().textAlignment;
-        if (Config.HANDLER.instance().absoluteMode) {
-            xPos = switch (alignment) {
-                case LEFT -> x + 3;
-                case CENTER -> x + ((x2 - x) / 2)+1 - dynamicSizeX(text) / 2;
-                case RIGHT -> x2 - dynamicSizeX(text) - 2;
-            };
-        } else {
-            xPos = x + 3;
-        }
-        return xPos;
+    @Override
+    public void register(LayeredDrawerWrapper layeredDrawerWrapper) {
+        layeredDrawerWrapper.attachLayerBefore(IdentifiedLayer.CROSSHAIR, INFO_LAYER, this::renderInfoDisplay);
     }
 
-    public void setRelativePosition() {
-        if (Config.HANDLER.instance().relativePosition == Config.HANDLER.instance().relativePosition.TOP_RIGHT) {
-            relativeRight = true;
-            relativeTop = true;
-        } else if (Config.HANDLER.instance().relativePosition == Config.HANDLER.instance().relativePosition.BOTTOM_LEFT) {
-            relativeRight = false;
-            relativeTop = false;
-        } else if (Config.HANDLER.instance().relativePosition == Config.HANDLER.instance().relativePosition.BOTTOM_RIGHT) {
-            relativeRight = true;
-            relativeTop = false;
-        } else {
-            relativeRight = false;
-            relativeTop = true;
-        }
-    }
-
-
-    public static String getCurrentTime() {
-        String patern;
-        patern = Config.HANDLER.instance().timeFormat12 ? "HH:mm" : "hh:mm";
-
-        if (Config.HANDLER.instance().showSeconds) {
-            patern += ":ss";
-        }
-
-        if (Config.HANDLER.instance().showAmPm) {
-            patern += " aa";
-        }
-
-        SimpleDateFormat time = new SimpleDateFormat(patern);
-        Date date = new Date();
-
-        return time.format(date);
-    }
-
-
-    public static int getEnabledInfoCount() {
-        int count = 0;
-        if (Config.HANDLER.instance().toggleFPS) count++;
-        if (Config.HANDLER.instance().toggleCoords) count++;
-        if (Config.HANDLER.instance().toggleBiome) count++;
-        if (Config.HANDLER.instance().toggleDirection) count++;
-        if (Config.HANDLER.instance().toggleTime) count++;
-        return count;
-    }
-
-
-    public String getCurrentBiome() {
-        MinecraftClient client = MinecraftClient.getInstance();
-        assert client.world != null;
-        assert client.player != null;
-        String biomeGibberish = client
-                .world
-                .getBiome(client.player.getBlockPos())
-                .toString();
-        String biomeToString = biomeGibberish.substring(biomeGibberish.indexOf("/ minecraft:")+12 ,
-                biomeGibberish.indexOf(']')
-        );
-
-        biomeToString = biomeToString.replace('_', ' ');
-
-        // capitalize first letter
-        biomeToString = Character.toUpperCase(
-                biomeToString.charAt(0))
-                + biomeToString.substring(1
-        );
-
-        // capitalize every letter after space
-        for (int i = 0; i < biomeToString.length(); i++) {
-            if (biomeToString.length() > 1 && biomeToString.charAt(i) == ' ') {
-                biomeToString = biomeToString.substring(0, i+1)
-                        + Character.toUpperCase(biomeToString.charAt(i+1))
-                        + biomeToString.substring(i+2
-                );
-            }
-        }
-        return biomeToString;
-    }
-
-    // method to dynamically change the size of the rectangle based on the length of the biome name,
-    // shorter char like i, l, t, I, k and f are also taken into account
-    public int dynamicSizeX(String text) {
-        return MinecraftClient.getInstance().textRenderer.getWidth(text);
-    }
-
-    /* deprecated methods
+    /* old methods
     // toggles the values based on the infoOrder String
     public static void updateInfoOrder() {
 

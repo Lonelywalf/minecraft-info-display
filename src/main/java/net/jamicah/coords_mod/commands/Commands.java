@@ -23,14 +23,12 @@ public class Commands implements ClientCommandRegistrationCallback {
         dispatcher.register(ClientCommandManager.literal("infodisplay")
                 .executes(context -> {
                     MinecraftClient client = MinecraftClient.getInstance();
-                    client.send(() ->
-                                    client.setScreen(
-                                            (new ConfigScreen())
-                                                    .createGui(MinecraftClient
-                                                            .getInstance().currentScreen
-                                                    )
-                                            )
-                            );
+                    client.send(() -> { // this method crashes on 1.21 and some other versions
+                        client.setScreen(
+                                (new ConfigScreen())
+                                        .createGui(client.currentScreen)
+                        );
+                    });
                     return 0;
                 })
         );
