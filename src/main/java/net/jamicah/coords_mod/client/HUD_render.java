@@ -1,8 +1,6 @@
 package net.jamicah.coords_mod.client;
 
-import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
-import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.jamicah.coords_mod.Coords_mod;
 import net.jamicah.coords_mod.client.InfoDisplays.*;
 import net.minecraft.client.MinecraftClient;
@@ -10,7 +8,9 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Identifier;
 
-public class HUD_render implements HudLayerRegistrationCallback {
+// TODO: Ping Display
+
+public class HUD_render implements HudElementRegistry {
     public static final Identifier INFO_LAYER = Identifier.of(Coords_mod.MOD_ID, "info-layer");
 
     public static FPSDisplay fpsDisplay = new FPSDisplay(Config.HANDLER.instance().toggleFPS);
@@ -28,7 +28,7 @@ public class HUD_render implements HudLayerRegistrationCallback {
             clockDisplay
     };
 
-    public boolean load = false;
+    public static boolean load = false;
 
     public static InfoDisplay[] getOrder() {
         InfoDisplay[] readOrder = new InfoDisplay[Config.HANDLER.instance().optionsList.size()];
@@ -80,7 +80,7 @@ public class HUD_render implements HudLayerRegistrationCallback {
         3. add it to the infoDisplays array
      */
 
-    public void renderInfoDisplay(DrawContext drawContext, RenderTickCounter tickCounter) {
+    public static void renderInfoDisplay(DrawContext drawContext, RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
 
         InfoDisplay.setRelativePosition();
@@ -139,10 +139,5 @@ public class HUD_render implements HudLayerRegistrationCallback {
                 infoDisplay.drawText(drawContext, client);
             }
         }
-    }
-
-    @Override
-    public void register(LayeredDrawerWrapper layeredDrawerWrapper) {
-        layeredDrawerWrapper.attachLayerBefore(IdentifiedLayer.CROSSHAIR, INFO_LAYER, this::renderInfoDisplay);
     }
 }
