@@ -11,8 +11,12 @@ import net.minecraft.util.Identifier;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Config {
+
+    private static final Logger LOGGER = Logger.getLogger("coords_mod");
 
     public static ConfigClassHandler<Config> HANDLER = ConfigClassHandler.createBuilder(Config.class)
             .id(Identifier.of("coords_mod", "info_display_config"))
@@ -41,6 +45,9 @@ public class Config {
 
     @SerialEntry
     public boolean toggleTime = false;
+
+    @SerialEntry
+    public boolean togglePing = false;
 
 
     @SerialEntry
@@ -116,7 +123,8 @@ public class Config {
         Text.translatable("config.coords_mod.order_list.coords"),
         Text.translatable("config.coords_mod.order_list.biome"),
         Text.translatable("config.coords_mod.order_list.direction"),
-        Text.translatable("config.coords_mod.order_list.time")
+        Text.translatable("config.coords_mod.order_list.time"),
+        Text.translatable("config.coords_mod.order_list.ping")
     );
 
     @SerialEntry
@@ -133,5 +141,113 @@ public class Config {
 
     @SerialEntry
     public String customTimeText = "%s";
+
+    @SerialEntry
+    public String customPingText = "Ping: %s ms";
+
+    // --- Migration helpers ---
+    // Default order as Texts for reference
+    public static final List<Text> DEFAULT_OPTIONS = Arrays.asList(
+            Text.translatable("config.coords_mod.order_list.FPS"),
+            Text.translatable("config.coords_mod.order_list.coords"),
+            Text.translatable("config.coords_mod.order_list.biome"),
+            Text.translatable("config.coords_mod.order_list.direction"),
+            Text.translatable("config.coords_mod.order_list.time"),
+            Text.translatable("config.coords_mod.order_list.ping")
+    );
+
+    // normalize a Text entry to a key-like suffix used in the rest of the code
+    private static String normalizeOptionText(Text t) {
+        if (t == null) return "";
+        String s = t.toString();
+        s = s.replaceAll("translation\\{key='config\\.coords_mod\\.order_list\\.", "");
+        s = s.replaceAll("', args=\\[]}", "");
+        return s.trim();
+    }
+
+    // Ensure any newly added defaults are present in optionsList. This appends missing defaults
+    // (so existing user order is preserved). Call this after loading config from disk.
+    public void migrateOptionsListIfNeeded() {
+        try {
+            if (optionsList == null) {
+                optionsList = DEFAULT_OPTIONS;
+                // try to persist
+                trySaveHandler();
+                return;
+            }
+
+            // Build a set of normalized existing keys for fast lookup
+            java.util.Set<String> existing = new java.util.HashSet<>();
+            for (Text t : optionsList) {
+                existing.add(normalizeOptionText(t).toLowerCase());
+            }
+
+            boolean changed = false;
+            java.util.List<Text> newList = new java.util.ArrayList<>(optionsList);
+            for (Text def : DEFAULT_OPTIONS) {
+                String key = normalizeOptionText(def).toLowerCase();
+                if (!existing.contains(key)) {
+                    newList.add(def);
+                    changed = true;
+                }
+            }
+
+            if (changed) {
+                optionsList = newList;
+                trySaveHandler();
+            }
+        } catch (Exception e) {
+            // don't break the client if migration fails; log to console
+            LOGGER.log(Level.SEVERE, "coords_mod: failed to migrate optionsList", e);
+        }
+    }
+
+    private void trySaveHandler() {
+        try {
+            if (HANDLER != null) {
+                // The ConfigClassHandler API usually exposes save/load methods. Try common ones.
+                try {
+                    // preferred: save()
+                    java.lang.reflect.Method m = HANDLER.getClass().getMethod("save");
+                    m.invoke(HANDLER);
+                    return;
+                } catch (NoSuchMethodException ignored) {}
+
+                try {
+                    // alternative: store() or write()
+                    java.lang.reflect.Method m2 = HANDLER.getClass().getMethod("store");
+                    m2.invoke(HANDLER);
+                    return;
+                } catch (NoSuchMethodException ignored) {}
+
+                try {
+                    java.lang.reflect.Method m3 = HANDLER.getClass().getMethod("write");
+                    m3.invoke(HANDLER);
+                    return;
+                } catch (NoSuchMethodException ignored) {}
+
+                // fallback: if none exist, try to load serializer and write file directly
+                try {
+                    // get serializer and path via reflection only if present
+                    java.lang.reflect.Field f = HANDLER.getClass().getDeclaredField("serializer");
+                    f.setAccessible(true);
+                    Object serializer = f.get(HANDLER);
+                    if (serializer != null) {
+                        // try to call a 'save' method on serializer
+                        try {
+                            java.lang.reflect.Method ms = serializer.getClass().getMethod("save", Object.class);
+                            ms.invoke(serializer, HANDLER.instance());
+                            return;
+                        } catch (NoSuchMethodException ignored2) {}
+                    }
+                } catch (NoSuchFieldException | IllegalAccessException ignored) {}
+
+                // if none of the reflection options worked, fall back to printing a notice
+                LOGGER.warning("coords_mod: Config handler doesn't expose a known save method; manual save may be required.");
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "coords_mod: error while attempting to save migrated config", e);
+        }
+    }
 
 }

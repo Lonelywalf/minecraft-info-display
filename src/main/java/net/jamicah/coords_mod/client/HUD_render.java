@@ -8,8 +8,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Identifier;
 
-// TODO: Ping Display
-
 public class HUD_render implements HudElementRegistry {
     public static final Identifier INFO_LAYER = Identifier.of(Coords_mod.MOD_ID, "info-layer");
 
@@ -18,6 +16,7 @@ public class HUD_render implements HudElementRegistry {
     public static BiomeDisplay biomeDisplay = new BiomeDisplay(Config.HANDLER.instance().toggleBiome);
     public static DirectionDisplay directionDisplay = new DirectionDisplay(Config.HANDLER.instance().toggleDirection);
     public static ClockDisplay clockDisplay = new ClockDisplay(Config.HANDLER.instance().toggleTime);
+    public static PingDisplay pingDisplay = new PingDisplay(Config.HANDLER.instance().togglePing);
 
     // information
     public static InfoDisplay[] infoDisplays = {
@@ -25,7 +24,8 @@ public class HUD_render implements HudElementRegistry {
             coordsDisplay,
             biomeDisplay,
             directionDisplay,
-            clockDisplay
+            clockDisplay,
+            pingDisplay
     };
 
     public static boolean load = false;
@@ -46,11 +46,15 @@ public class HUD_render implements HudElementRegistry {
                             ""
                     );
 
+            // normalize parsed string
+            read = read.trim();
+
             // set order of infoDisplays
             // and also check if the list is still valid
             boolean isStillVailList = false;
             for (InfoDisplay infoDisplay : infoDisplays) {
-                if (read.equals(infoDisplay.displayName)) {
+                // compare case-insensitive to avoid mismatches like "Ping" vs "ping"
+                if (read.equalsIgnoreCase(infoDisplay.displayName)) {
                     isStillVailList = true;
                     readOrder[i] = infoDisplay;
                     break;
@@ -63,7 +67,8 @@ public class HUD_render implements HudElementRegistry {
                         coordsDisplay,
                         biomeDisplay,
                         directionDisplay,
-                        clockDisplay
+                        clockDisplay,
+                        pingDisplay
                 };
                 break;
             }
@@ -76,12 +81,25 @@ public class HUD_render implements HudElementRegistry {
 
         how to add a new info:
         1. add it to Config
-        2. create new InfoDisplay class
-        3. add it to the infoDisplays array
+            a) create a toggle boolean
+            b) add it to the optionsList
+            c) add custom text
+            d) add to lang file
+        2. ConfigScreen.java
+            a) custom text
+            b) toggle button
+        3. Keybind
+        4. create new InfoDisplay class
+        5. add it to the infoDisplays array
+            a) also create a static instance of it
+            b) add it to the getOrder() default array
      */
 
     public static void renderInfoDisplay(DrawContext drawContext, RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
+
+        // reference tickCounter to avoid unused-parameter warnings (no-op)
+        if (tickCounter != null) tickCounter.hashCode();
 
         InfoDisplay.setRelativePosition();
 
@@ -89,6 +107,12 @@ public class HUD_render implements HudElementRegistry {
         if (!load) {
             load = true;
             Config.HANDLER.load();
+            // migrate old configs: append any newly added default options (e.g. Ping)
+            try {
+                Config.HANDLER.instance().migrateOptionsListIfNeeded();
+            } catch (Exception e) {
+                System.err.println("coords_mod: failed to migrate optionsList on first load: " + e.getMessage());
+            }
             infoDisplays = getOrder();
         }
 

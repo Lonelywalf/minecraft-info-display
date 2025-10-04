@@ -6,6 +6,7 @@
   "key.coords_mod.toggle_coordsHud_BIOME": "Toggle Biomes Info",
   "key.coords_mod.toggle_coordsHud_DIRECTION": "Toggle Direction",
   "key.coords_mod.toggle_coordsHud_CLOCK": "Toggle Time",
+  "key.coords_mod.toggle_coordsHud_PING": "Toggle Ping",
   "key.coords_mod.open_config": "Open Configuration",
 
 
@@ -34,6 +35,9 @@
   "config.coords_mod.enable_time": "Time",
   "config.coords_mod.enable_time.description": "Shows the real life time on the HUD",
 
+  "config.coords_mod.enable_ping": "Ping",
+  "config.coords_mod.enable_ping.description": "Shows your current ping to the server on the HUD",
+
 
   "config.coords_mod.category.general.time_settings": "Settings",
   "config.coords_mod.category.general.time_settings.description": "Appearance and format of the time",
@@ -58,6 +62,7 @@
   "config.coords_mod.order_list.biome": "Biome",
   "config.coords_mod.order_list.direction": "Facing Direction",
   "config.coords_mod.order_list.time": "Time",
+  "config.coords_mod.order_list.ping": "Ping",
 
 
   "config.coords_mod.category.appearance": "Appearance",

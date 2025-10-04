@@ -18,6 +18,7 @@ public class KeyInputHandler {
     public static final String KEY_TOGGLEFPS = "key.coords_mod.toggle_coordsHud_FPS";
     public static final String KEY_TOGGLECOORDS = "key.coords_mod.toggle_coordsHud_COORDS";
     public static final String KEY_TOGGLEDIRECTION = "key.coords_mod.toggle_coordsHud_DIRECTION";
+    public static final String KEY_TOGGLEPING = "key.coords_mod.toggle_coordsHud_PING";
     public static final String KEY_CLOCK = "key.coords_mod.toggle_coordsHud_CLOCK";
     public static final String KEY_OPENCONFIG = "key.coords_mod.open_config";
 
@@ -29,6 +30,7 @@ public class KeyInputHandler {
     public static KeyBinding open_config;
     public static KeyBinding toggle_direction;
     public static KeyBinding toggle_clock;
+    public static KeyBinding toggle_ping;
     public static void registerKeyInputs() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // toggle entire hud
@@ -64,6 +66,12 @@ public class KeyInputHandler {
             // toggle time info
             if (toggle_clock.wasPressed()) {
                 Config.HANDLER.instance().toggleTime = !Config.HANDLER.instance().toggleTime;
+                Config.HANDLER.save();
+            }
+
+            // toggle ping info
+            if (toggle_ping.wasPressed()) {
+                Config.HANDLER.instance().togglePing = !Config.HANDLER.instance().togglePing;
                 Config.HANDLER.save();
             }
 
@@ -117,6 +125,12 @@ public class KeyInputHandler {
         ));
         open_config = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_OPENCONFIG,
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_DONT_CARE,
+                KEY_CATEGORY
+        ));
+        toggle_ping = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                KEY_TOGGLEPING,
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_DONT_CARE,
                 KEY_CATEGORY

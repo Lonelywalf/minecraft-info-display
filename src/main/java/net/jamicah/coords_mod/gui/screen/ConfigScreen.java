@@ -181,6 +181,28 @@ public class ConfigScreen {
                                         ))
                                         .build()
                                 )
+                                .option(Option.<Boolean>createBuilder()
+                                        .name(Text.translatable("config.coords_mod.enable_ping"))
+                                        .description(OptionDescription.createBuilder()
+                                                .text(Text.translatable("config.coords_mod.enable_ping.description"))
+                                                .build()
+                                        )
+                                        .controller(opt -> BooleanControllerBuilder.create(opt)
+                                                .formatValue(val -> val ?
+                                                        Text.translatable("options.on") :
+                                                        Text.translatable("options.off")
+                                                )
+                                                .coloured(true)
+                                        )
+                                        .stateManager(StateManager.createInstant(
+                                                defaults.togglePing,
+                                                () -> config.togglePing,
+                                                newVal -> {
+                                                    config.togglePing = newVal;
+                                                    save();
+                                                }))
+                                        .build()
+                                )
                                 .build()
                         )
                         // time settings
@@ -456,6 +478,23 @@ public class ConfigScreen {
                                                 () -> config.customTimeText,
                                                 newVal -> {
                                                     config.customTimeText = newVal;
+                                                    save();
+                                                }
+                                        )
+                                        .build()
+                                )
+                                .option(Option.<String>createBuilder()
+                                        .name(Text.translatable("config.coords_mod.custom_ping_text"))
+                                        .description(OptionDescription.createBuilder()
+                                                .text(Text.translatable("config.coords_mod.custom_ping_text.description"))
+                                                .build()
+                                        )
+                                        .controller(StringControllerBuilder::create)
+                                        .binding(
+                                                defaults.customPingText,
+                                                () -> config.customPingText,
+                                                newVal -> {
+                                                    config.customPingText = newVal;
                                                     save();
                                                 }
                                         )
