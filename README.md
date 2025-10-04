@@ -44,6 +44,8 @@ Open the configuration menu by either:
 3. setting a keybind for it in the controls menu
 
 ## Contribute
+Feel free to open an issue or a pull request on GitHub!
+
 How to add localization for a new language:
 1. Create a new file in `src/main/resources/assets/coords_mod/lang/`
 2. Name it `xx_XX.json`, where `xx_XX` is the language code (e.g. `en_us` for English (US), `de_de` for German (DE))
