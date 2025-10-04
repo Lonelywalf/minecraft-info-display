@@ -42,3 +42,11 @@ Open the configuration menu by either:
 1. running the command `/infodisplay`
 2. opening it using Mod Menu
 3. setting a keybind for it in the controls menu
+
+## Contribute
+How to add localization for a new language:
+1. Create a new file in `src/main/resources/assets/coords_mod/lang/`
+2. Name it `xx_XX.json`, where `xx_XX` is the language code (e.g. `en_us` for English (US), `de_de` for German (DE))
+3. Copy the contents of `en_us.json` into the new file
+4. Translate the values on the right side of the colons into the new language
+5. Create a pull request
