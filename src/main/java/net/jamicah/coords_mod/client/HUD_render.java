@@ -124,7 +124,7 @@ public class HUD_render implements HudElementRegistry {
         }
 
 
-        // hide hud when f1 or toggleHud is false
+        // hide hud when f1 or toggleHud is false or debug (F3) is shown
         if (client.options.hudHidden || !InfoDisplay.isHudEnabled) {
             return;
         }

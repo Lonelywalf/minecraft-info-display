@@ -1,124 +1,132 @@
 {
   "key.category.coords_mod": "Info Display",
-  "key.coords_mod.toggle_coordsHud": "Toggle Entire Info Display",
-  "key.coords_mod.toggle_coordsHud_FPS": "Toggle FPS",
-  "key.coords_mod.toggle_coordsHud_COORDS": "Toggle Coordinates",
-  "key.coords_mod.toggle_coordsHud_BIOME": "Toggle Biomes Info",
-  "key.coords_mod.toggle_coordsHud_DIRECTION": "Toggle Direction",
-  "key.coords_mod.toggle_coordsHud_CLOCK": "Toggle Time",
-  "key.coords_mod.open_config": "Open Configuration",
+  "key.coords_mod.toggle_coordsHud": "Alle Infos umschalten",
+  "key.coords_mod.toggle_coordsHud_FPS": "FPS-Info umschalten",
+  "key.coords_mod.toggle_coordsHud_COORDS": "Koordinaten umschalten",
+  "key.coords_mod.toggle_coordsHud_BIOME": "Biom-Info umschalten",
+  "key.coords_mod.toggle_coordsHud_DIRECTION": "Richtungs-Info umschalten",
+  "key.coords_mod.toggle_coordsHud_CLOCK": "Uhrzeit-Info umschalten",
+  "key.coords_mod.toggle_coordsHud_PING": "Toggle Ping",
+  "key.coords_mod.open_config": "Konfiguration öffnen",
 
 
 
-  "config.coords_mod.title": "Info Display Configuration",
-  "config.coords_mod.category.general": "General",
-  "config.coords_mod.category.general.hud_info": "HUD Information",
-  "config.coords_mod.category.general.hud_info.description": "Toggle the display of different information on the HUD",
+  "config.coords_mod.title": "Info Display Konfiguration",
+  "config.coords_mod.category.general": "Allgemein",
+  "config.coords_mod.category.general.hud_info": "HUD Informationen",
+  "config.coords_mod.category.general.hud_info.description": "Anzeige verschiedener Informationen im HUD ein- oder ausschalten",
 
 
-  "config.coords_mod.enable_hud": "Enable Entire Info Display",
-  "config.coords_mod.enable_hud.description": "Toggles the entire HUD",
+  "config.coords_mod.enable_hud": "Gesamtes Info Display aktivieren",
+  "config.coords_mod.enable_hud.description": "Schaltet das gesamte HUD ein oder aus",
 
   "config.coords_mod.category.general.hud_info.FPS": "FPS",
-  "config.coords_mod.category.general.hud_info.FPS.description": "Shows the current FPS on the HUD",
+  "config.coords_mod.category.general.hud_info.FPS.description": "Zeigt die aktuellen FPS im HUD an",
 
-  "config.coords_mod.enable_coords": "Coordinates",
-  "config.coords_mod.enable_coords.description": "Shows the player's coordinates on the HUD",
+  "config.coords_mod.enable_coords": "Koordinaten",
+  "config.coords_mod.enable_coords.description": "Zeigt die Koordinaten des Spielers im HUD an",
 
-  "config.coords_mod.enable_biome": "Biome",
-  "config.coords_mod.enable_biome.description": "Shows the player's current biome on the HUD",
+  "config.coords_mod.enable_biome": "Biom",
+  "config.coords_mod.enable_biome.description": "Zeigt das aktuelle Biom des Spielers im HUD an",
 
-  "config.coords_mod.enable_direction": "Direction",
-  "config.coords_mod.enable_direction.description": "Shows the player's facing direction (without up and down) on the HUD",
+  "config.coords_mod.enable_direction": "Richtung",
+  "config.coords_mod.enable_direction.description": "Zeigt die Blickrichtung des Spielers (ohne oben und unten) im HUD an",
 
-  "config.coords_mod.enable_time": "Time",
-  "config.coords_mod.enable_time.description": "Shows the real life time on the HUD",
+  "config.coords_mod.enable_time": "Uhrzeit",
+  "config.coords_mod.enable_time.description": "Zeigt die reale Uhrzeit im HUD an",
 
-
-  "config.coords_mod.category.general.time_settings": "Settings",
-  "config.coords_mod.category.general.time_settings.description": "Appearance and format of the time",
-
-  "config.coords_mod.show_ampm": "Show AM/PM",
-  "config.coords_mod.show_ampm.description": "Shows AM or PM when using 12 hour time format",
-
-  "config.coords_mod.show_seconds": "Show Seconds",
-  "config.coords_mod.show_seconds.description": "Shows the seconds in the time info",
-
-  "config.coords_mod.time_format": "Time Format",
-  "config.coords_mod.time_format.description": "Toggle between 12 hour and 24 hour time format",
-
-  "config.coords_mod.time_format_24hour": "24 Hour",
-  "config.coords_mod.time_format_12hour": "12 Hour",
+  "config.coords_mod.enable_ping": "Ping",
+  "config.coords_mod.enable_ping.description": "Zeigt den aktuellen Ping zum Server im HUD an",
 
 
-  "config.coords_mod.order_list": "Order Of Displayed Infos",
-  "config.coords_mod.order_list.description": "Change the order of the displayed information",
+  "config.coords_mod.category.general.time_settings": "Zeiteinstellungen",
+  "config.coords_mod.category.general.time_settings.description": "Aussehen und Format der Uhrzeit",
+
+  "config.coords_mod.show_ampm": "AM/PM anzeigen",
+  "config.coords_mod.show_ampm.description": "Zeigt AM oder PM an, wenn das 12-Stunden-Zeitformat verwendet wird",
+
+  "config.coords_mod.show_seconds": "Sekunden anzeigen",
+  "config.coords_mod.show_seconds.description": "Zeigt die Sekunden in der Uhrzeit-Info an",
+
+  "config.coords_mod.time_format": "Zeitformat",
+  "config.coords_mod.time_format.description": "Wechseln zwischen 12-Stunden- und 24-Stunden-Zeitformat",
+
+  "config.coords_mod.time_format_24hour": "24 Stunden",
+  "config.coords_mod.time_format_12hour": "12 Stunden",
+
+
+  "config.coords_mod.order_list": "Reihenfolge der angezeigten Infos",
+  "config.coords_mod.order_list.description": "Aendern der Reihenfolge der angezeigten Informationen",
   "config.coords_mod.order_list.FPS": "FPS",
-  "config.coords_mod.order_list.coords": "Coordinates",
-  "config.coords_mod.order_list.biome": "Biome",
-  "config.coords_mod.order_list.direction": "Facing Direction",
-  "config.coords_mod.order_list.time": "Time",
+  "config.coords_mod.order_list.coords": "Koordinaten",
+  "config.coords_mod.order_list.biome": "Biom",
+  "config.coords_mod.order_list.direction": "Blickrichtung",
+  "config.coords_mod.order_list.time": "Uhrzeit",
+  "config.coords_mod.order_list.ping": "Ping",
 
 
-  "config.coords_mod.category.appearance": "Appearance",
-  "config.coords_mod.category.appearance.color": "Font",
-  "config.coords_mod.category.appearance.description": "Change the font of the HUD",
+  "config.coords_mod.category.appearance": "Aussehen",
+  "config.coords_mod.category.appearance.color": "Farben und Schriftarten",
+  "config.coords_mod.category.appearance.description": "Erscheinungsbild des HUDs anpassen",
 
-  "config.coords_mod.bg_color": "Background Color",
-  "config.coords_mod.bg_color.description": "Background color of the HUD",
+  "config.coords_mod.bg_color": "Hintergrundfarbe",
+  "config.coords_mod.bg_color.description": "Hintergrundfarbe des HUDs",
 
-  "config.coords_mod.text_color": "Text Color",
-  "config.coords_mod.text_color.description": "Text color of the HUD",
+  "config.coords_mod.text_color": "Textfarbe",
+  "config.coords_mod.text_color.description": "Textfarbe des HUDs",
 
-  "config.coords_mod.show_text_shadow": "Enable Text Shadow",
-  "config.coords_mod.show_text_shadow.description": "Show shadow behind the text",
-
-
-  "config.coords_mod.category.appearance.text_customization": "Text Customization",
-  "config.coords_mod.category.appearance.text_customization.description": "Customize the text displayed on the HUD",
-  "config.coords_mod.custom_fps_text": "Custom FPS Text",
-  "config.coords_mod.custom_fps_text.description": "Custom text to display for FPS. Example: \"%s FPS\" will display \"60 FPS\"",
-
-  "config.coords_mod.custom_coords_text": "Custom Coordinates Text",
-  "config.coords_mod.custom_coords_text.description": "Custom text to display for coordinates. Example: \"X: %s, Y: %s, Z: %s\" will display \"X: 0, Y: 0, Z: 0\"",
-
-  "config.coords_mod.custom_biome_text": "Custom Biome Text",
-  "config.coords_mod.custom_biome_text.description": "Custom text to display for biome. Example: \"%s Biome\" will display \"Plains Biome\"",
-  "config.coords_mod.custom_direction_text": "Custom Direction Text",
-  "config.coords_mod.custom_direction_text.description": "Custom text to display for direction. Example: \"%s Direction\" will display \"North Direction\"",
-
-  "config.coords_mod.custom_time_text": "Custom Time Text",
-  "config.coords_mod.custom_time_text.description": "Custom text to display for time. Example: \"Time: %s\" will display \"Time: 12:00\"",
-
-  "config.coords_mod.category.appearance.custom_text.invalid_error": "[Info Display] Invalid format for custom text \"%s\". Please use \"%s\" for the info value(s)",
+  "config.coords_mod.show_text_shadow": "Textschatten aktivieren",
+  "config.coords_mod.show_text_shadow.description": "Aktiviert einen Schatten hinter dem Text für bessere Lesbarkeit",
 
 
-  "config.coords_mod.category.position.positionMode": "Position Mode",
-  "config.coords_mod.category.position.positionMode.description": "Absolute Position: HUD is on a fixed position on the screen.\nRelative Position: HUD is on a fixed position relative to the screen corners",
-  "config.coords_mod.category.position.absolute": "Absolute",
-  "config.coords_mod.category.position.relativeMode": "Relative",
+  "config.coords_mod.category.appearance.text_customization": "Textanpassung",
+  "config.coords_mod.category.appearance.text_customization.description": "Angezeigten Text für jede Info anpassen",
+
+  "config.coords_mod.custom_fps_text": "FPS-Text",
+  "config.coords_mod.custom_fps_text.description": "Benutzerdefinierter Text für die Anzeige der FPS. Beispiel: \"%s BPS\" zeigt \"60 FPS\" an",
+
+  "config.coords_mod.custom_coords_text": "Koordinaten-Text",
+  "config.coords_mod.custom_coords_text.description": "Text für die Anzeige der Koordinaten. Beispiel: \"X: %s Y: %s Z: %s\" zeigt \"X: 100 Y: 64 Z: 200\" an",
+
+  "config.coords_mod.custom_biome_text": "Biom-Text",
+  "config.coords_mod.custom_biome_text.description": "Benutzerdefinierter Text für die Anzeige des Bioms. Beispiel: \"%s Biome\" zeigt \"Plains Biome\" an",
+
+  "config.coords_mod.custom_direction_text": "Richtungs-Text",
+  "config.coords_mod.custom_direction_text.description": "Benutzerdefinierter Text für die Anzeige der Richtung. Beispiel: \"%s Direction\" zeigt \"North Direction\" an",
+
+  "config.coords_mod.custom_time_text": "Zeit-Text",
+  "config.coords_mod.custom_time_text.description": "Benutzerdefinierter Text für die Anzeige der Uhrzeit. Beispiel: \"%s Uhr\" zeigt \"14:30 Uhr\" an",
+
+  "config.coords_mod.custom_ping_text": "Ping-Text",
+  "config.coords_mod.custom_ping_text.description": "Benutzerdefinierter Text für die Anzeige des Pings. Beispiel: \"%s ms\" zeigt \"50 ms\" an",
+
+  "config.coords_mod.category.appearance.custom_text.invalid_error": "[Info Display] Ungültiges Format für benutzerdefinierten Text \"%s\". Bitte verwenden Sie \"%s\" für die Info-Werte",
 
 
+  "config.coords_mod.category.position.positionMode": "Positionsmodus",
+  "config.coords_mod.category.position.positionMode.description": "Absolute Position: HUD ist auf einer festen Position auf dem Bildschirm\n\nRelative Position: HUD positioniert sich relativ zu den Bildschirmecken",
+  "config.coords_mod.category.position.absolute": "Absolut",
+  "config.coords_mod.category.position.relativeMode": "Relativ",
   "config.coords_mod.category.position": "Position",
   "config.coords_mod.category.position.absolutePosition": "Absolute Position",
-  "config.coords_mod.category.position.absolutePosition.description": "Absolute Mode Options",
+  "config.coords_mod.category.position.absolutePosition.description": "Absoluter Positionsmodus Optionen",
   "config.coords_mod.category.position.relativePosition": "Relative Position",
-  "config.coords_mod.category.position.relativePosition.description2": "Relative Mode Options",
-  "config.coords_mod.category.position.absolutePosition.textAlignment": "Text Alignment",
-  "config.coords_mod.category.position.absolutePosition.textAlignment.left": "Left",
-  "config.coords_mod.category.position.absolutePosition.textAlignment.center": "Center",
-  "config.coords_mod.category.position.absolutePosition.textAlignment.right": "Right",
-  "config.coords_mod.category.position.absolutePosition.textAlignment.description": "Alignment of the text relative to the background. (Only works for Absolute Position Mode)",
+  "config.coords_mod.category.position.relativePosition.description2": "Relativer Positionsmodus Optionen",
+  "config.coords_mod.category.position.absolutePosition.textAlignment": "Textausrichtung",
+  "config.coords_mod.category.position.absolutePosition.textAlignment.left": "Links",
+  "config.coords_mod.category.position.absolutePosition.textAlignment.center": "Zentriert",
+  "config.coords_mod.category.position.absolutePosition.textAlignment.right": "Rechts",
+  "config.coords_mod.category.position.absolutePosition.textAlignment.description": "Ausrichtung des Textes relativ zum HUD-Hintergrund (Funktioniert nur im absoluten Positionsmodus)",
 
-  "config.coords_mod.category.position.relativePosition.description": "Position of the HUD relative to the screen corners",
-  "config.coords_mod.category.position.relativePosition.top_left": "Top Left",
-  "config.coords_mod.category.position.relativePosition.top_right": "Top Right",
-  "config.coords_mod.category.position.relativePosition.bottom_left": "Bottom Left",
-  "config.coords_mod.category.position.relativePosition.bottom_right": "Bottom Right",
+  "config.coords_mod.category.position.relativePosition.description": "Position des HUD relativ zu den Bildschirmecken",
+  "config.coords_mod.category.position.relativePosition.top_left": "Oben Links",
+  "config.coords_mod.category.position.relativePosition.top_right": "Oben Rechts",
+  "config.coords_mod.category.position.relativePosition.bottom_left": "Unten Links",
+  "config.coords_mod.category.position.relativePosition.bottom_right": "Unten Rechts",
 
   "config.coords_mod.category.position.absolutePosition.xPos": "X Position",
-  "config.coords_mod.category.position.absolutePosition.xPos.description": "Absolute X position of the HUD. Position may change on screen resize",
+  "config.coords_mod.category.position.absolutePosition.xPos.description": "Absolute X Position des HUDs. Position kann sich bei Größenänderung des Bildschirms ändern",
 
   "config.coords_mod.category.position.absolutePosition.yPos": "Y Position",
-  "config.coords_mod.category.position.absolutePosition.yPos.description": "Absolute Y position of the HUD. Position may change on screen resize"
+  "config.coords_mod.category.position.absolutePosition.yPos.description": "Absolute Y Position des HUDs. Position kann sich bei Größenänderung des Bildschirms ändern"
 }
