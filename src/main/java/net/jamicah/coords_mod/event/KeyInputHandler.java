@@ -6,11 +6,12 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyInputHandler {
     // this determines in what category the keybind is
-    public static final String KEY_CATEGORY = "key.category.coords_mod";
+    private static final KeyBinding.Category KEY_CATEGORY = KeyBinding.Category.create(Identifier.of("coords_mod"));
 
     // these determine the names of the keybindings (actual name which will be displayed in "en_us.json" file)
     public static final String KEY_TOGGLEHUD = "key.coords_mod.toggle_coordsHud";

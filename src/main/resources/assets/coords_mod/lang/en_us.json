@@ -1,5 +1,5 @@
 {
-  "key.category.coords_mod": "Info Display",
+  "key.category.minecraft.coords_mod": "Info Display",
   "key.coords_mod.toggle_coordsHud": "Toggle Entire Info Display",
   "key.coords_mod.toggle_coordsHud_FPS": "Toggle FPS",
   "key.coords_mod.toggle_coordsHud_COORDS": "Toggle Coordinates",
