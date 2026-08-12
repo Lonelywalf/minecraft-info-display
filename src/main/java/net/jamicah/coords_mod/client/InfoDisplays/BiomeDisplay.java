@@ -1,8 +1,8 @@
 package net.jamicah.coords_mod.client.InfoDisplays;
 
 import net.jamicah.coords_mod.client.Config;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 
 public class BiomeDisplay extends InfoDisplay {
     public BiomeDisplay(boolean status) {
@@ -11,14 +11,14 @@ public class BiomeDisplay extends InfoDisplay {
     }
 
     @Override
-    public void updateInformation(MinecraftClient client) {
+    public void updateInformation(Minecraft client) {
         this.infoText = Config.HANDLER.instance().customBiomeText;
         try {
             this.infoText = String.format(this.infoText, getCurrentBiome());
         } catch (Exception e) {
             assert client.player != null;
-            client.player.sendMessage(
-                    Text.translatable(
+            client.player.displayClientMessage(
+                    Component.translatable(
                             "config.coords_mod.category.appearance.custom_text.invalid_error",
                             this.infoText,
                             "%s"

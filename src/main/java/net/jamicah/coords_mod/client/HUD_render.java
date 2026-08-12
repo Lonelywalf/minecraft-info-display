@@ -3,13 +3,13 @@ package net.jamicah.coords_mod.client;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.jamicah.coords_mod.Coords_mod;
 import net.jamicah.coords_mod.client.InfoDisplays.*;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.Identifier;
 
 public class HUD_render implements HudElementRegistry {
-    public static final Identifier INFO_LAYER = Identifier.of(Coords_mod.MOD_ID, "info-layer");
+    public static final Identifier INFO_LAYER = Identifier.fromNamespaceAndPath(Coords_mod.MOD_ID, "info-layer");
 
     public static FPSDisplay fpsDisplay = new FPSDisplay(Config.HANDLER.instance().toggleFPS);
     public static CoordinatesDisplay coordsDisplay = new CoordinatesDisplay(Config.HANDLER.instance().toggleCoords);
@@ -95,8 +95,8 @@ public class HUD_render implements HudElementRegistry {
             b) add it to the getOrder() default array
      */
 
-    public static void renderInfoDisplay(DrawContext drawContext, RenderTickCounter tickCounter) {
-        MinecraftClient client = MinecraftClient.getInstance();
+    public static void renderInfoDisplay(GuiGraphics drawContext, DeltaTracker tickCounter) {
+        Minecraft client = Minecraft.getInstance();
 
         // reference tickCounter to avoid unused-parameter warnings (no-op)
         if (tickCounter != null) tickCounter.hashCode();
@@ -125,7 +125,7 @@ public class HUD_render implements HudElementRegistry {
 
 
         // hide hud when f1 or toggleHud is false or debug (F3) is shown
-        if (client.options.hudHidden || !InfoDisplay.isHudEnabled) {
+        if (client.options.hideGui || !InfoDisplay.isHudEnabled) {
             return;
         }
 

@@ -5,8 +5,8 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.jamicah.coords_mod.gui.screen.ConfigScreen;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.client.Minecraft;
+import net.minecraft.commands.CommandBuildContext;
 
 public class Commands implements ClientCommandRegistrationCallback {
 
@@ -19,14 +19,14 @@ public class Commands implements ClientCommandRegistrationCallback {
 
     // "/infodisplay" to open the config screen
     @Override
-    public void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
+    public void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext registryAccess) {
         dispatcher.register(ClientCommandManager.literal("infodisplay")
                 .executes(context -> {
-                    MinecraftClient client = MinecraftClient.getInstance();
-                    client.send(() -> { // this method crashes on 1.21 and some other versions
+                    Minecraft client = Minecraft.getInstance();
+                    client.schedule(() -> { // this method crashes on 1.21 and some other versions
                         client.setScreen(
                                 (new ConfigScreen())
-                                        .createGui(client.currentScreen)
+                                        .createGui(client.screen)
                         );
                     });
                     return 0;

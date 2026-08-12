@@ -1,9 +1,8 @@
 package net.jamicah.coords_mod.client.InfoDisplays;
 
 import net.jamicah.coords_mod.client.Config;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 
 public class CoordinatesDisplay extends InfoDisplay {
     public CoordinatesDisplay(boolean status) {
@@ -12,7 +11,7 @@ public class CoordinatesDisplay extends InfoDisplay {
     }
 
     @Override
-    public void updateInformation(MinecraftClient client) {
+    public void updateInformation(Minecraft client) {
         this.infoText = Config.HANDLER.instance().customCoordsText;
         assert client.player != null;
 
@@ -23,8 +22,8 @@ public class CoordinatesDisplay extends InfoDisplay {
         try {
             this.infoText = String.format(this.infoText, x_pos, y_pos, z_pos);
         } catch (Exception e) {
-            client.player.sendMessage(
-                    Text.translatable(
+            client.player.displayClientMessage(
+                    Component.translatable(
                             "config.coords_mod.category.appearance.custom_text.invalid_error",
                             this.infoText,
                             "%s %s %s"

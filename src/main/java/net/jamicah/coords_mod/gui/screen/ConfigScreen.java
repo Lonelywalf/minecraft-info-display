@@ -6,10 +6,10 @@ import dev.isxander.yacl3.gui.controllers.LabelController;
 import net.jamicah.coords_mod.client.Config;
 import net.jamicah.coords_mod.client.HUD_render;
 import net.jamicah.coords_mod.client.InfoDisplays.InfoDisplay;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 
 import java.awt.*;
@@ -33,20 +33,20 @@ public class ConfigScreen {
 
         AtomicReference<Option<Config.RelativePositions>> relativePosition = new AtomicReference<>();
         return YetAnotherConfigLib.create(Config.HANDLER, (defaults, config, builder) -> builder
-                .title(Text.translatable("config.coords_mod.title"))
+                .title(Component.translatable("config.coords_mod.title"))
                 // general
                 .category(ConfigCategory.createBuilder()
-                        .name(Text.translatable("config.coords_mod.category.general"))
+                        .name(Component.translatable("config.coords_mod.category.general"))
                         .option(Option.<Boolean>createBuilder()
-                                .name(Text.translatable("config.coords_mod.enable_hud"))
+                                .name(Component.translatable("config.coords_mod.enable_hud"))
                                 .description(OptionDescription.createBuilder()
-                                        .text(Text.translatable("config.coords_mod.enable_hud.description"))
+                                        .text(Component.translatable("config.coords_mod.enable_hud.description"))
                                         .build()
                                 )
                                 .controller(opt -> BooleanControllerBuilder.create(opt)
                                         .formatValue(val -> val ?
-                                                Text.translatable("options.on") :
-                                                Text.translatable("options.off")
+                                                Component.translatable("options.on") :
+                                                Component.translatable("options.off")
                                         )
                                         .coloured(true)
                                 )
@@ -62,22 +62,22 @@ public class ConfigScreen {
                         )
                         // HUD info
                         .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("config.coords_mod.category.general.hud_info"))
+                                .name(Component.translatable("config.coords_mod.category.general.hud_info"))
                                 .description(OptionDescription.createBuilder()
-                                        .text(Text.translatable(
+                                        .text(Component.translatable(
                                                 "config.coords_mod.category.general.hud_info.description"))
                                         .build()
                                 )
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("config.coords_mod.category.general.hud_info.FPS"))
+                                        .name(Component.translatable("config.coords_mod.category.general.hud_info.FPS"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("config.coords_mod.category.general.hud_info.FPS.description"))
+                                                .text(Component.translatable("config.coords_mod.category.general.hud_info.FPS.description"))
                                                 .build()
                                         )
                                         .controller(opt -> BooleanControllerBuilder.create(opt)
                                                 .formatValue(val -> val ?
-                                                        Text.translatable("options.on") :
-                                                        Text.translatable("options.off")
+                                                        Component.translatable("options.on") :
+                                                        Component.translatable("options.off")
                                                 )
                                                 .coloured(true)
                                         )
@@ -91,15 +91,15 @@ public class ConfigScreen {
                                         .build()
                                 )
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("config.coords_mod.enable_coords"))
+                                        .name(Component.translatable("config.coords_mod.enable_coords"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("config.coords_mod.enable_coords.description"))
+                                                .text(Component.translatable("config.coords_mod.enable_coords.description"))
                                                 .build()
                                         )
                                         .controller(opt -> BooleanControllerBuilder.create(opt)
                                                 .formatValue(val -> val ?
-                                                        Text.translatable("options.on") :
-                                                        Text.translatable("options.off")
+                                                        Component.translatable("options.on") :
+                                                        Component.translatable("options.off")
                                                 )
                                                 .coloured(true)
                                         )
@@ -112,15 +112,15 @@ public class ConfigScreen {
                                         .build()
                                 )
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("config.coords_mod.enable_biome"))
+                                        .name(Component.translatable("config.coords_mod.enable_biome"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("config.coords_mod.enable_biome.description"))
+                                                .text(Component.translatable("config.coords_mod.enable_biome.description"))
                                                 .build()
                                         )
                                         .controller(opt -> BooleanControllerBuilder.create(opt)
                                                 .formatValue(val -> val ?
-                                                        Text.translatable("options.on") :
-                                                        Text.translatable("options.off")
+                                                        Component.translatable("options.on") :
+                                                        Component.translatable("options.off")
                                                 )
                                                 .coloured(true)
                                         )
@@ -134,15 +134,15 @@ public class ConfigScreen {
                                         .build()
                                 )
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("config.coords_mod.enable_direction"))
+                                        .name(Component.translatable("config.coords_mod.enable_direction"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("config.coords_mod.enable_direction.description"))
+                                                .text(Component.translatable("config.coords_mod.enable_direction.description"))
                                                 .build()
                                         )
                                         .controller(opt -> BooleanControllerBuilder.create(opt)
                                                 .formatValue(val -> val ?
-                                                        Text.translatable("options.on") :
-                                                        Text.translatable("options.off")
+                                                        Component.translatable("options.on") :
+                                                        Component.translatable("options.off")
                                                 )
                                                 .coloured(true)
                                         )
@@ -156,15 +156,15 @@ public class ConfigScreen {
                                         .build()
                                 )
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("config.coords_mod.enable_time"))
+                                        .name(Component.translatable("config.coords_mod.enable_time"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("config.coords_mod.enable_time.description"))
+                                                .text(Component.translatable("config.coords_mod.enable_time.description"))
                                                 .build()
                                         )
                                         .controller(opt -> BooleanControllerBuilder.create(opt)
                                                 .formatValue(val -> val ?
-                                                        Text.translatable("options.on") :
-                                                        Text.translatable("options.off")
+                                                        Component.translatable("options.on") :
+                                                        Component.translatable("options.off")
                                                 )
                                                 .coloured(true)
                                         )
@@ -182,15 +182,15 @@ public class ConfigScreen {
                                         .build()
                                 )
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("config.coords_mod.enable_ping"))
+                                        .name(Component.translatable("config.coords_mod.enable_ping"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("config.coords_mod.enable_ping.description"))
+                                                .text(Component.translatable("config.coords_mod.enable_ping.description"))
                                                 .build()
                                         )
                                         .controller(opt -> BooleanControllerBuilder.create(opt)
                                                 .formatValue(val -> val ?
-                                                        Text.translatable("options.on") :
-                                                        Text.translatable("options.off")
+                                                        Component.translatable("options.on") :
+                                                        Component.translatable("options.off")
                                                 )
                                                 .coloured(true)
                                         )
@@ -207,22 +207,22 @@ public class ConfigScreen {
                         )
                         // time settings
                         .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("config.coords_mod.category.general.time_settings"))
+                                .name(Component.translatable("config.coords_mod.category.general.time_settings"))
                                 .description(OptionDescription.createBuilder()
-                                        .text(Text.translatable("config.coords_mod.category.general.time_settings.description"))
+                                        .text(Component.translatable("config.coords_mod.category.general.time_settings.description"))
                                         .build()
                                 )
                                 .option(Util.make(() -> {
                                     var option = Option.<Boolean>createBuilder()
-                                            .name(Text.translatable("config.coords_mod.time_format"))
+                                            .name(Component.translatable("config.coords_mod.time_format"))
                                             .description(OptionDescription.createBuilder()
-                                                    .text(Text.translatable("config.coords_mod.time_format.description"))
+                                                    .text(Component.translatable("config.coords_mod.time_format.description"))
                                                     .build()
                                             )
                                             .controller(opt -> BooleanControllerBuilder.create(opt)
                                                     .formatValue(val -> val ?
-                                                            Text.translatable("config.coords_mod.time_format_24hour") :
-                                                            Text.translatable("config.coords_mod.time_format_12hour"))
+                                                            Component.translatable("config.coords_mod.time_format_24hour") :
+                                                            Component.translatable("config.coords_mod.time_format_12hour"))
                                             )
                                             .available(Config.HANDLER.instance().toggleTime)
                                             .stateManager(StateManager.createInstant(
@@ -239,15 +239,15 @@ public class ConfigScreen {
                                 .option(Util.make(() -> {
                                     var option =
                                             Option.<Boolean>createBuilder()
-                                                    .name(Text.translatable("config.coords_mod.show_ampm"))
+                                                    .name(Component.translatable("config.coords_mod.show_ampm"))
                                                     .description(OptionDescription.createBuilder()
-                                                            .text(Text.translatable("config.coords_mod.show_ampm.description"))
+                                                            .text(Component.translatable("config.coords_mod.show_ampm.description"))
                                                             .build()
                                                     )
                                                     .controller(opt -> BooleanControllerBuilder.create(opt)
                                                             .formatValue(val -> val ?
-                                                                    Text.translatable("options.on") :
-                                                                    Text.translatable("options.off")
+                                                                    Component.translatable("options.on") :
+                                                                    Component.translatable("options.off")
                                                             )
                                                             .coloured(true)
                                                     )
@@ -266,15 +266,15 @@ public class ConfigScreen {
                                 }))
                                 .option(Util.make(() -> {
                                     var option = Option.<Boolean>createBuilder()
-                                            .name(Text.translatable("config.coords_mod.show_seconds"))
+                                            .name(Component.translatable("config.coords_mod.show_seconds"))
                                             .description(OptionDescription.createBuilder()
-                                                    .text(Text.translatable("config.coords_mod.show_seconds.description"))
+                                                    .text(Component.translatable("config.coords_mod.show_seconds.description"))
                                                     .build()
                                             )
                                             .controller(opt -> BooleanControllerBuilder.create(opt)
                                                     .formatValue(val -> val ?
-                                                            Text.translatable("options.on") :
-                                                            Text.translatable("options.off")
+                                                            Component.translatable("options.on") :
+                                                            Component.translatable("options.off")
                                                     )
                                                     .coloured(true)
                                             )
@@ -294,10 +294,10 @@ public class ConfigScreen {
                                 .collapsed(true)
                                 .build()
                         )
-                        .group(ListOption.<Text>createBuilder()
-                                .name(Text.translatable("config.coords_mod.order_list"))
+                        .group(ListOption.<Component>createBuilder()
+                                .name(Component.translatable("config.coords_mod.order_list"))
                                 .description(OptionDescription.createBuilder()
-                                        .text(Text.translatable("config.coords_mod.order_list.description"))
+                                        .text(Component.translatable("config.coords_mod.order_list.description"))
                                         .build()
                                 )
                                 .state(StateManager.createInstant(
@@ -310,7 +310,7 @@ public class ConfigScreen {
                                         }
                                 ))
                                 .customController(LabelController::new)
-                                .initial(Text.of(""))
+                                .initial(Component.nullToEmpty(""))
                                 .maximumNumberOfEntries(InfoDisplay.totalInfoDisplayInstances)
                                 .minimumNumberOfEntries(InfoDisplay.totalInfoDisplayInstances)
                                 .collapsed(false)
@@ -320,18 +320,18 @@ public class ConfigScreen {
                 )
                 // appearance
                 .category(ConfigCategory.createBuilder()
-                        .name(Text.translatable("config.coords_mod.category.appearance"))
+                        .name(Component.translatable("config.coords_mod.category.appearance"))
                         // appearance
                         .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("config.coords_mod.category.appearance.color"))
+                                .name(Component.translatable("config.coords_mod.category.appearance.color"))
                                 .description(OptionDescription.createBuilder()
-                                        .text(Text.translatable("config.coords_mod.category.appearance.description"))
+                                        .text(Component.translatable("config.coords_mod.category.appearance.description"))
                                         .build()
                                 )
                                 .option(Option.<Color>createBuilder()
-                                        .name(Text.translatable("config.coords_mod.bg_color"))
+                                        .name(Component.translatable("config.coords_mod.bg_color"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("config.coords_mod.bg_color.description"))
+                                                .text(Component.translatable("config.coords_mod.bg_color.description"))
                                                 .build()
                                         )
                                         .controller(opt -> ColorControllerBuilder.create(opt)
@@ -347,9 +347,9 @@ public class ConfigScreen {
                                         .build()
                                 )
                                 .option(Option.<Color>createBuilder()
-                                        .name(Text.translatable("config.coords_mod.text_color"))
+                                        .name(Component.translatable("config.coords_mod.text_color"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("config.coords_mod.text_color.description"))
+                                                .text(Component.translatable("config.coords_mod.text_color.description"))
                                                 .build()
                                         )
                                         .controller(opt -> ColorControllerBuilder.create(opt)
@@ -365,16 +365,16 @@ public class ConfigScreen {
                                         .build()
                                 )
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("config.coords_mod.show_text_shadow"))
+                                        .name(Component.translatable("config.coords_mod.show_text_shadow"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("config.coords_mod.show_text_shadow.description"))
-                                                .image(Identifier.of("coords_mod", "textures/gui/textshadow.png"), 1, 1)
+                                                .text(Component.translatable("config.coords_mod.show_text_shadow.description"))
+                                                .image(Identifier.fromNamespaceAndPath("coords_mod", "textures/gui/textshadow.png"), 1, 1)
                                                 .build()
                                         )
                                         .controller(opt -> BooleanControllerBuilder.create(opt)
                                                 .formatValue(val -> val ?
-                                                        Text.translatable("options.on") :
-                                                        Text.translatable("options.off")
+                                                        Component.translatable("options.on") :
+                                                        Component.translatable("options.off")
                                                 )
                                                 .coloured(true)
                                         )
@@ -392,16 +392,16 @@ public class ConfigScreen {
                         )
                         // text customization
                         .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("config.coords_mod.category.appearance.text_customization"))
+                                .name(Component.translatable("config.coords_mod.category.appearance.text_customization"))
                                 .description(OptionDescription.createBuilder()
-                                        .image(Identifier.of("coords_mod", "textures/gui/text_customization.png"), 253, 85)
-                                        .text(Text.translatable("config.coords_mod.category.appearance.text_customization.description"))
+                                        .image(Identifier.fromNamespaceAndPath("coords_mod", "textures/gui/text_customization.png"), 253, 85)
+                                        .text(Component.translatable("config.coords_mod.category.appearance.text_customization.description"))
                                         .build()
                                 )
                                 .option(Option.<String>createBuilder()
-                                        .name(Text.translatable("config.coords_mod.custom_fps_text"))
+                                        .name(Component.translatable("config.coords_mod.custom_fps_text"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("config.coords_mod.custom_fps_text.description"))
+                                                .text(Component.translatable("config.coords_mod.custom_fps_text.description"))
                                                 .build()
                                         )
                                         .controller(StringControllerBuilder::create)
@@ -416,9 +416,9 @@ public class ConfigScreen {
                                         .build()
                                 )
                                 .option(Option.<String>createBuilder()
-                                        .name(Text.translatable("config.coords_mod.custom_coords_text"))
+                                        .name(Component.translatable("config.coords_mod.custom_coords_text"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("config.coords_mod.custom_coords_text.description"))
+                                                .text(Component.translatable("config.coords_mod.custom_coords_text.description"))
                                                 .build()
                                         )
                                         .controller(StringControllerBuilder::create)
@@ -433,9 +433,9 @@ public class ConfigScreen {
                                         .build()
                                 )
                                 .option(Option.<String>createBuilder()
-                                        .name(Text.translatable("config.coords_mod.custom_biome_text"))
+                                        .name(Component.translatable("config.coords_mod.custom_biome_text"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("config.coords_mod.custom_biome_text.description"))
+                                                .text(Component.translatable("config.coords_mod.custom_biome_text.description"))
                                                 .build()
                                         )
                                         .controller(StringControllerBuilder::create)
@@ -450,9 +450,9 @@ public class ConfigScreen {
                                         .build()
                                 )
                                 .option(Option.<String>createBuilder()
-                                        .name(Text.translatable("config.coords_mod.custom_direction_text"))
+                                        .name(Component.translatable("config.coords_mod.custom_direction_text"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("config.coords_mod.custom_direction_text.description"))
+                                                .text(Component.translatable("config.coords_mod.custom_direction_text.description"))
                                                 .build()
                                         )
                                         .controller(StringControllerBuilder::create)
@@ -467,9 +467,9 @@ public class ConfigScreen {
                                         .build()
                                 )
                                 .option(Option.<String>createBuilder()
-                                        .name(Text.translatable("config.coords_mod.custom_time_text"))
+                                        .name(Component.translatable("config.coords_mod.custom_time_text"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("config.coords_mod.custom_time_text.description"))
+                                                .text(Component.translatable("config.coords_mod.custom_time_text.description"))
                                                 .build()
                                         )
                                         .controller(StringControllerBuilder::create)
@@ -484,9 +484,9 @@ public class ConfigScreen {
                                         .build()
                                 )
                                 .option(Option.<String>createBuilder()
-                                        .name(Text.translatable("config.coords_mod.custom_ping_text"))
+                                        .name(Component.translatable("config.coords_mod.custom_ping_text"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("config.coords_mod.custom_ping_text.description"))
+                                                .text(Component.translatable("config.coords_mod.custom_ping_text.description"))
                                                 .build()
                                         )
                                         .controller(StringControllerBuilder::create)
@@ -507,15 +507,15 @@ public class ConfigScreen {
                 // position
                 .category(ConfigCategory.createBuilder()
                         .option(Option.<Boolean>createBuilder()
-                                .name(Text.translatable("config.coords_mod.category.position.positionMode"))
+                                .name(Component.translatable("config.coords_mod.category.position.positionMode"))
                                 .description(OptionDescription.createBuilder()
-                                        .text(Text.translatable("config.coords_mod.category.position.positionMode.description"))
+                                        .text(Component.translatable("config.coords_mod.category.position.positionMode.description"))
                                         .build()
                                 )
                                 .controller(opt -> BooleanControllerBuilder.create(opt)
                                         .formatValue(val -> val ?
-                                                Text.translatable("config.coords_mod.category.position.absolute") :
-                                                Text.translatable("config.coords_mod.category.position.relativeMode")
+                                                Component.translatable("config.coords_mod.category.position.absolute") :
+                                                Component.translatable("config.coords_mod.category.position.relativeMode")
                                         )
                                         .coloured(false)
                                 )
@@ -537,20 +537,20 @@ public class ConfigScreen {
                                 )
                                 .build()
                         )
-                        .name(Text.translatable("config.coords_mod.category.position"))
+                        .name(Component.translatable("config.coords_mod.category.position"))
 
                         // relative position
                         .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("config.coords_mod.category.position.relativePosition"))
+                                .name(Component.translatable("config.coords_mod.category.position.relativePosition"))
                                 .description(OptionDescription.createBuilder()
-                                        .text(Text.translatable("config.coords_mod.category.position.relativePosition.description2"))
+                                        .text(Component.translatable("config.coords_mod.category.position.relativePosition.description2"))
                                         .build()
                                 )
                                 .option(Util.make(() -> {
                                     var option = Option.<Config.RelativePositions>createBuilder()
-                                            .name(Text.translatable("config.coords_mod.category.position.relativePosition"))
+                                            .name(Component.translatable("config.coords_mod.category.position.relativePosition"))
                                             .description(OptionDescription.createBuilder()
-                                                    .text(Text.translatable("config.coords_mod.category.position.relativePosition.description"))
+                                                    .text(Component.translatable("config.coords_mod.category.position.relativePosition.description"))
                                                     .build()
                                             )
                                             .controller(opt -> EnumControllerBuilder.create(opt)
@@ -571,16 +571,16 @@ public class ConfigScreen {
                                 .build())
                         // absolute position
                         .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("config.coords_mod.category.position.absolutePosition"))
+                                .name(Component.translatable("config.coords_mod.category.position.absolutePosition"))
                                 .description(OptionDescription.createBuilder()
-                                        .text(Text.translatable("config.coords_mod.category.position.absolutePosition.description"))
+                                        .text(Component.translatable("config.coords_mod.category.position.absolutePosition.description"))
                                         .build()
                                 )
                                 .option(Util.make(() -> {
                                     var option = Option.<Config.TextAlignment>createBuilder()
-                                            .name(Text.translatable("config.coords_mod.category.position.absolutePosition.textAlignment"))
+                                            .name(Component.translatable("config.coords_mod.category.position.absolutePosition.textAlignment"))
                                             .description(OptionDescription.createBuilder()
-                                                    .text(Text.translatable("config.coords_mod.category.position.absolutePosition.textAlignment.description"))
+                                                    .text(Component.translatable("config.coords_mod.category.position.absolutePosition.textAlignment.description"))
                                                     .build()
                                             )
                                             .controller(opt -> EnumControllerBuilder.create(opt)
@@ -600,12 +600,12 @@ public class ConfigScreen {
                                 }))
                                 .option(Util.make(() -> {
                                     var option = Option.<Integer>createBuilder()
-                                            .name(Text.translatable("config.coords_mod.category.position.absolutePosition.xPos"))
+                                            .name(Component.translatable("config.coords_mod.category.position.absolutePosition.xPos"))
                                             .description(OptionDescription.createBuilder()
-                                                    .text(Text.translatable("config.coords_mod.category.position.absolutePosition.xPos.description"))
+                                                    .text(Component.translatable("config.coords_mod.category.position.absolutePosition.xPos.description"))
                                                     .build())
                                             .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                                                    .range(0, MinecraftClient.getInstance().getWindow().getScaledWidth())
+                                                    .range(0, Minecraft.getInstance().getWindow().getGuiScaledWidth())
                                                     .step(1)
                                             )
                                             .stateManager(StateManager.createInstant(
@@ -623,12 +623,12 @@ public class ConfigScreen {
                                 }))
                                 .option(Util.make(() -> {
                                     var option = Option.<Integer>createBuilder()
-                                            .name(Text.translatable("config.coords_mod.category.position.absolutePosition.yPos"))
+                                            .name(Component.translatable("config.coords_mod.category.position.absolutePosition.yPos"))
                                             .description(OptionDescription.createBuilder()
-                                                    .text(Text.translatable("config.coords_mod.category.position.absolutePosition.yPos.description"))
+                                                    .text(Component.translatable("config.coords_mod.category.position.absolutePosition.yPos.description"))
                                                     .build())
                                             .controller(opt -> IntegerSliderControllerBuilder.create(opt)
-                                                    .range(0, MinecraftClient.getInstance().getWindow().getScaledHeight())
+                                                    .range(0, Minecraft.getInstance().getWindow().getGuiScaledHeight())
                                                     .step(1)
                                             )
                                             .stateManager(StateManager.createInstant(

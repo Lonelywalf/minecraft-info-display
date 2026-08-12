@@ -5,9 +5,8 @@ import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +18,7 @@ public class Config {
     private static final Logger LOGGER = Logger.getLogger("coords_mod");
 
     public static ConfigClassHandler<Config> HANDLER = ConfigClassHandler.createBuilder(Config.class)
-            .id(Identifier.of("coords_mod", "info_display_config"))
+            .id(Identifier.fromNamespaceAndPath("coords_mod", "info_display_config"))
             .serializer(config -> GsonConfigSerializerBuilder.create(config)
                     .setPath(FabricLoader.getInstance().getConfigDir().resolve("infoDisplay.json5"))
                     .setJson5(true)
@@ -89,8 +88,8 @@ public class Config {
         BOTTOM_RIGHT;
 
         @Override
-        public Text getDisplayName() {
-            return Text.translatable(
+        public Component getDisplayName() {
+            return Component.translatable(
                     "config.coords_mod.category.position.relativePosition."
                             + name().toLowerCase()
             );
@@ -106,8 +105,8 @@ public class Config {
         RIGHT;
 
         @Override
-        public Text getDisplayName() {
-            return Text.translatable(
+        public Component getDisplayName() {
+            return Component.translatable(
                     "config.coords_mod.category.position.absolutePosition.textAlignment."
                             + name().toLowerCase()
             );
@@ -118,13 +117,13 @@ public class Config {
     public boolean absoluteMode = false;
 
     @SerialEntry(comment = "Order for the Text labels")
-    public List<Text> optionsList = Arrays.asList(
-        Text.translatable("config.coords_mod.order_list.FPS"),
-        Text.translatable("config.coords_mod.order_list.coords"),
-        Text.translatable("config.coords_mod.order_list.biome"),
-        Text.translatable("config.coords_mod.order_list.direction"),
-        Text.translatable("config.coords_mod.order_list.time"),
-        Text.translatable("config.coords_mod.order_list.ping")
+    public List<Component> optionsList = Arrays.asList(
+        Component.translatable("config.coords_mod.order_list.FPS"),
+        Component.translatable("config.coords_mod.order_list.coords"),
+        Component.translatable("config.coords_mod.order_list.biome"),
+        Component.translatable("config.coords_mod.order_list.direction"),
+        Component.translatable("config.coords_mod.order_list.time"),
+        Component.translatable("config.coords_mod.order_list.ping")
     );
 
     @SerialEntry
@@ -147,17 +146,17 @@ public class Config {
 
     // --- Migration helpers ---
     // Default order as Texts for reference
-    public static final List<Text> DEFAULT_OPTIONS = Arrays.asList(
-            Text.translatable("config.coords_mod.order_list.FPS"),
-            Text.translatable("config.coords_mod.order_list.coords"),
-            Text.translatable("config.coords_mod.order_list.biome"),
-            Text.translatable("config.coords_mod.order_list.direction"),
-            Text.translatable("config.coords_mod.order_list.time"),
-            Text.translatable("config.coords_mod.order_list.ping")
+    public static final List<Component> DEFAULT_OPTIONS = Arrays.asList(
+            Component.translatable("config.coords_mod.order_list.FPS"),
+            Component.translatable("config.coords_mod.order_list.coords"),
+            Component.translatable("config.coords_mod.order_list.biome"),
+            Component.translatable("config.coords_mod.order_list.direction"),
+            Component.translatable("config.coords_mod.order_list.time"),
+            Component.translatable("config.coords_mod.order_list.ping")
     );
 
     // normalize a Text entry to a key-like suffix used in the rest of the code
-    private static String normalizeOptionText(Text t) {
+    private static String normalizeOptionText(Component t) {
         if (t == null) return "";
         String s = t.toString();
         s = s.replaceAll("translation\\{key='config\\.coords_mod\\.order_list\\.", "");
@@ -178,13 +177,13 @@ public class Config {
 
             // Build a set of normalized existing keys for fast lookup
             java.util.Set<String> existing = new java.util.HashSet<>();
-            for (Text t : optionsList) {
+            for (Component t : optionsList) {
                 existing.add(normalizeOptionText(t).toLowerCase());
             }
 
             boolean changed = false;
-            java.util.List<Text> newList = new java.util.ArrayList<>(optionsList);
-            for (Text def : DEFAULT_OPTIONS) {
+            java.util.List<Component> newList = new java.util.ArrayList<>(optionsList);
+            for (Component def : DEFAULT_OPTIONS) {
                 String key = normalizeOptionText(def).toLowerCase();
                 if (!existing.contains(key)) {
                     newList.add(def);
