@@ -5,7 +5,7 @@ import net.jamicah.coords_mod.Coords_mod;
 import net.jamicah.coords_mod.client.InfoDisplays.*;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 
 public class HUD_render implements HudElementRegistry {
@@ -95,7 +95,7 @@ public class HUD_render implements HudElementRegistry {
             b) add it to the getOrder() default array
      */
 
-    public static void renderInfoDisplay(GuiGraphics drawContext, DeltaTracker tickCounter) {
+    public static void renderInfoDisplay(GuiGraphicsExtractor drawContext, DeltaTracker tickCounter) {
         Minecraft client = Minecraft.getInstance();
 
         // reference tickCounter to avoid unused-parameter warnings (no-op)
@@ -123,11 +123,11 @@ public class HUD_render implements HudElementRegistry {
             infoDisplay.loadConfiguration();
         }
 
-
         // hide hud when f1 or toggleHud is false or debug (F3) is shown
         if (client.options.hideGui || !InfoDisplay.isHudEnabled) {
             return;
         }
+
 
         // dynamic y position
         InfoDisplay.yCurrent = InfoDisplay.y;

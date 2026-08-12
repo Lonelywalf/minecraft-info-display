@@ -3,7 +3,7 @@ package net.jamicah.coords_mod.client.InfoDisplays;
 import net.jamicah.coords_mod.client.Config;
 import net.jamicah.coords_mod.client.HUD_render;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -65,7 +65,7 @@ public abstract class InfoDisplay {
         y = Config.HANDLER.instance().y;
     }
 
-    public static void renderRectangle(GuiGraphics drawContext, int longestX) {
+    public static void renderRectangle(GuiGraphicsExtractor drawContext, int longestX) {
         InfoDisplay.xPosRectangle = 0;
         if (InfoDisplay.yCurrent != InfoDisplay.y) {
             // determine the x length of the rectangle
@@ -107,8 +107,8 @@ public abstract class InfoDisplay {
 
     public abstract void updateInformation(Minecraft client);
 
-    public void drawText(GuiGraphics drawContext, Minecraft client) {
-        drawContext.drawString(
+    public void drawText(GuiGraphicsExtractor drawContext, Minecraft client) {
+        drawContext.text(
                 client.font,
                 this.infoText,
                 // if the pos is relative right, then subtract the length of the text
