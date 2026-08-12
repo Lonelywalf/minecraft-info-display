@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.11-SNAPSHOT'
+	id 'fabric-loom' version '1.17-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -40,7 +40,7 @@ dependencies {
 	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 	/*
 	modApi("me.shedaniel.cloth:cloth-config-fabric:15.0.128") {
 		exclude(group: "net.fabricmc.fabric-api")
@@ -66,6 +66,7 @@ tasks.withType(JavaCompile).configureEach {
 java {
 	withSourcesJar()
 
+
 	sourceCompatibility = JavaVersion.VERSION_21
 	targetCompatibility = JavaVersion.VERSION_21
 }
@@ -75,6 +76,8 @@ jar {
 		rename { "${it}_${project.base.archivesName.get()}"}
 	}
 }
+
+
 
 // configure the maven publication
 publishing {
